@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Match.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="FantasySummary.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

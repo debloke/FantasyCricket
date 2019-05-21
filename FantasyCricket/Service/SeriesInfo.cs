@@ -1,4 +1,5 @@
 ﻿using Common.Net.Extensions;
+using FantasyCricket.Converter;
 using FantasyCricket.Database;
 using FantasyCricket.Models;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace FantasyCricket.Service
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
                 connection.Open();
-                using (SQLiteCommand insertCommand = new SQLiteCommand(CREATESERIES, connection))
+                using (SQLiteCommand insertCommand = new SQLiteCommand(ADDORUPDATEMATCH, connection))
                 {
                     insertCommand.CommandType = System.Data.CommandType.Text;
                     insertCommand.Parameters.AddWithValue("@uniqie_id", match.MatchId);
@@ -68,7 +69,8 @@ namespace FantasyCricket.Service
 
         public Match[] GetUnAssignedMatches()
         {
-            return JsonConvert.DeserializeObject<Match[]>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/matches?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2")));
+            Matches matches =  JsonConvert.DeserializeObject<Matches>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/matches?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2")));
+            return matches.AllMatch;
         }
     }
 }

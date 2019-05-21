@@ -31,10 +31,12 @@ namespace FantasyCricket.Models
         public string Type { get; set; }
 
         [SQLiteColumn("team1",ConverterType=typeof(SqlStringEnumConverter))]
+        [JsonProperty("team-1")]
         [JsonConverter(typeof(CountryNameJsonConverter))]
         public CountryTeamName Team1 { get; set; }
 
         [SQLiteColumn("team2", ConverterType = typeof(SqlStringEnumConverter))]
+        [JsonProperty("team-2")]
         [JsonConverter(typeof(CountryNameJsonConverter))]
         public CountryTeamName Team2 { get; set; }
 

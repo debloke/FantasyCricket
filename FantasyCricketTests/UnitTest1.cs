@@ -22,6 +22,19 @@ namespace FantasyCricketTests
 
 
         }
+
+        [TestMethod]
+        public void TestMethodMatches()
+        {
+            string matchJson = File.ReadAllText(@"Match.json", Encoding.UTF8);
+
+            Matches matches = JsonConvert.DeserializeObject<Matches>(matchJson);
+
+            Console.WriteLine(matches);
+        }
+
+
+
         [TestMethod]
         public void TestMethod1()
         {

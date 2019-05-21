@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FantasyCricket.Service;
+using Newtonsoft.Json;
 using System;
 
 namespace FantasyCricket.Converter
@@ -16,7 +17,14 @@ namespace FantasyCricket.Converter
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return Enum.Parse(objectType, Convert.ToString(existingValue).Replace(" ", ""), true);
+            try
+            {
+                return Enum.Parse(typeof(CountryTeamName), Convert.ToString(reader.Value).Replace(" ", ""), true);
+            }
+            catch
+            {
+                return CountryTeamName.Unknown;
+            }
 
 
         }
