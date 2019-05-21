@@ -5,7 +5,6 @@ namespace System.Net.Http
     // Borrowed from NET.core
     public class HttpResponseException : Exception
     {
-        private HttpResponseMessage httpResponseMessage;
 
         public HttpStatusCode HttpStatusCode { get; private set; }
         public string Content { get; private set; }

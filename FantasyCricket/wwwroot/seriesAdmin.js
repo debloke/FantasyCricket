@@ -48,7 +48,7 @@ $(function() {
             };
         });
         matchData.map(function(mD) {
-            tempData[mD.SeriesId].Mathes.push({
+            tempData[mD.SeriesId].Matches.push({
                 "Date" : mD.dateTimeGMT,
                 "Team1" : md["team-1"],
                 "Team2" : md["team-1"]
