@@ -33,6 +33,7 @@ namespace FantasyCricket
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton<ILiveScore, CricApiLiveScore>();
             services.AddSingleton<IPlayerInfo, PlayerInfo>();
+            services.AddSingleton<ISeriesInfo, SeriesInfo>();
             services.AddSingleton<IUser, User>();
             DatabaseSetup databaseSetup = new DatabaseSetup();
         }

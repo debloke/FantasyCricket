@@ -30,11 +30,11 @@ namespace FantasyCricket.Service
         Australia,
         WestIndies,
         Srilanka,
-        Ireland,
         Bangladesh,
         Afghanistan,
-        Scotland,
-        SouthAfrica
+        SouthAfrica,
+        NewZealand,
+        Unknown
 
 
     }

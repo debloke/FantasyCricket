@@ -2,10 +2,6 @@
 using Newtonsoft.Json.Converters;
 using Sqlite.Converters;
 using Sqlite.SqliteAttributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FantasyCricket.Models
 {
@@ -35,7 +31,7 @@ namespace FantasyCricket.Models
         [SQLiteColumn("Team")]
         public string TeamName { get; set; }
 
-        [SQLiteColumn("Role",ConverterType=typeof(SqlStringEnumConverter))]
+        [SQLiteColumn("Role", ConverterType = typeof(SqlStringEnumConverter))]
         [JsonConverter(typeof(StringEnumConverter))]
         public Role Role { get; set; }
 

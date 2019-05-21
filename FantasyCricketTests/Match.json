@@ -1,0 +1,14 @@
+﻿{
+  "matches": [
+    {
+      "unique_id": 1169332,
+      "date": "2019-05-21T00:00:00.000Z",
+      "dateTimeGMT": "2019-05-21T10:00:00.000Z",
+      "team-1": "Scotland",
+      "team-2": "Sri Lanka",
+      "type": "ODI",
+      "squad": false,
+      "matchStarted": false
+    }
+  ]
+}
