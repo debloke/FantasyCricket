@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js"> </script>
+        <script type="text/javascript" src="util/utility.js"> </script>
+        <script type="text/javascript" src="seriesAdmin.js"> </script>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <title>Fantasy League</title>
+    </head>
+    <body>
+        <div class="mainBlock">
+            <div class="seriesLeftBlock"></div>
+            <div class="seriesDescription"></div>
+        </div>
+        <div id="inputPopup">
+            <div class="glassBackground"></div>
+            <div class="inputContainer" style="background: mistyrose;">
+                <div class="close">X</div>
+                <table>
+                    <tr>
+                        <td>Series Name</td>
+                        <td><input type="text" id="serName"></td>
+                    </tr>
+                    <tr>
+                        <td>Series Type</td>
+                        <td><input type="text" id="serType"></td>
+                    </tr>
+                    <tr>
+                        <td>Matches</td>
+                        <td><input type="text" id="matches"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button id="addSeries">Submit</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

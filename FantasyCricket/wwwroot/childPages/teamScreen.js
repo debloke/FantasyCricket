@@ -21,11 +21,10 @@ function populateTeamData(id) {
         ALL_PLAYERS.map(function(player) {
             if( myPlayers.indexOf(player.Id) == -1 ) {
                 if(((filter.role == "FULL") || (filter.role == player.role)) && ((filter.team == "FULL") || (filter.team == player.team))) {
-                    list+= "<li>";
+                    list+= "<li class='addPlayer' data='"+player.Id+"'>";
                     list+= "<span class='playerName'>"+player.Name+"</span>";
                     list+= "<span class='playerTeam'>"+player.team+"</span>";
                     list+= "<span class='playerPrice'>"+player.price+"</span>";
-                    list+= "<span class='addPlayer' data='"+player.Id+"'>+</span></li>";
                 }
             }
         });

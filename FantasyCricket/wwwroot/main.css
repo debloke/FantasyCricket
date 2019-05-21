@@ -133,9 +133,9 @@ button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca
 .playerAdminBlock { position: absolute; width: 80%; left: 10%; text-align: center; top: 50px; }
 .playerAdmin { display: inline-block; width: 96%; border: 1px solid grey; border-radius: 15px; padding: 2%; }
 .playerAdmin table { width: 100%; }
-.playerAdmin table th { color: #50d266; font-size: 20px; padding-bottom: 10px; }
+.playerAdmin table th { color: #e4ff00; font-size: 20px; padding-bottom: 10px; }
 .playerAdmin table th, .playerAdmin table td { text-align: left; }
-.playerAdmin table th h3 { text-align: center; color: #a99742; font-size: 24px; margin: 0; border-bottom: 1px solid grey; }
+.playerAdmin table th h3 { text-align: center; color: #e4ff00; font-size: 24px; margin: 0; border-bottom: 1px solid grey; }
 .playerAdmin table td span { position: relative; top: -8px; left: 10px; }
 
 .inputContainerAdmin { width: 40%; margin: 0 auto; z-index: 10; position: absolute; left: 30%; line-height: 35px; top: 10%; }
@@ -143,3 +143,13 @@ button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca
 .inputContainerAdmin > .editPopup table { width: 100%; }
 .inputContainerAdmin .close { position: absolute; right: 5px; top: 5px; color: red; width: 30px; height: 30px; border: 2px solid #80862d; border-radius: 15px; text-align: center; }
 /* CSS FOR PLAYER ADMIN SCREEN END */
+
+.mainBlock { position: absolute; top: 5%; left: 5%; width: 90%; height: 90%; }
+.seriesLeftBlock { position: absolute; left: 0; width: 30%; height: 100%; border: 1px solid black; overflow-y: auto; }
+.seriesLeftBlock ul { list-style: none; width: 90%; padding: 5%; }
+.seriesLeftBlock ul li { background: #8fad47; padding: 20px; border-bottom: 1px solid grey; }
+.seriesDescription { position: absolute; left: 30%; width: 70%; height: 100%; border: 1px solid black; }
+.seriesDescription h3 { text-align: center; }
+.seriesDescription table { width: 80%; text-align: left; padding-left: 10%; }
+.seriesDescription table span { margin: 0 0 0 10px; top: -8px; position: relative; }
+#AddSeries { position: absolute; top: 4px; right: 5%; font-weight: bold; font-size: 22px; border: 1px solid grey; text-align: center; width: 30px; border-radius: 10px; }
