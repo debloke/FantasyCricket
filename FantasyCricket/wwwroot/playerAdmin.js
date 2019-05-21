@@ -7,13 +7,18 @@ var ALL_PLAYERS = [];
  * @returns        N/A                                                       *
  ****************************************************************************/
 $(function() {
-    $.ajax({
-        url: "http://localhost:5000/api/player/?tournament=ODI"
-    })
-    .done(function( data ) {
-        ALL_PLAYERS = data;
-        processData();
-    });
+    let utility = new UtilityClass(); 
+    // AJAX call
+    utility.getRequest(
+        "/api/player/?tournament=ODI",
+        function( data ) {
+            ALL_PLAYERS = data;
+            processData();
+        },
+        function(err) {
+            alert( "Unable to fetch all players data" );
+        }
+    );
 });    
    
  /****************************************************************************
@@ -43,6 +48,7 @@ function processData() {
 }
 
 function displayPlayerDetailForChange(id) {
+    let utility = new UtilityClass(); 
     let editPlayer = {
         "Name":"",
         "team":"",
@@ -69,22 +75,24 @@ function displayPlayerDetailForChange(id) {
     $(".close").bind("click", function() {
         $("#inputPopup").hide();
     });
+
+
     $(".submitPlayer").bind("click", function() {
-        let url = ["http://localhost:5000/api/player"];
+        let url = ["/api/player"];
         url.push(playerId);
         url.push($(".editPlayerData.cost").val());
         url.push($(".editPlayerData.role").val());
         url.push("?tournament=ODI");
         // AJAX call
-        $.ajax({
-            type: "PUT",
-            url: url.join("/")
-        })
-        .done(function( data ) {
-            location.reload(true);
-        }).fail(function(err) {
-            alert( "error : " + err );
-        });
+        utility.putRequest(
+            url.join("/"),
+            function( data ) {
+                location.reload(true);
+            },
+            function(err) {
+                alert( "Unable to update player data" );
+            }
+        );
         $("#inputPopup").hide();
     });
 }
