@@ -63,16 +63,19 @@ namespace FantasyCricket.Database
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
                                      [Series] (
                                      [Seriesid]     INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     [Seriesname]     VARCHAR(255) NOT NULL)";
+                                     [Seriesname]     VARCHAR(255) NOT NULL UNIQUE)";
             sqlite_cmd.ExecuteNonQuery();
 
-            // Create Mateches Table
+            // Create Matches Table
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
                                      [Match] (
                                      [unique_id]     INTEGER NOT NULL PRIMARY KEY,
                                      [MatchTime]     DATETIME NOT NULL,
+                                     [Seriesid]     INTEGER,
+                                     [Type] VARCHAR(255) NOT NULL,
                                       [team1]     VARCHAR(255) NOT NULL,  
- [team2]     VARCHAR(255) NOT NULL )";
+                                      [team2]     VARCHAR(255) NOT NULL ,
+                                      FOREIGN KEY(Seriesid) REFERENCES Series(Seriesid))";
             sqlite_cmd.ExecuteNonQuery();
 
             // Create User Table

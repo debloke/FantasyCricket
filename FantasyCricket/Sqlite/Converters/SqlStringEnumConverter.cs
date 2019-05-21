@@ -22,10 +22,10 @@ namespace Sqlite.Converters
 
             if (value.GetType() == typeof(string))
             {
-                return Enum.Parse(objectType, Convert.ToString(value), true);
+                return Enum.Parse(objectType, Convert.ToString(value).Replace(" ", ""), true);
             }
 
-                // Assuming it is an 'int' type (so no parsing required)
+            // Assuming it is an 'int' type (so no parsing required)
             return value;
         }
 
