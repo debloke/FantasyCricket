@@ -1,5 +1,4 @@
 ﻿using Common.Net.Extensions;
-using FantasyCricket.Converter;
 using FantasyCricket.Database;
 using FantasyCricket.Models;
 using Newtonsoft.Json;
@@ -14,6 +13,9 @@ namespace FantasyCricket.Service
         private readonly HttpClient httpClient = new HttpClient();
 
         private static readonly string SQLSELECTMATCH = "SELECT * FROM Match";
+
+
+        private static readonly string SQLSELECTSERIES = "SELECT * FROM Series";
 
         private static readonly string CREATESERIES = "INSERT OR REPLACE INTO [Series] (  Seriesname ) VALUES (  @Seriesname)";
         private static readonly string ADDORUPDATEMATCH = "INSERT OR REPLACE INTO [Match] (  uniqie_id, MatchTime, Seriesid, Type,team1,team2 ) VALUES ( @uniqie_id, @MatchTime, @Seriesid, @Type,@team1,@team2)";
@@ -69,8 +71,24 @@ namespace FantasyCricket.Service
 
         public Match[] GetUnAssignedMatches()
         {
-            Matches matches =  JsonConvert.DeserializeObject<Matches>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/matches?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2")));
+            Matches matches = JsonConvert.DeserializeObject<Matches>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/matches?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2")));
             return matches.AllMatch;
+        }
+
+        public Series[] GetSeries()
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(SQLSELECTSERIES, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        return reader.ReadAll<Series>();
+                    }
+                }
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ namespace FantasyCricket.Service
     {
         Match[] GetMatches();
 
+        Series[] GetSeries();
+
         Match[] GetUnAssignedMatches();
 
         void CreateSeries(string seriesName);

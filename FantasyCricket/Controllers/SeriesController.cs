@@ -1,7 +1,6 @@
 ﻿using FantasyCricket.Models;
 using FantasyCricket.Service;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 
 namespace FantasyCricket.Controllers
@@ -18,9 +17,17 @@ namespace FantasyCricket.Controllers
 
         // GET api/series
         [HttpGet]
-        public ActionResult<IEnumerable<Match>> Get()
+        [Route("matches")]
+        public ActionResult<IEnumerable<Match>> GetSeriesMatches()
         {
             return seriesInfo.GetMatches();
+        }
+
+        // GET api/series
+        [HttpGet]
+        public ActionResult<IEnumerable<Series>> GetSeries()
+        {
+            return seriesInfo.GetSeries();
         }
 
         // GET api/series
