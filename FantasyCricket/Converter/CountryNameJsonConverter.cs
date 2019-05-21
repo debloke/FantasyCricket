@@ -1,6 +1,8 @@
 ﻿using FantasyCricket.Service;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 
 namespace FantasyCricket.Converter
 {
@@ -31,7 +33,9 @@ namespace FantasyCricket.Converter
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            value.ToString();
+
+            writer.WriteValue(value.ToString());
+           
         }
     }
 }

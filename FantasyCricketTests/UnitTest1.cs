@@ -30,7 +30,7 @@ namespace FantasyCricketTests
 
             Matches matches = JsonConvert.DeserializeObject<Matches>(matchJson);
 
-            Console.WriteLine(matches);
+            Console.WriteLine(JsonConvert.SerializeObject(matches.AllMatch[0]));
         }
 
 
