@@ -1,0 +1,145 @@
+body { position:absolute; width:100%; height:100%; left:0; right:0; padding:0; margin:0; background-color:#39387b; background: -webkit-linear-gradient(top, #9563f7 0%,#4af697 100%); background-attachment: fixed; }
+.loginPageBG { background-image: url("images/background.png"); background-repeat: no-repeat; background-size: cover; }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { box-shadow: inset 0 0 5px grey; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: red; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #b30000; }
+
+.selected { background: #ef285f !important; }
+
+/* CSS FOR NAVIGATION START */
+nav {
+    margin: 25px auto; padding: 0 0 0 5px; border-width: 1px; border-style: solid; border-top-color: #e4e8ce; border-bottom-color: #32371a;
+    border-left-color: #b3be78; border-right-color: #b3be78; background: #60cc9a; width: 90%; height: 50px;
+    -moz-box-shadow: #32371a 0 -10px 40px -10px inset; -webkit-box-shadow: #32371a 0 -10px 40px -10px inset; box-shadow: #32371a 0 -10px 40px -10px inset; }
+nav ul { margin: 0; position: relative; z-index: 10; }
+nav ul li { padding: 0 5px; float: left; list-style: none; width: 15%; }
+nav ul li a { font: bold 17px Arial Narrow, sans-serif; color: #fff; text-decoration: none; text-transform: uppercase; padding: 13px 11px; display: block; }
+nav ul li a div { position: relative; z-index: 1; background-image: -webkit-linear-gradient(#32358e 45%, #52592a);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: #fff; text-align: center; }
+nav:before, nav ul li a:hover:before, nav ul li a.current:before {display: block; content: ""; }
+nav, nav:before, nav ul li a:hover, nav ul li a.current, nav ul li a:hover:before, nav ul li a.current:before {
+    -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; }
+nav ul li a div:after {
+    background: none; content: attr(data-text); left: 0; position: absolute; top: 0; z-index: -1; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6); }
+nav ul li a:hover, nav ul li a.current {
+    padding: 19px 11px; margin: -7px -1px -11px; text-decoration: none; position: relative; background: #ef285f; border: 1px solid #b7055f;
+    -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #120e09 0 -10px 40px -10px inset; }
+nav ul li a:hover:before, nav ul li a.current:before {
+    width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; -moz-box-shadow: rgba(0, 0, 0, 0.5) 0 0 35px 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 0 35px 0; box-shadow: rgba(0, 0, 0, 0.5) 0 0 35px 0; }
+/* CSS FOR NAVIGATION END */
+
+/* CSS FOR MAIN SCREEN START */
+#mainContent{ color: white; width: 88%; left: 5%; bottom: 30px; top: 100px; position: absolute; padding: 1%;
+    border: 1px solid white; border-radius: 5px; margin: 0 auto; overflow: hidden; }
+.roundedBoxContainer { margin: 0 auto; }
+.roundedBox { border: 5px solid #c46488; height: 150px; width: 150px; float: left; margin: 10px; padding: 0; position: relative;
+    border-radius: 50px; background: #ef285f; color: black; font: bold 14 sans-serif; }
+.leftItems { position: absolute; width: 50%; height: 100%; }
+.rightItems { position: absolute; width: 50%; right: 0; height: 100%; }
+.leftItems > div { margin: auto 0; display: inline; width: 80%; position: absolute; height: 40%; top: 25%; padding: 10%; }
+.leftItems > div > img { height: 100%; }
+.rightItems > div { height: 50px; margin: 0 auto; line-height: 25px; text-align: center; top: 35px; position: relative; width: 85%; padding-right: 15%; }
+.rightHeader { margin-bottom: 0; }
+.rightContent { margin-top: 0; }
+/* CSS FOR MAIN SCREEN END */
+
+/* CSS FOR POPUP START */
+#inputPopup { display: none; }
+.glassBackground { position: absolute; left: 0; right: 0; top: 0; bottom: 0; padding: 0; z-index: 10; opacity: 0.8; background: #000; }
+.inputContainer { width: 80%; height: 80%; margin: 0 auto; z-index: 10; position: absolute; left: 10%; line-height: 60px; text-align: center; top: 10%; }
+.boundary { border: 1px solid white; width: 60%; height: 80%; top: 10%; left: 20%; position: absolute; border-radius: 50%; background: #38dc63; }
+.innerCircle { position: absolute; width: 50%; height: 50%; border: 1px solid white; left: 25%; top: 25%; border-radius: 50%; }
+.pitch { position: absolute; width: 20%; height: 60%; top: 20%; left: 40%; background: #b7b719; }
+.close { position: absolute; right: 0; top: 0; color: red; width: 30px; height: 30px; border: 2px solid #80862d; line-height: 2; border-radius: 15px; }
+.playerInGrid { position: absolute; height: 20px; width: 100px; line-height: 1; font-size: 10px; }
+/* CSS FOR POPUP END */
+
+/* CSS FOR TEAM START */
+.myTeam { float: left; width: 40%; height: 100%; overflow: auto; position: relative; }
+.teamList { float: right; width: 60%; height: 100%; overflow: auto; }
+.leftTeamItems { float:left; width:20%; }
+.centerTeamItems { float:left; width:58%; }
+.rightTeamItems { float:left; width:20%; }
+.myTeam ul { list-style: none; padding: 0; margin: 0; }
+#saveteam { position: absolute; top: 10px; right: 10px; padding: 10px; border-radius: 10px; background: #ea988a; color: black; }
+.teamList ul { list-style: none; padding: 0; }
+.leftTeamItems ul li { padding: 9px; background: #6b9ea0; border-bottom: 1px solid grey; }
+.rightTeamItems ul li { padding: 9px; background: #6b9ea0; border-bottom: 1px solid grey; }
+.centerTeamItems ul li { padding: 3px 10px; background: #2a546d; border-bottom: 1px solid grey; height: 15px; }
+span.playerName { width: 50%; float: left; }
+span.playerTeam { width: 35%; float: left; }
+span.playerPrice { width: 10%; float: left; }
+span.addPlayer { width: 5%; float: left; }
+.myTeam > div { display: -webkit-box; }
+.myTeam li { float: left; padding: 5px; border: 1px solid grey; border-radius: 10px; text-align: center; width: 200px; margin: 10px; height: 30px; background: #ef285f; }
+.allCountries { height:30px; width: 40px; background: url(../icons/flags/flags.png) no-repeat; }
+
+/* COUNTRIES START */
+.India { background-position: -200px -180px; }
+.Pakistan { background-position: -280px -180px; }
+.Australia { background-position: 0 -30px; }
+.Afganistan { background-position: -40px 0; }
+.Bangladesh { background-position: -80px -30px; }
+.England { background-position: 0 -150px; }
+.NewZealand { background-position: -280px -120px; }
+.SouthAfrica { background-position: -280px -270px; }
+.SriLanka { background-position: -320px -210px; }
+.WestIndies { background-position: -200px -330px; }
+/* COUNTRIES END */
+
+/* CSS FOR TEAM START */
+.roles { width: 18px; position: relative; top: -5px; left: 4px; }
+.playerInGrid .roles { top: 7px; left: -8px; }
+.iconContainer { float: left; width: 60px; }
+.playerInfo { float: left; font-size: 12px; margin: 8px 0 0 8px; }
+img.deletePlayer { width: 23px; float: right; }
+
+.iconContainer { float:left; width: 60px; }
+.pPrice { margin-left: 6px; }
+#errorMessage { color: red; font-weight: bold; font-size: 18px; }
+/* CSS FOR TEAM END */
+
+/* CSS FOR LIVE DATA START */
+.liveData { height: 100%; overflow: auto; }
+/* CSS FOR LIVE DATA END */
+
+/* CSS FOR LOGIN SCREEN START */
+.loginBlock { text-align: right; }
+.loginBlock > div { display: inline-block; padding: 20px; margin-top: 5%; margin-right: 5%; border: 5px solid #fbff0f; border-radius: 10px; font-family: sans-serif; }
+.loginBlock > div td:nth-child(2n+1) { padding-right: 25px; }
+.loginBlock > div input { border: none; border-radius: 10px; padding: 5px 20px; }
+.registerLink { position: absolute; right: 20px; top: 10px; color: #000000; font-size: 18px; font-weight: bold; font-family: sans-serif; }
+#errorMessageBox { color: red; font-weight: bold; }
+/* CSS FOR LOGIN SCREEN END */
+
+/* CSS FOR REGISTER SCREEN START */
+button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca57; }
+/* CSS FOR REGISTER SCREEN END */
+
+/* CSS FOR LEAGUE SCREEN START */
+#leagueList { position: absolute; width: 25%; overflow: auto; }
+#leagueList ul { list-style: none; padding: 0; margin: 0; }
+#leagueList ul li { padding: 10px 20px; background: #46e285; border: 1px solid grey; }
+#leagueInfo { position: absolute; width: 70%; left: 30%; overflow: auto; text-align: center; }
+#leagueInfo table { width: 80%; background: grey; }
+#leagueInfo table th { background: yellow; color: red; }
+#leagueInfo table td { border: none; }
+/* CSS FOR LEAGUE SCREEN END */
+
+/* CSS FOR PLAYER ADMIN SCREEN START */
+.playerAdminBlock { position: absolute; width: 80%; left: 10%; text-align: center; top: 50px; }
+.playerAdmin { display: inline-block; width: 96%; border: 1px solid grey; border-radius: 15px; padding: 2%; }
+.playerAdmin table { width: 100%; }
+.playerAdmin table th { color: #50d266; font-size: 20px; padding-bottom: 10px; }
+.playerAdmin table th, .playerAdmin table td { text-align: left; }
+.playerAdmin table th h3 { text-align: center; color: #a99742; font-size: 24px; margin: 0; border-bottom: 1px solid grey; }
+.playerAdmin table td span { position: relative; top: -8px; left: 10px; }
+
+.inputContainerAdmin { width: 40%; margin: 0 auto; z-index: 10; position: absolute; left: 30%; line-height: 35px; top: 10%; }
+.inputContainerAdmin > .editPopup { background: yellow; border-radius: 10px; padding: 16px; }
+.inputContainerAdmin > .editPopup table { width: 100%; }
+.inputContainerAdmin .close { position: absolute; right: 5px; top: 5px; color: red; width: 30px; height: 30px; border: 2px solid #80862d; border-radius: 15px; text-align: center; }
+/* CSS FOR PLAYER ADMIN SCREEN END */

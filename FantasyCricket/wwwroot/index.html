@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js"> </script>
+        <script type="text/javascript" src="util/utility.js"> </script>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <title>Fantasy League</title>
+    </head>
+    <body class="loginPageBG">
+        <script type="text/javascript">
+            let utility = new UtilityClass();
+            function register() {
+                window.location.href = "register.html";
+            }
+            function login() {
+                // AJAX call
+                utility.postRequest(
+                    "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val(),
+                    function( data ) {
+                        localStorage.loggedInUser = $("#userName").val();
+                        window.location.href = "main.html";
+                    },
+                    function() {
+                        $("#errorMessageBox").html( "Unable to Login" );
+                    }
+                );
+            }
+        </script>
+        <a href="#" class="registerLink" onclick="register()">Register</a>
+        <div class="loginBlock">
+            <div>
+                <table>
+                    <tr>
+                        <th colspan="2"><h3>Login</h3></th>
+                    </tr>
+                    <tr>
+                        <td>User Name</td>
+                        <td><input id="userName" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input id="password" type="password"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button onclick="login()">Login</button></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><span id="errorMessageBox"></span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

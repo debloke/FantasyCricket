@@ -1,0 +1,610 @@
+﻿{
+  "dateTimeGMT": "2019-05-02T14:30:00.000Z",
+  "data": {
+    "fielding": [
+      {
+        "title": "Fielding for Mumbai Indians Innings",
+        "scores": [
+          {
+            "name": "Mohammad Nabi",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 2,
+            "pid": "25913"
+          },
+          {
+            "name": "RG Sharma",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "34102"
+          },
+          {
+            "name": "V Shankar",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "477021"
+          },
+          {
+            "name": "Rashid Khan",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "793463"
+          }
+        ]
+      },
+      {
+        "title": "Fielding for Sunrisers Hyderabad Innings",
+        "scores": [
+          {
+            "name": "KA Pollard",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "230559"
+          },
+          {
+            "name": "Q de Kock",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "379143"
+          },
+          {
+            "name": "E Lewis",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "431901"
+          },
+          {
+            "name": "SA Yadav",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 0,
+            "catch": 1,
+            "pid": "446507"
+          },
+          {
+            "name": "KH Pandya",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 1,
+            "catch": 0,
+            "pid": "471342"
+          },
+          {
+            "name": "JJ Bumrah",
+            "runout": 0,
+            "stumped": 0,
+            "bowled": 0,
+            "lbw": 1,
+            "catch": 0,
+            "pid": "625383"
+          }
+        ]
+      }
+    ],
+    "bowling": [
+      {
+        "scores": [
+          {
+            "6s": 0,
+            "4s": 4,
+            "0s": 10,
+            "Econ": "7.25",
+            "W": "1",
+            "R": "29",
+            "M": "0",
+            "O": "4",
+            "bowler": "B Kumar",
+            "pid": "326016"
+          },
+          {
+            "6s": 2,
+            "4s": 5,
+            "0s": 9,
+            "Econ": "10.50",
+            "W": "3",
+            "R": "42",
+            "M": "0",
+            "O": "4",
+            "bowler": "KK Ahmed",
+            "pid": "942645"
+          },
+          {
+            "6s": 1,
+            "4s": 1,
+            "0s": 9,
+            "Econ": "6.00",
+            "W": "1",
+            "R": "24",
+            "M": "0",
+            "O": "4",
+            "bowler": "Mohammad Nabi",
+            "pid": "25913"
+          },
+          {
+            "6s": 1,
+            "4s": 1,
+            "0s": 11,
+            "Econ": "5.25",
+            "W": "0",
+            "R": "21",
+            "M": "0",
+            "O": "4",
+            "bowler": "Rashid Khan",
+            "pid": "793463"
+          },
+          {
+            "6s": 2,
+            "4s": 4,
+            "0s": 8,
+            "Econ": "10.00",
+            "W": "0",
+            "R": "40",
+            "M": "0",
+            "O": "4",
+            "bowler": "Basil Thampi",
+            "pid": "732291"
+          }
+        ],
+        "title": "Bowling To Mumbai Indians Innings"
+      },
+      {
+        "scores": [
+          {
+            "6s": 1,
+            "4s": 3,
+            "0s": 3,
+            "Econ": "12.00",
+            "W": "0",
+            "R": "24",
+            "M": "0",
+            "O": "2",
+            "bowler": "BB Sran",
+            "pid": "537126"
+          },
+          {
+            "6s": 2,
+            "4s": 5,
+            "0s": 8,
+            "Econ": "10.75",
+            "W": "0",
+            "R": "43",
+            "M": "0",
+            "O": "4",
+            "bowler": "SL Malinga",
+            "pid": "49758"
+          },
+          {
+            "6s": 0,
+            "4s": 5,
+            "0s": 9,
+            "Econ": "7.75",
+            "W": "2",
+            "R": "31",
+            "M": "0",
+            "O": "4",
+            "bowler": "JJ Bumrah",
+            "pid": "625383"
+          },
+          {
+            "6s": 0,
+            "4s": 2,
+            "0s": 10,
+            "Econ": "5.25",
+            "W": "0",
+            "R": "21",
+            "M": "0",
+            "O": "4",
+            "bowler": "RD Chahar",
+            "pid": "1064812"
+          },
+          {
+            "6s": 0,
+            "4s": 1,
+            "0s": 6,
+            "Econ": "5.50",
+            "W": "2",
+            "R": "22",
+            "M": "0",
+            "O": "4",
+            "bowler": "KH Pandya",
+            "pid": "471342"
+          },
+          {
+            "6s": 2,
+            "4s": 0,
+            "0s": 4,
+            "Econ": "10.00",
+            "W": "2",
+            "R": "20",
+            "M": "0",
+            "O": "2",
+            "bowler": "HH Pandya",
+            "pid": "625371"
+          }
+        ],
+        "title": "Bowling To Sunrisers Hyderabad Innings"
+      }
+    ],
+    "batting": [
+      {
+        "scores": [
+          {
+            "dismissal-by": {
+              "name": "Mohammad Nabi",
+              "pid": "25913"
+            },
+            "dismissal": "catch",
+            "SR": 133,
+            "6s": 0,
+            "4s": 5,
+            "B": 18,
+            "R": 24,
+            "dismissal-info": "c Mohammad Nabi b Ahmed",
+            "batsman": "RG Sharma (c)",
+            "pid": "34102"
+          },
+          {
+            "dismissal": "not out",
+            "SR": 118,
+            "6s": 2,
+            "4s": 6,
+            "B": 58,
+            "R": 69,
+            "dismissal-info": "not out",
+            "batsman": "Q de Kock  ",
+            "pid": "379143"
+          },
+          {
+            "dismissal-by": {
+              "name": "Rashid Khan",
+              "pid": "793463"
+            },
+            "dismissal": "catch",
+            "SR": 135,
+            "6s": 1,
+            "4s": 3,
+            "B": 17,
+            "R": 23,
+            "dismissal-info": "c Rashid Khan b Ahmed",
+            "batsman": "SA Yadav",
+            "pid": "446507"
+          },
+          {
+            "dismissal-by": {
+              "name": "V Shankar",
+              "pid": "477021"
+            },
+            "dismissal": "catch",
+            "SR": 16,
+            "6s": 0,
+            "4s": 0,
+            "B": 6,
+            "R": 1,
+            "dismissal-info": "c Shankar b Mohammad Nabi",
+            "batsman": "E Lewis",
+            "pid": "431901"
+          },
+          {
+            "dismissal-by": {
+              "name": "Mohammad Nabi",
+              "pid": "25913"
+            },
+            "dismissal": "catch",
+            "SR": 180,
+            "6s": 1,
+            "4s": 1,
+            "B": 10,
+            "R": 18,
+            "dismissal-info": "c Mohammad Nabi b Kumar",
+            "batsman": "HH Pandya",
+            "pid": "625371"
+          },
+          {
+            "dismissal-by": {
+              "name": "RG Sharma",
+              "pid": "34102"
+            },
+            "dismissal": "catch",
+            "SR": 111,
+            "6s": 1,
+            "4s": 0,
+            "B": 9,
+            "R": 10,
+            "dismissal-info": "c Abhishek Sharma b Ahmed",
+            "batsman": "KA Pollard",
+            "pid": "230559"
+          },
+          {
+            "dismissal": "not out",
+            "SR": 300,
+            "6s": 1,
+            "4s": 0,
+            "B": 3,
+            "R": 9,
+            "dismissal-info": "not out",
+            "batsman": "KH Pandya",
+            "pid": "471342"
+          },
+          {
+            "SR": "",
+            "6s": "",
+            "4s": "",
+            "B": "",
+            "R": "",
+            "dismissal-info": "",
+            "detail": "8 (lb 6, nb 1, w 1)",
+            "batsman": "Extras",
+            "pid": 0
+          }
+        ],
+        "title": "Mumbai Indians Innings"
+      },
+      {
+        "scores": [
+          {
+            "dismissal-by": {
+              "name": "E Lewis",
+              "pid": "431901"
+            },
+            "dismissal": "catch",
+            "SR": 166,
+            "6s": 0,
+            "4s": 5,
+            "B": 15,
+            "R": 25,
+            "dismissal-info": "c Lewis b Bumrah",
+            "batsman": "WP Saha  ",
+            "pid": "279810"
+          },
+          {
+            "dismissal-by": {
+              "name": "JJ Bumrah",
+              "pid": "625383"
+            },
+            "dismissal": "lbw",
+            "SR": 136,
+            "6s": 1,
+            "4s": 1,
+            "B": 11,
+            "R": 15,
+            "dismissal-info": "lbw b Bumrah",
+            "batsman": "MJ Guptill",
+            "pid": "226492"
+          },
+          {
+            "dismissal": "not out",
+            "SR": 151,
+            "6s": 2,
+            "4s": 8,
+            "B": 47,
+            "R": 71,
+            "dismissal-info": "not out",
+            "batsman": "MK Pandey",
+            "pid": "290630"
+          },
+          {
+            "dismissal-by": {
+              "name": "KH Pandya",
+              "pid": "471342"
+            },
+            "dismissal": "lbw",
+            "SR": 42,
+            "6s": 0,
+            "4s": 0,
+            "B": 7,
+            "R": 3,
+            "dismissal-info": "lbw b KH Pandya",
+            "batsman": "KS Williamson (c)",
+            "pid": "277906"
+          },
+          {
+            "dismissal-by": {
+              "name": "KA Pollard",
+              "pid": "230559"
+            },
+            "dismissal": "catch",
+            "SR": 70,
+            "6s": 0,
+            "4s": 0,
+            "B": 17,
+            "R": 12,
+            "dismissal-info": "c Pollard b KH Pandya",
+            "batsman": "V Shankar",
+            "pid": "477021"
+          },
+          {
+            "dismissal-by": {
+              "name": "Q de Kock",
+              "pid": "379143"
+            },
+            "dismissal": "catch",
+            "SR": 66,
+            "6s": 0,
+            "4s": 0,
+            "B": 3,
+            "R": 2,
+            "dismissal-info": "c  de Kock b HH Pandya",
+            "batsman": "Abhishek Sharma",
+            "pid": "1070183"
+          },
+          {
+            "dismissal-by": {
+              "name": "SA Yadav",
+              "pid": "446507"
+            },
+            "dismissal": "catch",
+            "SR": 155,
+            "6s": 2,
+            "4s": 2,
+            "B": 20,
+            "R": 31,
+            "dismissal-info": "c Yadav b HH Pandya",
+            "batsman": "Mohammad Nabi",
+            "pid": "25913"
+          },
+          {
+            "dismissal": "not out",
+            "SR": 0,
+            "6s": 0,
+            "4s": 0,
+            "B": 0,
+            "R": 0,
+            "dismissal-info": "not out",
+            "batsman": "Rashid Khan",
+            "pid": "793463"
+          },
+          {
+            "SR": "",
+            "6s": "",
+            "4s": "",
+            "B": "",
+            "R": "",
+            "dismissal-info": "",
+            "detail": "3 (lb 1, w 2)",
+            "batsman": "Extras",
+            "pid": 0
+          }
+        ],
+        "title": "Sunrisers Hyderabad Innings"
+      }
+    ],
+    "team": [
+      {
+        "players": [
+          {
+            "name": "RG Sharma",
+            "pid": "34102"
+          },
+          {
+            "name": "Q de Kock",
+            "pid": "379143"
+          },
+          {
+            "name": "SA Yadav",
+            "pid": "446507"
+          },
+          {
+            "name": "E Lewis",
+            "pid": "431901"
+          },
+          {
+            "name": "HH Pandya",
+            "pid": "625371"
+          },
+          {
+            "name": "KA Pollard",
+            "pid": "230559"
+          },
+          {
+            "name": "KH Pandya",
+            "pid": "471342"
+          },
+          {
+            "name": "BB Sran",
+            "pid": "537126"
+          },
+          {
+            "name": "RD Chahar",
+            "pid": "1064812"
+          },
+          {
+            "name": "SL Malinga",
+            "pid": "49758"
+          },
+          {
+            "name": "JJ Bumrah",
+            "pid": "625383"
+          }
+        ],
+        "name": "Mumbai Indians"
+      },
+      {
+        "players": [
+          {
+            "name": "WP Saha",
+            "pid": "279810"
+          },
+          {
+            "name": "MJ Guptill",
+            "pid": "226492"
+          },
+          {
+            "name": "MK Pandey",
+            "pid": "290630"
+          },
+          {
+            "name": "KS Williamson",
+            "pid": "277906"
+          },
+          {
+            "name": "V Shankar",
+            "pid": "477021"
+          },
+          {
+            "name": "Abhishek Sharma",
+            "pid": "1070183"
+          },
+          {
+            "name": "Mohammad Nabi",
+            "pid": "25913"
+          },
+          {
+            "name": "Rashid Khan",
+            "pid": "793463"
+          },
+          {
+            "name": "B Kumar",
+            "pid": "326016"
+          },
+          {
+            "name": "KK Ahmed",
+            "pid": "942645"
+          },
+          {
+            "name": "Basil Thampi",
+            "pid": "732291"
+          }
+        ],
+        "name": "Sunrisers Hyderabad"
+      }
+    ],
+    "man-of-the-match": {
+      "name": "JJ Bumrah",
+      "pid": "625383"
+    },
+    "toss_winner_team": "Mumbai Indians",
+    "matchStarted": true
+  },
+  "type": "Twenty20",
+  "cache3": true,
+  "creditsLeft": 240,
+  "v": "1",
+  "ttl": 7,
+  "provider": {
+    "source": "Various",
+    "url": "https://cricapi.com/",
+    "pubDate": "2019-05-03T01:07:45.392Z"
+  }
+}

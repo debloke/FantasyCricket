@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js"> </script>
+        <script type="text/javascript" src="util/utility.js"> </script>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <title>Fantasy League</title>
+    </head>
+    <body class="loginPageBG">
+        <script type="text/javascript">
+            let utility = new UtilityClass();
+            function register() {               
+                // AJAX call
+                utility.putRequest(
+                    "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val() + "&displayname=" + $("#displayName").val(),
+                    function( data ) {
+                        window.location.href = "index.html";
+                    },
+                    function(err) {
+                        alert( "Unable to register" );
+                    }
+                );
+            }
+        </script>
+        <div class="loginBlock">
+            <div>
+                <table>
+                    <tr>
+                        <th colspan="2"><h3>Register</h3></th>
+                    </tr>
+                    <tr>
+                        <td>Display Name</td>
+                        <td><input id="displayName" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td>User Name</td>
+                        <td><input id="userName"  type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input id="password" type="password"/></td>
+                    </tr>
+                    <tr>
+                        <td></td><td><button onclick="register()">Submit</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
