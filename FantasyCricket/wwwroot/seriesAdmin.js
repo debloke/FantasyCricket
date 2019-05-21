@@ -7,30 +7,57 @@ var ALL_PLAYERS = [];
  * @returns        N/A                                                       *
  ****************************************************************************/
 $(function() {
-    // DUMMY
-    // TO BE REPLACED WITH REAL DATA
-    let seriesData = [
-        {
-            "SeriesName" : "ICC World Cup",
-            "Type" : "ODI",
-            "Matches" : [
-                { "Date" : "30 May, 2019", "Team1" : "England", "Team2" : "South Africa" },
-                { "Date" : "31 May, 2019", "Team1" : "West Indies", "Team2" : "Pakistan" },
-                { "Date" : "1 Jun, 2019", "Team1" : "New Zealand", "Team2" : "Sri Lanka" },
-                { "Date" : "1 Jun, 2019", "Team1" : "Australia", "Team2" : "Afganistan" }
-            ]
-        },
-        {
-            "SeriesName" : "ICC Champions Trophy",
-            "Type" : "ODI",
-            "Matches" : [
-                { "Date" : "3 May, 2020", "Team1" : "India", "Team2" : "South Africa" },
-                { "Date" : "4 May, 2020", "Team1" : "West Indies", "Team2" : "Pakistan" },
-                { "Date" : "1 Jun, 2020", "Team1" : "England", "Team2" : "Sri Lanka" },
-                { "Date" : "2 Jun, 2020", "Team1" : "Bangladesh", "Team2" : "Afganistan" }
-            ]
-        }
-    ];
+    let utility = new UtilityClass();
+    
+    // Promise to fetch Series info
+    let seriesPromise = new Promise(function(resolve, reject) {
+        utility.getRequest(
+            "/api/series",
+            function( data ) {
+                resolve(data);
+            },
+            function(err) {
+                alert( "Unable to fetch Live data" );
+            }
+        );
+    });
+    
+    // Promise to fetch Series info
+    let matchesPromise = new Promise(function(resolve, reject) {
+        utility.getRequest(
+            "/api/series/matches",
+            function( data ) {
+                resolve(data);
+            },
+            function(err) {
+                alert( "Unable to fetch Live data" );
+            }
+        );
+    });
+
+    let tempData = {};
+    Promise.all([seriesPromise, matchesPromise]).then(function(values) {
+        let seriesData = values[0];
+        let matchData = values[1];
+        let objSeries = {};
+        seriesData.map(function(sD) {
+            tempData[sD.SeriesId] = {
+                "SeriesName" : sD.SeriesName,
+                "Type" : "ODI",
+                "Matches" : []
+            };
+        });
+        matchData.map(function(mD) {
+            tempData[mD.SeriesId].Mathes.push({
+                "Date" : mD.dateTimeGMT,
+                "Team1" : md["team-1"],
+                "Team2" : md["team-1"]
+            });
+        });
+        
+    });
+    
+    let seriesData = Object.values(tempData);
     processData(seriesData);
 });
 
