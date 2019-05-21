@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 
 namespace FantasyCricket
 {
@@ -29,6 +30,11 @@ namespace FantasyCricket
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+
+            services.AddMvc()
+        .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton<ILiveScore, CricApiLiveScore>();

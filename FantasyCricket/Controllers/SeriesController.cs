@@ -39,8 +39,8 @@ namespace FantasyCricket.Controllers
         }
 
         // POST api/series
-        [HttpPost]
-        public void CreateSeries([FromQuery(Name = "seriesname")] string seriesName)
+        [HttpPost("{seriesname}")]
+        public void CreateSeries(string seriesName)
         {
             seriesInfo.CreateSeries(seriesName);
         }

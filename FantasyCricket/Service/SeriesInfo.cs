@@ -18,7 +18,7 @@ namespace FantasyCricket.Service
         private static readonly string SQLSELECTSERIES = "SELECT * FROM Series";
 
         private static readonly string CREATESERIES = "INSERT OR REPLACE INTO [Series] (  Seriesname ) VALUES (  @Seriesname)";
-        private static readonly string ADDORUPDATEMATCH = "INSERT OR REPLACE INTO [Match] (  uniqie_id, MatchTime, Seriesid, Type,team1,team2 ) VALUES ( @uniqie_id, @MatchTime, @Seriesid, @Type,@team1,@team2)";
+        private static readonly string ADDORUPDATEMATCH = "INSERT OR REPLACE INTO [Match] (  unique_id, MatchTime, Seriesid, Type,team1,team2 ) VALUES ( @unique_id, @MatchTime, @Seriesid, @Type,@team1,@team2)";
 
         public void AddMatch(Match match)
         {
@@ -28,7 +28,7 @@ namespace FantasyCricket.Service
                 using (SQLiteCommand insertCommand = new SQLiteCommand(ADDORUPDATEMATCH, connection))
                 {
                     insertCommand.CommandType = System.Data.CommandType.Text;
-                    insertCommand.Parameters.AddWithValue("@uniqie_id", match.MatchId);
+                    insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
                     insertCommand.Parameters.AddWithValue("@MatchTime", match.MatchStartTime);
                     insertCommand.Parameters.AddWithValue("@Seriesid", match.SeriesId);
                     insertCommand.Parameters.AddWithValue("@Type", match.Type);
