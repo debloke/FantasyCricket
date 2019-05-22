@@ -73,6 +73,7 @@ namespace FantasyCricket.Database
                                      [MatchTime]     DATETIME NOT NULL,
                                      [Seriesid]     INTEGER,
                                      [Type] VARCHAR(255) NOT NULL,
+                                     [Status]	VARCHAR(255) DEFAULT 0,
                                       [team1]     VARCHAR(255) NOT NULL,  
                                       [team2]     VARCHAR(255) NOT NULL ,
                                       FOREIGN KEY(Seriesid) REFERENCES Series(Seriesid))";

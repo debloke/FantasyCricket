@@ -5,12 +5,16 @@ using Newtonsoft.Json.Converters;
 using Sqlite.Converters;
 using Sqlite.SqliteAttributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FantasyCricket.Models
 {
+    public enum MatchStatus
+    {
+        NOTSTARTED,
+        STARTED,
+        FINISHED,
+        CANCELLED
+    }
     public class Match
     {
 
@@ -30,7 +34,7 @@ namespace FantasyCricket.Models
         [JsonProperty("type")]
         public string Type { get; set; }
 
-        [SQLiteColumn("team1",ConverterType=typeof(SqlStringEnumConverter))]
+        [SQLiteColumn("team1", ConverterType = typeof(SqlStringEnumConverter))]
         [JsonProperty("team-1")]
         [JsonConverter(typeof(CountryNameJsonConverter))]
         public CountryTeamName Team1 { get; set; }
@@ -39,6 +43,10 @@ namespace FantasyCricket.Models
         [JsonProperty("team-2")]
         [JsonConverter(typeof(CountryNameJsonConverter))]
         public CountryTeamName Team2 { get; set; }
+
+        [SQLiteColumn("Status", ConverterType = typeof(SqlStringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public MatchStatus Status { get; set; }
 
     }
 }
