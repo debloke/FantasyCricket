@@ -14,7 +14,7 @@ namespace FantasyCricket.Service
 
         private readonly HttpClient httpClient = new HttpClient();
 
-        private static readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ) VALUES (  @username, @password, @displayname)";
+        private static readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
         private static readonly string SELECTUSER = "SELECT magickey,lastlogin FROM [User] where username = @username and password = @password";
 
@@ -47,6 +47,7 @@ namespace FantasyCricket.Service
                     command.Parameters.AddWithValue("@username", username);
                     command.Parameters.AddWithValue("@password", password);
                     command.Parameters.AddWithValue("@displayname", displayName);
+                    command.Parameters.AddWithValue("@magickey", Guid.NewGuid());
                     command.ExecuteNonQuery();
                 }
             }
@@ -66,7 +67,7 @@ namespace FantasyCricket.Service
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             MagicKey key = reader.Read<MagicKey>();
-                            if (key == null)
+                            if (key == null || key.Magic == null || key.Magic == Guid.Empty)
                             {
                                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Yoy are trying to look at something you should not, RUN AWAY boy", "", null);
                             }
@@ -75,11 +76,11 @@ namespace FantasyCricket.Service
 
                                 using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERLOGINTIME, connection))
                                 {
-                                    command.CommandType = System.Data.CommandType.Text;
-                                    command.Parameters.AddWithValue("@username", username);
-                                    command.Parameters.AddWithValue("@password", password);
-                                    command.Parameters.AddWithValue("@logintime", DateTime.UtcNow);
-                                    command.ExecuteNonQuery();
+                                    command1.CommandType = System.Data.CommandType.Text;
+                                    command1.Parameters.AddWithValue("@username", username);
+                                    command1.Parameters.AddWithValue("@password", password);
+                                    command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
+                                    command1.ExecuteNonQuery();
                                 }
 
                                 return key;
@@ -130,11 +131,11 @@ namespace FantasyCricket.Service
                                 {
                                     using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
                                     {
-                                        command.CommandType = System.Data.CommandType.Text;
+                                        command1.CommandType = System.Data.CommandType.Text;
 
-                                        command.Parameters.AddWithValue("@oldmagickey", key.Magic);
-                                        command.Parameters.AddWithValue("@newmagickey", Guid.NewGuid());
-                                        command.ExecuteNonQuery();
+                                        command1.Parameters.AddWithValue("@oldmagickey", key.Magic);
+                                        command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid());
+                                        command1.ExecuteNonQuery();
                                     }
                                 }
                             }

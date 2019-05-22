@@ -84,8 +84,8 @@ namespace FantasyCricket.Database
                                      [user_id]     INTEGER PRIMARY KEY AUTOINCREMENT ,
                                      [username]     VARCHAR(255) NOT NULL UNIQUE,
                                      [password]     VARCHAR(255) NOT NULL,  
-                                     [lastlogin]     DATETIME NOT NULL ,
-                                     [magickey]     GUID NOT NULL ,
+                                     [lastlogin]     DATETIME  ,
+                                     [magickey]     GUID ,
                                      [displayname]     VARCHAR(255) NOT NULL )";
             sqlite_cmd.ExecuteNonQuery();
 

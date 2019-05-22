@@ -91,6 +91,8 @@ namespace Sqlite.Converters
                     return SqlDbType.Bit;
                 case "DATETIME":
                     return SqlDbType.DateTime;
+                case "GUID":
+                    return SqlDbType.UniqueIdentifier;
             }
             
             return (SqlDbType)Enum.Parse(typeof(SqlDbType), dataTypeName, true);
