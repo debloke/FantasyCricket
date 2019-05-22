@@ -47,7 +47,7 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR MAIN SCREEN END */
 
 /* CSS FOR POPUP START */
-#inputPopup { display: none; }
+#inputPopup { display: none; position: fixed; left: 0; right: 0; top: 0; bottom: 0; }
 .glassBackground { position: absolute; left: 0; right: 0; top: 0; bottom: 0; padding: 0; z-index: 10; opacity: 0.8; background: #000; }
 .inputContainer { width: 80%; height: 80%; margin: 0 auto; z-index: 10; position: absolute; left: 10%; line-height: 60px; text-align: center; top: 10%; }
 .boundary { border: 1px solid white; width: 60%; height: 80%; top: 10%; left: 20%; position: absolute; border-radius: 50%; background: #38dc63; }
