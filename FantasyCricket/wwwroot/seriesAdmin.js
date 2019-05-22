@@ -57,7 +57,7 @@ function pollData() {
                 "Date": formatDate(mD.dateTimeGMT),
                 "Team1": mD["team-1"],
                 "Team2": mD["team-2"],
-                "unique_id": mD.unique_id
+                "unique_id" : mD.unique_id
             });
         });
         

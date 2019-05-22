@@ -20,21 +20,21 @@ let validator = function(dataObj) {
         let playersInATeam = {};
         let maxPlayerFromATeamAllowed = { count: 6, error: "We can not have more than 6 players from single team" };
         // Check for budget
-        let maxAllowedBudget = { count: 100, error: "We can not have budget more than 100" };
+        let maxAllowedBudget = { count: 1000, error: "We can not have budget more than 1000" };
         let totalBudget = 0;      
         // Loop through the players list within the team
         // And determine the roles each player play
         self.data.map(function(playerData) {
-            switch(playerData.role) {
+            switch(playerData.Role) {
                 case "BAT": roles.canBat.count++; break;
                 case "BOWL": roles.canBowl.count++; break;
                 case "ALL": roles.canBowl.count++; roles.canBat.count++; break;
                 case "WK": roles.canKeep.count++; roles.canBat.count++; break;
                 default: break;
             }
-            playersInATeam[playerData.team] = playersInATeam[playerData.team] || 0;
-            playersInATeam[playerData.team]++;
-            totalBudget += playerData.price;
+            playersInATeam[playerData.TeamName] = playersInATeam[playerData.TeamName] || 0;
+            playersInATeam[playerData.TeamName]++;
+            totalBudget += playerData.Cost;
         });
         
         response.budgetLeft = maxAllowedBudget.count - totalBudget;

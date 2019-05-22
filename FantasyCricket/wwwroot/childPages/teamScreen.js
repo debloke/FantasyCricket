@@ -1,7 +1,18 @@
 "use strict";
+let ALL_PLAYERS = [];
 var teamScreen = function() {
     this.returnDataForDisplay = function(id) {
-        populateTeamData( id );
+        let utility = new UtilityClass();
+        utility.getRequest(
+            "/api/player/?tournament=ODI",
+            function (data) {
+                ALL_PLAYERS = data;
+                populateTeamData( id);
+            },
+            function (err) {
+                alert("Unable to fetch players data");
+            }
+        ); 
     };
 };
 
@@ -10,21 +21,21 @@ function populateTeamData(id) {
     let myPlayersFullDetail = [];
     let listOfRoleFilters = ["FULL"];
     let listOfTeamFilters = ["FULL"];
-    let filter = { role: "FULL", team: "FULL" };
+    let filter = { Role: "FULL", TeamName: "FULL" };
     ALL_PLAYERS.map(function(player) {
-        if(listOfRoleFilters.indexOf(player.role) == -1) listOfRoleFilters.push(player.role);
-        if(listOfTeamFilters.indexOf(player.team) == -1) listOfTeamFilters.push(player.team);
+        if(listOfRoleFilters.indexOf(player.Role) == -1) listOfRoleFilters.push(player.Role);
+        if(listOfTeamFilters.indexOf(player.TeamName) == -1) listOfTeamFilters.push(player.TeamName);
     });
 
     function displayPlayerList() {
         let list = "";    
         ALL_PLAYERS.map(function(player) {
-            if( myPlayers.indexOf(player.Id) == -1 ) {
-                if(((filter.role == "FULL") || (filter.role == player.role)) && ((filter.team == "FULL") || (filter.team == player.team))) {
-                    list+= "<li class='addPlayer' data='"+player.Id+"'>";
-                    list+= "<span class='playerName'>"+player.Name+"</span>";
-                    list+= "<span class='playerTeam'>"+player.team+"</span>";
-                    list+= "<span class='playerPrice'>"+player.price+"</span>";
+            if( myPlayers.indexOf(player.pid) == -1 ) {
+                if(((filter.Role == "FULL") || (filter.Role == player.Role)) && ((filter.TeamName == "FULL") || (filter.TeamName == player.TeamName))) {
+                    list+= "<li class='addPlayer' data='"+player.pid+"'>";
+                    list+= "<span class='playerName'>"+player.name+"</span>";
+                    list+= "<span class='playerTeam'>"+player.TeamName+"</span>";
+                    list+= "<span class='playerPrice'>"+player.Cost+"</span>";
                 }
             }
         });
@@ -37,10 +48,10 @@ function populateTeamData(id) {
         let rightColData = "";
         centerColData = displayPlayerList();
         listOfRoleFilters.map(function(role){
-            leftColData += (role == filter.role) ? "<li class='selected'>"+role+"</li>" : "<li>"+role+"</li>";
+            leftColData += (role == filter.Role) ? "<li class='selected'>"+role+"</li>" : "<li>"+role+"</li>";
         });
         listOfTeamFilters.map(function(team){
-            rightColData += (team == filter.team) ? "<li class='selected'>"+team+"</li>" : "<li>"+team+"</li>";
+            rightColData += (team == filter.TeamName) ? "<li class='selected'>"+team+"</li>" : "<li>"+team+"</li>";
         });
         myPlayersFullDetail = [];
         let myBatsmanData = "";
@@ -48,16 +59,16 @@ function populateTeamData(id) {
         let myAllRounderData = "";
         let myWicketKeeperData = "";
         ALL_PLAYERS.map(function(player){
-            if(myPlayers.indexOf(player.Id) > -1) {
+            if(myPlayers.indexOf(player.pid) > -1) {
                 myPlayersFullDetail.push(player);
                 let mPDate = "<li>";
-                mPDate += "<div class='iconContainer'><img class='allCountries "+player.team.replace(/ /gi, "")+"'/>";
-                mPDate += "<img class='roles' src='/icons/roles/"+player.role+".png'/></div>";
-                mPDate += "<div class='playerInfo'><span class='pName'>"+player.Name+"</span>";
-                mPDate += "<span class='pPrice'>"+player.price+"</span></div>";
-                mPDate += "<img src='/icons/delete.png' class='deletePlayer' data='"+player.Id+"'></li>";
+                mPDate += "<div class='iconContainer'><img class='allCountries "+player.TeamName.replace(/ /gi, "")+"'/>";
+                mPDate += "<img class='roles' src='/icons/roles/"+player.Role+".png'/></div>";
+                mPDate += "<div class='playerInfo'><span class='pName'>"+player.name+"</span>";
+                mPDate += "<span class='pPrice'>"+player.Cost+"</span></div>";
+                mPDate += "<img src='/icons/delete.png' class='deletePlayer' data='"+player.pid+"'></li>";
 
-                switch(player.role) {
+                switch(player.Role) {
                     case "BAT": myBatsmanData+= mPDate; break;
                     case "WK": myWicketKeeperData+= mPDate; break;
                     case "ALL": myAllRounderData+= mPDate; break;
@@ -93,14 +104,14 @@ function populateTeamData(id) {
         $( ".leftTeamItems li" ).bind("click", function() {
             $( ".leftTeamItems li" ).removeClass("selected");
             $(this).addClass("selected");
-            filter.role = $(this)[0].innerText;
+            filter.Role = $(this)[0].innerText;
             fillDataInUI();
         });
         $( ".rightTeamItems li" ).unbind( "click" );
         $( ".rightTeamItems li" ).bind("click", function() {
             $( ".rightTeamItems li" ).removeClass("selected");
             $(this).addClass("selected");
-            filter.team = $(this)[0].innerText;
+            filter.TeamName = $(this)[0].innerText;
             fillDataInUI();
         });
         $( ".addPlayer" ).unbind( "click" );
