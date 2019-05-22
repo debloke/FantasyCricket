@@ -23,6 +23,13 @@ namespace FantasyCricket.Controllers
             return seriesInfo.GetMatches();
         }
 
+        [HttpDelete]
+        [Route("matches/{uniqueid}")]
+        public void DeleteSeriesMatches(int uniqueid)
+        {
+            seriesInfo.DeleteMatch(uniqueid);
+        }
+
         // GET api/series
         [HttpGet]
         public ActionResult<IEnumerable<Series>> GetSeries()

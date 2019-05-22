@@ -20,6 +20,9 @@ namespace FantasyCricket.Service
         private static readonly string CREATESERIES = "INSERT OR REPLACE INTO [Series] (  Seriesname ) VALUES (  @Seriesname)";
         private static readonly string ADDORUPDATEMATCH = "INSERT OR REPLACE INTO [Match] (  unique_id, MatchTime, Seriesid, Type,team1,team2 ) VALUES ( @unique_id, @MatchTime, @Seriesid, @Type,@team1,@team2)";
 
+
+        private static readonly string DELETEMATCH = "DELETE FROM [Match] where unique_id=@unique_id";
+
         public void AddMatch(Match match)
         {
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
@@ -48,6 +51,20 @@ namespace FantasyCricket.Service
                 {
                     insertCommand.CommandType = System.Data.CommandType.Text;
                     insertCommand.Parameters.AddWithValue("@Seriesname", seriesName);
+                    insertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteMatch(int uniqueid)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand insertCommand = new SQLiteCommand(DELETEMATCH, connection))
+                {
+                    insertCommand.CommandType = System.Data.CommandType.Text;
+                    insertCommand.Parameters.AddWithValue("@unique_id", uniqueid);
                     insertCommand.ExecuteNonQuery();
                 }
             }

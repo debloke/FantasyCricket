@@ -1,7 +1,6 @@
-﻿using FantasyCricket.Models;
-using FantasyCricket.Service;
+﻿using FantasyCricket.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
 
 namespace FantasyCricket.Controllers
 {
@@ -17,11 +16,11 @@ namespace FantasyCricket.Controllers
 
         // POST api/user
         [HttpPost]
-        public void LoginUser([FromQuery(Name = "username")] string username,
+        public ActionResult<Guid> LoginUser([FromQuery(Name = "username")] string username,
             [FromQuery(Name = "password")] string password)
 
         {
-            user.LoginUser(username,password);
+            return user.LoginUser(username, password).Magic;
         }
 
         // PUT api/user

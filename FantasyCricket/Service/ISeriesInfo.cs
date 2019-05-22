@@ -14,5 +14,7 @@ namespace FantasyCricket.Service
 
         void AddMatch(Match match);
 
+        void DeleteMatch(int uniqueid);
+
     }
 }
