@@ -7,6 +7,11 @@ var ALL_PLAYERS = [];
 * @returns        N/A                                                       *
 ****************************************************************************/
 $(function () {
+    pollData();
+});
+
+function pollData() {
+    $(".seriesDescription").html("");
     let utility = new UtilityClass();
     let listOfPromises = [];
     let tempData = {};
@@ -58,8 +63,7 @@ $(function () {
         processData(Object.values(tempData));
         displayUnassignedMatches(unassignedMatchData, utility, assignedMatches);
     });
-
-});
+}
 
 /****************************************************************************
 * @function       processData                                               *
@@ -135,9 +139,11 @@ function openPopupAndCreateRecord(data) {
         utility.postRequest(
             "/api/series/" + seriesName,
             function (data) {
-                window.location.reload();
+                $("#inputPopup").hide();
+                pollData();
             },
             function (err) {
+                $("#inputPopup").hide();
                 alert("Unable to add series");
             }
         );
@@ -183,7 +189,7 @@ function displayUnassignedMatches(unAssignedMatches, utility, assignedMatches) {
         utility.postRequest(
             "/api/series",
             function (data) {
-                window.location.reload();
+                pollData();
             },
             function (err) {
                 alert("Unable to add match to series");
@@ -209,7 +215,7 @@ function removeMatchFromSeries(matchId) {
     utility.deleteRequest(
         "/api/series/matches/" + matchId,
         function (data) {
-            window.location.reload();
+            pollData();
         },
         function (err) {
             alert("Unable to remove match from series");
