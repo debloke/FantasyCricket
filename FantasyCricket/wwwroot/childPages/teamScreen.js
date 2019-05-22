@@ -97,7 +97,7 @@ function populateTeamData(id) {
         let response = teamValidation.runValidations();
         (response.isError) && $("#errorMessage").html(response.error);
         $("#budgetLeftMessage").html("Budget Left: " + response.budgetLeft);
-        $("#subsLeftMessage").html("Substitutions Left: 26");
+        $("#subsLeftMessage").html("Substitutions Left: &#8734;");
         $("#saveteam").css("visibility", ( response.isError ? "hidden" : "visible" ));
 
         $( ".leftTeamItems li" ).unbind( "click" );
