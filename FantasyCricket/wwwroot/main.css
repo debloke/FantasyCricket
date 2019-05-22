@@ -148,8 +148,9 @@ button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca
 .seriesLeftBlock { position: absolute; left: 0; width: 30%; height: 100%; border: 1px solid black; overflow-y: auto; }
 .seriesLeftBlock ul { list-style: none; width: 90%; padding: 5%; }
 .seriesLeftBlock ul li { background: #8fad47; padding: 20px; border-bottom: 1px solid grey; }
-.seriesDescription { position: absolute; left: 30%; width: 70%; height: 100%; border: 1px solid black; }
-.seriesDescription h3 { text-align: center; }
-.seriesDescription table { width: 80%; text-align: left; padding-left: 10%; }
-.seriesDescription table span { margin: 0 0 0 10px; top: -8px; position: relative; }
+.seriesDescription { position: absolute; left: 30%; width: 70%; height: 50%; border: 1px solid black; }
+.untaggedMatches { position: absolute; left: 30%; width: 70%; top: 50%; height: 50%; border: 1px solid black; overflow-y: auto; }
+.untaggedMatches h3, .seriesDescription h3 { text-align: center; }
+.untaggedMatches table, .seriesDescription table { width: 95%; text-align: left; padding-left: 5%; }
+.untaggedMatches table span, .seriesDescription table span { margin: 0 0 0 10px; top: -8px; position: relative; }
 #AddSeries { position: absolute; top: 4px; right: 5%; font-weight: bold; font-size: 22px; border: 1px solid grey; text-align: center; width: 30px; border-radius: 10px; }

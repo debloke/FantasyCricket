@@ -1,6 +1,6 @@
 let UtilityClass = function() {
     let that = this;
-    that.baseURL = "";
+    that.baseURL = "http://cricketfantasy.azurewebsites.net";
     
     /**************************************************
      * @function     getRequest
@@ -23,11 +23,17 @@ let UtilityClass = function() {
      * @param        {String} url - URL for HTTP request
      * @param        {Callback} successCB - Callback for success
      * @param        {Callback} errorCB - Callback for error
+     * @param        {Object} data - Data to post
      * @return       N/A
      **************************************************/
-    that.postRequest = function(url, successCB, errorCB) {
+    that.postRequest = function(url, successCB, errorCB, data) {
+        let obj = {url: (that.baseURL + url), type: "POST"};
+        if(data) {
+            obj.data = JSON.stringify(data);
+            obj.contentType = "application/json";
+        }
         makeHTTPCall(
-            {url: (that.baseURL + url), type: "POST"}, 
+            obj, 
             successCB,
             errorCB);
     };
@@ -43,6 +49,21 @@ let UtilityClass = function() {
     that.putRequest = function(url, successCB, errorCB) {
         makeHTTPCall(
             {url: (that.baseURL + url), type: "PUT"}, 
+            successCB,
+            errorCB);
+    };
+    
+    /**************************************************
+     * @function     deleteRequest
+     * @brief        Make HTTP DELETE calls
+     * @param        {String} url - URL for HTTP request
+     * @param        {Callback} successCB - Callback for success
+     * @param        {Callback} errorCB - Callback for error
+     * @return       N/A
+     **************************************************/
+    that.deleteRequest = function(url, successCB, errorCB) {
+        makeHTTPCall(
+            {url: (that.baseURL + url), type: "DELETE"}, 
             successCB,
             errorCB);
     };
