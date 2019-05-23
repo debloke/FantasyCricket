@@ -1,4 +1,6 @@
 body { position:absolute; width:100%; height:100%; left:0; right:0; padding:0; margin:0; background-color:#39387b; background: -webkit-linear-gradient(top, #9563f7 0%,#4af697 100%); background-attachment: fixed; }
+
+li { cursor: pointer; } 
 .loginPageBG { background-image: url("images/background.png"); background-repeat: no-repeat; background-size: cover; }
 
 ::-webkit-scrollbar { width: 10px; }
@@ -103,7 +105,14 @@ img.deletePlayer { width: 23px; float: right; }
 /* CSS FOR TEAM END */
 
 /* CSS FOR LIVE DATA START */
-.liveData { height: 100%; overflow: auto; }
+.liveData { width: 100%; display: inline-block; position: relative; }
+.liveData table table td { padding-left: 10px; }
+.allLiveScores { position: absolute; left: 20%; right: 0; top: 15px; bottom : 0; overflow-x: hidden; overflow-y: auto; }
+.individualLiveScore { display: none; }
+.selectMatch { list-style: none; }
+.selectMatch li { background: #3b458e; padding: 10px; border-bottom: 1px solid grey; }
+.selectedLi { background: #bbbd18 !important; }
+.containerForUL { position: absolute; left: 0; width: 20%; }
 /* CSS FOR LIVE DATA END */
 
 /* CSS FOR LOGIN SCREEN START */
@@ -144,6 +153,7 @@ button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca
 .inputContainerAdmin .close { position: absolute; right: 5px; top: 5px; color: red; width: 30px; height: 30px; border: 2px solid #80862d; border-radius: 15px; text-align: center; }
 /* CSS FOR PLAYER ADMIN SCREEN END */
 
+/* CSS FOR ADMIN PAGES START */
 .mainBlock { position: absolute; top: 5%; left: 5%; width: 90%; height: 90%; }
 .seriesLeftBlock { position: absolute; left: 0; width: 30%; height: 100%; border: 1px solid black; overflow-y: auto; }
 .seriesLeftBlock ul { list-style: none; width: 90%; padding: 5%; }
@@ -154,3 +164,16 @@ button { border-radius: 10px; border: none; padding: 5px 10px; background: #46ca
 .untaggedMatches table, .seriesDescription table { width: 95%; text-align: left; padding-left: 5%; }
 .untaggedMatches table span, .seriesDescription table span { margin: 0 0 0 10px; top: -8px; position: relative; }
 #AddSeries { position: absolute; top: 4px; right: 5%; font-weight: bold; font-size: 22px; border: 1px solid grey; text-align: center; width: 30px; border-radius: 10px; }
+
+/* CSS FOR ADMIN PAGES END */
+.containerForSelectingRule { position: absolute; left: 0; width: 20%; }
+.allRulesContainer { position: absolute; left: 20%; width: 80%; }
+.allRules { position: absolute; left: 10%; top: 20px; bottom: 20px; left: 20px; right: 20px; border-radius: 10px; border: 1px solid white; overflow-x : hidden; overflow-y: auto; }
+/* CSS FOR ADMIN RULES START */
+.rulesContainer { text-align: left; display: none; }
+.containerForSelectingRule ul { list-style: none; }
+.allRulesContainer h3 { padding-left: 25px; }
+.allRulesContainer li { cursor: grab; }
+.redirectHome { position: absolute; z-index : 3; left: 20px; top: 5px; }
+.containerForSelectingRule ul li { background: #8fad47; padding: 20px; border-bottom: 1px solid grey; }
+/* CSS FOR ADMIN RULES START */

@@ -25,15 +25,11 @@
                 );
             }
             function showRules() {
-                $("#inputPopup").show();
-                $(".rulesLink").unbind("click");
-                $(".rulesLink").bind("click", function() {
-                    $("#inputPopup").hide();
-                });
+                window.location.href = "rules.html";
             }
         </script>
         <a href="#" class="registerLink" onclick="register()">Register</a>
-        <a href="#" class="rulesLink" onclick="showRules()">Rules</a>
+        <img src="/icons/info.png" class="rulesLink" onclick="showRules()"/>
         <div class="loginBlock">
             <div>
                 <table>
@@ -57,15 +53,6 @@
                         <td><span id="errorMessageBox"></span></td>
                     </tr>
                 </table>
-            </div>
-        </div>
-        <div id="inputPopup">
-            <div class="glassBackground"></div>
-            <div class="inputContainer">
-                <div class="close">X</div>
-                <div>
-                    Rules Start here...
-                </div>
             </div>
         </div>
     </body>

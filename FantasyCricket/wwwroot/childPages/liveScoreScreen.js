@@ -12,11 +12,41 @@ function populateLiveData(id) {
     // AJAX call : HARDCODED FOR NOW
     // TO BE CHANGED WITH LIVE GAME ID
     utility.getRequest(
-        "/api/score/1152843",
+        "/api/score",
         function( data ) {
-            oldData = data;
-            newData = data;
-            plotDataToUI(oldData, newData, id);
+            $(id).html();
+            let plotData = {};
+            let conObj = {
+                "selection" :"<div class='containerForUL'><ul class='selectMatch'>",
+                "mainContent" :"<div class='allLiveScores'>"
+            };
+            oldData = JSON.parse(data);
+            newData = JSON.parse(data);
+            for(let mKey in oldData) {
+                plotData[mKey] = {};
+                plotData[mKey].oldData = oldData[mKey];
+            }
+            
+            for(let nKey in newData) {
+                plotData[nKey] = plotData[nKey] || {};
+                plotData[nKey].oldData = plotData[nKey].oldData || [];
+                plotData[nKey].newData = newData[nKey];
+            }
+            
+            for(let key in plotData) {
+                plotDataToUI(plotData[key].oldData, plotData[key].newData, id, conObj, key);
+            }
+            conObj.mainContent += "</div>";
+            conObj.selection += "</ul></div>";
+            $(id).html(conObj.mainContent + conObj.selection);
+            
+            $(".selectMatch li").bind("click", function() {
+                let matchId = this.getAttribute("data");
+                $(".individualLiveScore").hide();
+                $(".match" + matchId).show();
+                $(".selectMatch li").removeClass("selectedLi");
+                $(this).addClass("selectedLi");
+            });
         },
         function(err) {
             alert( "Unable to fetch Live data" );
@@ -24,25 +54,27 @@ function populateLiveData(id) {
     );
 }
 
-function plotDataToUI(oData, nData, id) {
+function plotDataToUI(oData, nData, id, conObj, key) {
     let player = {};
     let playerPerTeam = {};
+    
     oData.map(function(opData) {
         player[opData.pid] = opData;
         player[opData.pid].Points = opData.BattingPoints + opData.FieldingPoints + opData.BowlingPoints;
     });
     nData.map(function(npData) {
         playerPerTeam[npData.Team] = playerPerTeam[npData.Team] || [];
+        player[npData.pid] = player[npData.pid] || {};
         player[npData.pid].NewBattingPoints = npData.BattingPoints;
         player[npData.pid].NewFieldingPoints = npData.FieldingPoints;
         player[npData.pid].NewBowlingPoints = npData.BowlingPoints;
         player[npData.pid].NewPoints = npData.BattingPoints + npData.FieldingPoints + npData.BowlingPoints;
         playerPerTeam[npData.Team].push(player[npData.pid]);
     });
-    drawData(playerPerTeam, id);
+    drawData(playerPerTeam, id, conObj, key);
 }
 
-function drawData(data, id) {
+function drawData(data, id, conObj, key) {
     let response = "";
     let teamList = [];
 
@@ -68,9 +100,9 @@ function drawData(data, id) {
         });
         response += "<td style='vertical-align: top;'><table style='display:inline;'>" + tData + "</table></td>";
     }
-    $(id).html( "<div align='center' class='liveData'><table border='1'><tr><th colspan='2'>" +
-        teamList.join(" VS ") +
-        "</th></tr>" +
+    conObj.mainContent += ( "<div align='center' class='liveData individualLiveScore match"+ key +"'>" + 
+        "<table border='1'>" +
         "<tr>" + response + "</tr>" +
         "</table></div>");
+    conObj.selection += "<li data='"+ key +"'>"+ teamList.join(" VS ") + "</li>";
 }

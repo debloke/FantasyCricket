@@ -1,0 +1,93 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery.min.js"> </script>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <title>Fantasy League</title>
+    </head>
+    <body style="text-align: center">
+        <script type="text/javascript">
+            $(function() {
+                $(".containerForSelectingRule ul li").bind("click", function() {
+                    let cl = this.getAttribute("data");
+                    $(".rulesContainer").hide();
+                    $("." + cl).show();
+                    $(".containerForSelectingRule ul li").removeClass("selected");
+                    $(this).addClass("selected");
+                });
+            });
+            function sendHome() {
+                window.location.href = "index.html";
+            }
+        </script>
+        <div class="allRules">
+            <img class="redirectHome" onclick="sendHome()" src="/icons/home.png"/>
+            <h2 style="width: 100%; margin-bottom: 5px;">Point System</h2><hr/>
+            <div class="containerForSelectingRule">
+                <ul>
+                    <li data="battingRules">Batting Points</li>
+                    <li data="bowlingRules">Bowling Points</li>
+                    <li data="fieldingRules">Fielding Points</li>
+                    <li data="otherRules">Other Points</li>
+                </ul>
+            </div>
+            <div class="allRulesContainer">
+                <div class="battingRules rulesContainer">
+                    <h3>Batting Points</h3>
+                    <ol>
+                        <li> Every single run scored by your batsman will give you 1 point </li>
+                        <li> If Runs scored is more than balls faced, 2 points are rewarded per run for the difference. For example, 10 runs in 5 balls for the batsman will give you => (10-5)*2 = 10 points </li>
+                        <li> If Runs scored is less than balls faced, 1 point is deducted per run for the difference, For example, 2 runs in 5 balls will give you => (2-5) = -3 points </li>
+                        <li> Every 10 run scored by the batsman will give 2 points. For example, If a batsman scores 60, you get => (6*2) = 12 points  </li>
+                        <li> Every 25 run scored by the batsman will give 5 points. For example, If a batsman scores 60, you get => (2*5) = 10 points  </li>
+                        <li> Every 50 run scored by the batsman will give 10 points. For example, If a batsman scores 160, you get => (3*10) = 30 points  </li>
+                        <li> Every 100 run scored by the batsman will give 20 points. For example, If a batsman scores 160, you get => (1*20) = 20 points  </li>
+                        <li> Every single four hit by the batsman will give 1 points </li>
+                        <li> Every single six hit by the batsman will give 2 points </li>
+                        <li> Duck scored by a specialist batsman will deduct 10 points </li>
+                        <li> Duck scored by a allrounder will deduct 5 points </li>
+                        <li> Duck scored by a bowler will not deduct any point </li>
+                    <ol>
+                </div>
+
+                <div class="bowlingRules rulesContainer">
+                    <h3>Bowling Points</h3>
+                    <ol>
+                        <li> Every wicket taken by your bowler will give you 25 point </li>
+                        <li> If the bowler takes 2 or more wickets, you get 5 bonus points </li>
+                        <li> If the bowler takes 3 or more wickets, you get 15 bonus points </li>
+                        <li> If the bowler takes 4 or more wickets, you get 25 bonus points </li>
+                        <li> If the bowler takes 5 or more wickets, you get 35 bonus points </li>
+                        <li> If the bowler takes 6 or more wickets, you get 45 bonus points </li>
+                        <li> If the bowler takes 7 or more wickets, you get 55 bonus points </li>
+                        <li> If the bowler takes 8 or more wickets, you get 65 bonus points </li>
+                        <li> If the bowler takes 9 or more wickets, you get 75 bonus points </li>
+                        <li> If the bowler takes 10 or more wickets, you get 85 bonus points </li>
+                        <li> If the bowler takes N wickets, you get bonus point for 2, 3, 4 .... and N wickets. For example, If a bowler takes 5 wickets, you get => (5 + 15 + 25 + 35) = 80 points </li>
+                    <ol>
+                </div>
+
+                <div class="fieldingRules rulesContainer">
+                    <h3>Fielding Points</h3>
+                    <ol>
+                        <li> Every catch taken by your player will give you 15 point </li>
+                        <li> Every stumping taken by your player will give you 20 point </li>
+                        <li> Every direct Runout done by your player will give you 20 point </li>
+                        <li> Every direct shared with another player will give you 10 point </li>
+                    <ol>
+                </div>
+
+                <div class="otherRules rulesContainer">
+                    <h3>Other Points</h3>
+                    <ol>
+                        <li> Every player of winning team gets 5 points </li>
+                        <li> Batting points scored by Batting Captain is doubled </li>
+                        <li> Bowling points scored by Bowling Captain is doubled </li>
+                        <li> Fielding points scored by Fielding Captain is doubled </li>
+                    <ol>
+                </div>
+
+            </div>
+        </div>
+
+    </body>
+</html>
