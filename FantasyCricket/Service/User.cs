@@ -104,7 +104,7 @@ namespace FantasyCricket.Service
             catch (Exception exception)
             {
                 Exception rethrow_Exception = new Exception(
-                    string.Format("Failed to initialize the SqLite maintenance timer. {0}", exception.Message)
+                    string.Format("Failed to initialize the User maintenance timer. {0}", exception.Message)
                     );
 
                 // Throw exception to DhcpStartService

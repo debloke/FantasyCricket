@@ -10,7 +10,7 @@ namespace FantasyCricket.Models
 {
     public enum MatchStatus
     {
-        NOTSTARTED,
+        SCHEDULED,
         STARTED,
         FINISHED,
         CANCELLED

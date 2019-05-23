@@ -51,7 +51,7 @@ namespace FantasyCricket.Service
 
         private static readonly string ADDORUPDATEPLAYERIPL = "INSERT OR REPLACE INTO [IplPlayer] (  Pid, Pname, Team, Role ) VALUES (  @Pid, @Pname, @Team, @Role)";
 
-        private static readonly string ADDORUPDATEPLAYERCOUNTRY = "INSERT OR REPLACE INTO [OdiPlayer] (  Pid, Pname, Team, Role ) VALUES (  @Pid, @Pname, @Team, @Role)";
+        private static readonly string ADDORUPDATEPLAYERCOUNTRY = "INSERT INTO [OdiPlayer] (  Pid, Pname, Team, Role ) VALUES (  @Pid, @Pname, @Team, @Role)";
 
         private static readonly string SQLSELECTIPL = "SELECT * FROM IplPlayer";
 
@@ -102,18 +102,25 @@ namespace FantasyCricket.Service
                 {
                     foreach (Player player in team.Players)
                     {
-                        using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                        try
                         {
-                            connection.Open();
-                            using (SQLiteCommand insertCommand = new SQLiteCommand(ADDORUPDATEPLAYERCOUNTRY, connection))
+                            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
                             {
-                                insertCommand.CommandType = System.Data.CommandType.Text;
-                                insertCommand.Parameters.AddWithValue("@Pid", player.PlayerId);
-                                insertCommand.Parameters.AddWithValue("@Pname", player.PlayerName);
-                                insertCommand.Parameters.AddWithValue("@Team", teamName);
-                                insertCommand.Parameters.AddWithValue("@Role", Role.UNKNOWN);
-                                insertCommand.ExecuteNonQuery();
+                                connection.Open();
+                                using (SQLiteCommand insertCommand = new SQLiteCommand(ADDORUPDATEPLAYERCOUNTRY, connection))
+                                {
+                                    insertCommand.CommandType = System.Data.CommandType.Text;
+                                    insertCommand.Parameters.AddWithValue("@Pid", player.PlayerId);
+                                    insertCommand.Parameters.AddWithValue("@Pname", player.PlayerName);
+                                    insertCommand.Parameters.AddWithValue("@Team", teamName);
+                                    insertCommand.Parameters.AddWithValue("@Role", Role.UNKNOWN);
+                                    insertCommand.ExecuteNonQuery();
+                                }
                             }
+                        }
+                        catch
+                        {
+                            // TODO
                         }
                     }
                 }

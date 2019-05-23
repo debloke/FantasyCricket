@@ -1,7 +1,6 @@
-﻿using FantasyCricket.Models;
-using FantasyCricket.Service;
+﻿using FantasyCricket.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace FantasyCricket.Controllers
 {
@@ -16,7 +15,7 @@ namespace FantasyCricket.Controllers
         }
 
         // GET api/score
-        [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Points>> Get(int id) => liveScore.GetScore(id);
+        [HttpGet]
+        public ActionResult<string> Get() => JsonConvert.SerializeObject(liveScore.GetScores(),Formatting.Indented);
     }
 }

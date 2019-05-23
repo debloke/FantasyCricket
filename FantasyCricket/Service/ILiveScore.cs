@@ -1,10 +1,11 @@
 ﻿using FantasyCricket.Models;
+using System.Collections.Concurrent;
 
 namespace FantasyCricket.Service
 {
     public interface ILiveScore
     {
-        Points[] GetScore(int uniqueId);
+        ConcurrentDictionary<int, Points[]> GetScores();
 
     }
 }
