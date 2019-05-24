@@ -8,31 +8,54 @@
     <body class="loginPageBG">
         <script type="text/javascript">
             let utility = new UtilityClass();
-            function register() {               
-                // AJAX call
-                utility.putRequest(
-                    "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val() + "&displayname=" + $("#displayName").val(),
-                    function( data ) {
-                        window.location.href = "index.html";
-                    },
-                    function(err) {
-                        alert( "Unable to register" );
+            function register() {
+                let userName = $("#userName").val();
+                let password = $("#password").val();
+                let response = validateUserNamePwd(userName, password);
+                if(!response.error) {
+                    // AJAX call
+                    utility.putRequest(
+                        "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val() + "&displayname=" + $("#displayName").val(),
+                        function( data ) {
+                            window.location.href = "index.html";
+                        },
+                        function(err) {
+                            alert( "Unable to register" );
+                        }
+                    );
+                }
+                else {
+                    $("#errorMessageBox").html(response.message);
+                }
+            }
+            function validateUserNamePwd(userName, password) {
+                let response = {error: false, message: ""};
+                if((userName.length < 6) || (userName.length > 10)) {
+                    response.error = true;
+                    response.message = "UserName should be 6 to 10 characters long";
+                }
+                else {
+                    let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/;
+                    if(!regex.test(password)) {
+                        response.error = true;
+                        response.message = "Password should be 6 to 12 characters long. It should include at least one upper case letter, one lower case letter, and one numeric digit";
                     }
-                );
+                }
+                return response;
             }
         </script>
         <div class="loginBlock">
-            <div>
-                <table>
+            <div style="width: 330px">
+                <table style="width: 100%">
                     <tr>
                         <th colspan="2"><h3>Register</h3></th>
                     </tr>
                     <tr>
-                        <td>Display Name</td>
+                        <td style="width: 80px;">Name</td>
                         <td><input id="displayName" type="text"/></td>
                     </tr>
                     <tr>
-                        <td>User Name</td>
+                        <td>User Id</td>
                         <td><input id="userName"  type="text"/></td>
                     </tr>
                     <tr>
@@ -41,6 +64,9 @@
                     </tr>
                     <tr>
                         <td></td><td><button onclick="register()">Submit</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><span id="errorMessageBox"></span></td>
                     </tr>
                 </table>
             </div>
