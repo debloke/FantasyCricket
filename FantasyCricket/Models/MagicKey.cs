@@ -13,6 +13,9 @@ namespace FantasyCricket.Models
         [SQLiteColumn("lastlogin")]
         public DateTime LastLogin { get; set; }
 
+        [SQLiteColumn("username")]
+        public string username { get; set; }
+
 
 
     }

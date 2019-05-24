@@ -1,7 +1,9 @@
 ﻿using FantasyCricket.Database;
 using FantasyCricket.Models;
+using Newtonsoft.Json;
 using Sqlite.SqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Net;
 using System.Net.Http;
@@ -14,15 +16,26 @@ namespace FantasyCricket.Service
 
         private readonly HttpClient httpClient = new HttpClient();
 
-        private static readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
+        private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
-        private static readonly string SELECTUSER = "SELECT magickey,lastlogin FROM [User] where username = @username and password = @password";
+        private readonly string SELECTUSER = "SELECT magickey,lastlogin FROM [User] where username = @username and password = @password";
 
-        private static readonly string SELECTALLUSER = "SELECT magickey,lastlogin FROM [User]";
+        private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username FROM [User]";
 
-        private static readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username and password = @password";
+        private readonly string SELECTUSERBYGUID = "SELECT magickey,lastlogin,username FROM [User] where magickey=@magickey";
 
-        private static readonly string UPDATEUSERGUID = "UPDATE [User] SET magickey = @newmagickey WHERE magickey = @oldmagickey";
+        private readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username and password = @password";
+
+        private readonly string UPDATEUSERGUID = "UPDATE [User] SET magickey = @newmagickey WHERE magickey = @oldmagickey";
+
+        private readonly string ADDUNEWSERTEAM = "INSERT OR REPLACE INTO [UserTeam] (  username, currentteam ) VALUES (  @username,  @currentteam)";
+
+        private readonly string UPDATECURRENTSERTEAM = "UPDATE [UserTeam] SET currentteam = @currentteam where where username=@username";
+
+        private readonly string UPDATECURRENTSERTEAMWITHSUBS = "UPDATE [UserTeam] SET currentteam = @currentteam , remsub = @remsub where where username=@username";
+
+        private readonly string GETLASTTEAM = "SELECT * FROM [UserTeam] where username=@username";
+
 
         private readonly object login = new object();
 
@@ -145,10 +158,161 @@ namespace FantasyCricket.Service
                 }
             }
         }
+
+        public void SaveTeam(UserTeam userTeam, Guid magicKey)
+        {
+            string username;
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        MagicKey[] keys = reader.ReadAll<MagicKey>();
+                        if (keys.Length != 1)
+                        {
+                            throw new Exception("Unauthorised access");
+                        }
+                        username = keys[0].username;
+                    }
+                }
+
+                // get next match info
+
+                using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@username", username);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            // Get Column ordinal
+                            int ordinal = reader.GetOrdinal("lastteam");
+
+                            UserTeam lastTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
+                            int subsOrdinal = reader.GetOrdinal("lastremsub");
+                            int lastRemSubs = reader.GetInt32(subsOrdinal);
+
+                            if (lastTeam == null)
+                            {
+                                // Saving for first time just update currentteam
+                                using (SQLiteCommand commandAddUser = new SQLiteCommand(UPDATECURRENTSERTEAM, connection))
+                                {
+                                    command.CommandType = System.Data.CommandType.Text;
+                                    command.Parameters.AddWithValue("@username", username);
+                                    command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                    command.ExecuteNonQuery();
+                                }
+
+                            }
+                            else
+                            {
+                                int subUsed = 0;
+                                //user already played last match
+                                List<int> lastPlayers = new List<int>(lastTeam.PlayerIds);
+                                foreach (int id in userTeam.PlayerIds)
+                                {
+                                    if (!lastPlayers.Contains(id))
+                                    {
+                                        subUsed += 1;
+                                    }
+                                }
+
+
+                                if (lastRemSubs - subUsed >= 0)
+                                {
+                                    using (SQLiteCommand commandAddUser = new SQLiteCommand(UPDATECURRENTSERTEAMWITHSUBS, connection))
+                                    {
+                                        command.CommandType = System.Data.CommandType.Text;
+                                        command.Parameters.AddWithValue("@username", username);
+                                        command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                        command.Parameters.AddWithValue("@remsubs", lastRemSubs - subUsed);
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Subs exceded");
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            // adding for first time
+                            using (SQLiteCommand commandAddUser = new SQLiteCommand(ADDUNEWSERTEAM, connection))
+                            {
+                                command.CommandType = System.Data.CommandType.Text;
+                                command.Parameters.AddWithValue("@username", username);
+                                command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public UserTeam GetTeam(Guid magicKey)
+        {
+
+
+
+            string username;
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        MagicKey[] keys = reader.ReadAll<MagicKey>();
+                        if (keys.Length != 1)
+                        {
+                            throw new Exception("Unauthorised access");
+                        }
+                        username = keys[0].username;
+                    }
+                }
+
+                // get next match info
+
+                using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@username", username);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            // Get Column ordinal
+                            int ordinal = reader.GetOrdinal("currentteam");
+
+                            UserTeam currentTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
+                            int subsOrdinal = reader.GetOrdinal("remsub");
+                            int lastRemSubs = reader.GetInt32(subsOrdinal);
+
+                            currentTeam.RemSubs = lastRemSubs;
+
+                            return currentTeam;
+                        }
+                    }
+
+                }
+
+            }
+            return new UserTeam();
+
+        }
     }
-
-
-
-
 }
-

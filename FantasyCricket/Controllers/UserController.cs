@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Service;
+﻿using FantasyCricket.Models;
+using FantasyCricket.Service;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -21,6 +22,25 @@ namespace FantasyCricket.Controllers
 
         {
             return user.LoginUser(username, password).Magic;
+        }
+
+        // POST api/user
+        [HttpPost]
+        [Route("team")]
+        public void SaveTeam(UserTeam userTeam,
+            [FromQuery(Name = "magic")] Guid magicKey)
+
+        {
+            user.SaveTeam(userTeam, magicKey);
+        }
+
+
+        [HttpPost]
+        [Route("team")]
+        public UserTeam GetTeam([FromQuery(Name = "magic")] Guid magicKey)
+
+        {
+            return user.GetTeam(magicKey);
         }
 
         // PUT api/user

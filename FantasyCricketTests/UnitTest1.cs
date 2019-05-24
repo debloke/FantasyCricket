@@ -38,67 +38,16 @@ namespace FantasyCricketTests
         [TestMethod]
         public void TestMethod1()
         {
-            string fantasySummaryJson = File.ReadAllText(@"FantasySummary.json", Encoding.UTF8);
+           ConcurrentDictionary<int, Points[]> liveScores = new ConcurrentDictionary<int, Points[]>();
 
-            PlayerScoresResponse playerScoresResponse = JsonConvert.DeserializeObject<PlayerScoresResponse>(fantasySummaryJson, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            Points[] points = new Points[] { new Points() {BattingPoints=1,BowlingPoints=2 }, new Points() {FieldingPoints=3 }};
+            Points[] point1 = new Points[] { new Points() { BattingPoints = 2, FieldingPoints = 3 }, new Points() { FieldingPoints = 4 ,  BowlingPoints=5} };
 
-
-
-            ConcurrentDictionary<int, Points> concurrentDictionary = new ConcurrentDictionary<int, Points>();
-
-            foreach (Team team in playerScoresResponse.Data.Team)
-            {
-                foreach (Player player in team.Players)
-                {
-                    concurrentDictionary.TryAdd(player.PlayerId, new Points() { PlayerId = player.PlayerId, PlayerName = player.PlayerName });
-                }
-            }
-
-            foreach (Batting battingDetails in playerScoresResponse.Data.Batting)
-            {
-                foreach (BattingScore battingScore in battingDetails.BattingScores)
-                {
-                    if (battingScore.Pid != 0)
-                    {
-                        concurrentDictionary.TryGetValue(battingScore.Pid, out Points points);
-                        points.BattingScore = battingScore;
-                    }
-                }
-            }
-
-            foreach (Bowling bowlingDetails in playerScoresResponse.Data.Bowling)
-            {
-                foreach (BowlingScore bowlingScore in bowlingDetails.BowlingScores)
-                {
-                    concurrentDictionary.TryGetValue(bowlingScore.Pid, out Points points);
-                    points.BowlingScore = bowlingScore;
-                }
-            }
-
-            foreach (Fielding fieldingDetails in playerScoresResponse.Data.Fielding)
-            {
-                foreach (FieldingScore fieldingScore in fieldingDetails.FieldingScores)
-                {
-                    concurrentDictionary.TryGetValue(fieldingScore.Pid, out Points points);
-                    points.FieldingScore = fieldingScore;
-                }
-            }
+            liveScores.GetOrAdd(1,points);
+            liveScores.GetOrAdd(2, point1);
 
 
-
-
-            foreach (Points point in concurrentDictionary.Values)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(point));
-            }
-
-
-
-
-
+            Console.WriteLine(JsonConvert.SerializeObject(liveScores));
         }
     }
 }

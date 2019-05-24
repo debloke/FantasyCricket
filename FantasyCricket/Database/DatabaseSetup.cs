@@ -90,6 +90,29 @@ namespace FantasyCricket.Database
                                      [displayname]     VARCHAR(255) NOT NULL )";
             sqlite_cmd.ExecuteNonQuery();
 
+            sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS UserTeam (
+                                        username      VARCHAR(255) NOT NULL,
+                                        lastteam VARCHAR(255) ,
+                                        currentteam VARCHAR(255),
+                                        lastremsub INTEGER DEFAULT 100,
+                                        remsub INTEGER DEFAULT 100,
+                                        FOREIGN KEY (username) REFERENCES User (username) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION)";
+            sqlite_cmd.ExecuteNonQuery();
+
+            // Create UserTeam
+            sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS UserTeamPointsHistory (
+                                        username      VARCHAR(255) NOT NULL,
+                                        unique_id integer NOT NULL,
+                                        selectedteam VARCHAR(255) ,
+                                        points integer,
+                                        PRIMARY KEY (username, unique_id),
+                                        FOREIGN KEY (username) REFERENCES User (username) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION,
+                                        FOREIGN KEY (unique_id) REFERENCES Match (unique_id) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION)";
+            sqlite_cmd.ExecuteNonQuery();
+
 
         }
     }

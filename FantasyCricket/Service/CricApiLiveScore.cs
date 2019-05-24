@@ -17,9 +17,21 @@ namespace FantasyCricket.Service
     {
         private readonly HttpClient httpClient = new HttpClient();
 
-        private static readonly string SQLSELECT_SCHEDULED_OR_STARTED_MATCHES = "SELECT * FROM [Match] WHERE (STATUS = 0 OR Status = 1) AMS MatchTime < date('now')";
+        private static readonly string SQLSELECT_SCHEDULED_OR_STARTED_MATCHES = "SELECT * FROM [Match] WHERE (STATUS = 0 OR Status = 1) AND MatchTime < date('now')";
 
-        private static readonly string SQLSETMATCHSTARTED = "UPDATE [Match] SET Status = 1 WHERE unique_id =@unique_id";
+        private static readonly string SQLSETMATCHSTARTED = "UPDATE [Match] SET Status =@status WHERE unique_id =@unique_id";
+
+        private static readonly string SQLSETMATCHPOINTS = "INSERT OR REPLACE INTO [MatchPoints] (unique_id,points) values( @unique_id , @points)";
+
+
+        private static readonly string UPDATEUSERLASTTEAM = "update UserTeam set lastteam = currentteam,lastremsub=remsub";
+
+        private static readonly string UPDATEUSERTEAMMATCHMAP = "INSERT OR REPLACE INTO UserTeamPointsHistory (username, selectedteam,unique_id) SELECT username, lastteam,@unique_id FROM UserTeam";
+
+
+        private static readonly string GETALLUSERMATCHMAP = "SELECT username,selectedteam FROM UserTeamPointsHistory where unique_id=unique_id";
+
+        private static readonly string UPDATEUSERMATCHMAP = "UPDATE UserTeamPointsHistory SET points=@points where username=@username and unique_id=unique_id";
 
         private ConcurrentDictionary<int, Points[]> liveScores = new ConcurrentDictionary<int, Points[]>();
 
@@ -56,9 +68,25 @@ namespace FantasyCricket.Service
                         using (SQLiteCommand insertCommand = new SQLiteCommand(SQLSETMATCHSTARTED, connection))
                         {
                             insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.Parameters.AddWithValue("@status", MatchStatus.STARTED);
                             insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
                             insertCommand.ExecuteNonQuery();
                         }
+
+                        // update user last team
+                        using (SQLiteCommand insertCommand = new SQLiteCommand(UPDATEUSERLASTTEAM, connection))
+                        {
+                            insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.ExecuteNonQuery();
+                        }
+
+                        using (SQLiteCommand insertCommand = new SQLiteCommand(UPDATEUSERTEAMMATCHMAP, connection))
+                        {
+                            insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
+                            insertCommand.ExecuteNonQuery();
+                        }
+
                     }
                 }
 
@@ -74,6 +102,62 @@ namespace FantasyCricket.Service
                     default:
                         throw new Exception("Unknown match type");
 
+                }
+
+
+
+                if (playerScoresResponse.Data.MOM != null)
+                {
+                    using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                    {
+                        connection.Open();
+                        using (SQLiteCommand insertCommand = new SQLiteCommand(SQLSETMATCHSTARTED, connection))
+                        {
+                            insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.Parameters.AddWithValue("@status", MatchStatus.FINISHED);
+                            insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
+                            insertCommand.ExecuteNonQuery();
+                        }
+
+
+                        using (SQLiteCommand insertCommand = new SQLiteCommand(GETALLUSERMATCHMAP, connection))
+                        {
+                            insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
+                            using (SQLiteDataReader reader = insertCommand.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+
+                                    // Get Column ordinal
+                                    int ordinal = reader.GetOrdinal("selectedteam");
+
+                                    UserTeam selectedTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
+
+                                    int userOrdinal = reader.GetOrdinal("username");
+
+                                    string username = reader.GetString(userOrdinal);
+
+
+
+                                    //calculate points
+
+                                    using (SQLiteCommand updateuserpointmap = new SQLiteCommand(UPDATEUSERMATCHMAP, connection))
+                                    {
+                                        insertCommand.CommandType = System.Data.CommandType.Text;
+                                        insertCommand.Parameters.AddWithValue("@points", PointsCalculator.CalculatePoints(points, selectedTeam));
+                                        insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
+                                        insertCommand.Parameters.AddWithValue("@username", username);
+                                        insertCommand.ExecuteNonQuery();
+                                    }
+
+
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch
