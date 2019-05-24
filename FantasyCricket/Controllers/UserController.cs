@@ -35,7 +35,7 @@ namespace FantasyCricket.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("team")]
         public UserTeam GetTeam([FromQuery(Name = "magic")] Guid magicKey)
 

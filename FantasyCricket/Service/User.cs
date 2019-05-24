@@ -18,7 +18,7 @@ namespace FantasyCricket.Service
 
         private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
-        private readonly string SELECTUSER = "SELECT magickey,lastlogin FROM [User] where username = @username and password = @password";
+        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username FROM [User] where username = @username and password = @password";
 
         private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username FROM [User]";
 
@@ -60,7 +60,7 @@ namespace FantasyCricket.Service
                     command.Parameters.AddWithValue("@username", username);
                     command.Parameters.AddWithValue("@password", password);
                     command.Parameters.AddWithValue("@displayname", displayName);
-                    command.Parameters.AddWithValue("@magickey", Guid.NewGuid());
+                    command.Parameters.AddWithValue("@magickey", Guid.NewGuid().ToString());
                     command.ExecuteNonQuery();
                 }
             }
@@ -147,7 +147,7 @@ namespace FantasyCricket.Service
                                         command1.CommandType = System.Data.CommandType.Text;
 
                                         command1.Parameters.AddWithValue("@oldmagickey", key.Magic);
-                                        command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid());
+                                        command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid().ToString());
                                         command1.ExecuteNonQuery();
                                     }
                                 }
@@ -169,6 +169,7 @@ namespace FantasyCricket.Service
                 using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@magickey", magicKey.ToString());
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         MagicKey[] keys = reader.ReadAll<MagicKey>();
@@ -272,6 +273,7 @@ namespace FantasyCricket.Service
                 using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@magickey", magicKey.ToString());
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         MagicKey[] keys = reader.ReadAll<MagicKey>();

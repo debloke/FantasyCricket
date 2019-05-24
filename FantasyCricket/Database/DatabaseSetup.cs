@@ -86,7 +86,7 @@ namespace FantasyCricket.Database
                                      [username]     VARCHAR(255) NOT NULL UNIQUE,
                                      [password]     VARCHAR(255) NOT NULL,  
                                      [lastlogin]     DATETIME  ,
-                                     [magickey]     GUID ,
+                                     [magickey]     GUID,
                                      [displayname]     VARCHAR(255) NOT NULL )";
             sqlite_cmd.ExecuteNonQuery();
 
