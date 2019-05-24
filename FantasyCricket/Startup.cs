@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Database;
+﻿using FantasyCricket.Common.Filters;
+using FantasyCricket.Database;
 using FantasyCricket.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,10 @@ namespace FantasyCricket
             }));
 
 
-            services.AddMvc()
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(typeof(ExceptionFilter));
+            })
         .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 

@@ -205,10 +205,10 @@ namespace FantasyCricket.Service
                                 // Saving for first time just update currentteam
                                 using (SQLiteCommand commandAddUser = new SQLiteCommand(UPDATECURRENTSERTEAM, connection))
                                 {
-                                    command.CommandType = System.Data.CommandType.Text;
-                                    command.Parameters.AddWithValue("@username", username);
-                                    command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
-                                    command.ExecuteNonQuery();
+                                    commandAddUser.CommandType = System.Data.CommandType.Text;
+                                    commandAddUser.Parameters.AddWithValue("@username", username);
+                                    commandAddUser.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                    commandAddUser.ExecuteNonQuery();
                                 }
 
                             }
@@ -230,11 +230,11 @@ namespace FantasyCricket.Service
                                 {
                                     using (SQLiteCommand commandAddUser = new SQLiteCommand(UPDATECURRENTSERTEAMWITHSUBS, connection))
                                     {
-                                        command.CommandType = System.Data.CommandType.Text;
-                                        command.Parameters.AddWithValue("@username", username);
-                                        command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
-                                        command.Parameters.AddWithValue("@remsubs", lastRemSubs - subUsed);
-                                        command.ExecuteNonQuery();
+                                        commandAddUser.CommandType = System.Data.CommandType.Text;
+                                        commandAddUser.Parameters.AddWithValue("@username", username);
+                                        commandAddUser.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                        commandAddUser.Parameters.AddWithValue("@remsubs", lastRemSubs - subUsed);
+                                        commandAddUser.ExecuteNonQuery();
                                     }
                                 }
                                 else
@@ -249,10 +249,10 @@ namespace FantasyCricket.Service
                             // adding for first time
                             using (SQLiteCommand commandAddUser = new SQLiteCommand(ADDUNEWSERTEAM, connection))
                             {
-                                command.CommandType = System.Data.CommandType.Text;
-                                command.Parameters.AddWithValue("@username", username);
-                                command.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
-                                command.ExecuteNonQuery();
+                                commandAddUser.CommandType = System.Data.CommandType.Text;
+                                commandAddUser.Parameters.AddWithValue("@username", username);
+                                commandAddUser.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
+                                commandAddUser.ExecuteNonQuery();
                             }
                         }
                     }
