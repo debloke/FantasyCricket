@@ -318,5 +318,28 @@ namespace FantasyCricket.Service
             return new UserTeam();
 
         }
+
+        public string[] GetUsers()
+        {
+            List<string> userList = new List<string>();
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(SELECTALLUSER, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        MagicKey[] keys = reader.ReadAll<MagicKey>();
+                        foreach (MagicKey key in keys)
+                        {
+                            userList.Add(key.username);
+                        }
+
+                    }
+                }
+            }
+            return userList.ToArray();
+        }
     }
 }

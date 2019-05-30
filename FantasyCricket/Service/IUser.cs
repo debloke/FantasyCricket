@@ -11,5 +11,7 @@ namespace FantasyCricket.Service
         void SaveTeam(UserTeam userTeam, Guid magicKey);
 
         UserTeam GetTeam(Guid magicKey);
+
+        string[] GetUsers();
     }
 }

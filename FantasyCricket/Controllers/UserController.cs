@@ -43,6 +43,13 @@ namespace FantasyCricket.Controllers
             return user.GetTeam(magicKey);
         }
 
+        [HttpGet]
+        public ActionResult<string[]> GetUsers()
+
+        {
+            return user.GetTeam(magicKey);
+        }
+
         // PUT api/user
         [HttpPut]
         public void CreateUser([FromQuery(Name = "username")] string username,
