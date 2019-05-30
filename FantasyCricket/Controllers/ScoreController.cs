@@ -16,6 +16,15 @@ namespace FantasyCricket.Controllers
 
         // GET api/score
         [HttpGet]
-        public ActionResult<string> Get() => JsonConvert.SerializeObject(liveScore.GetScores(),Formatting.Indented);
+        public ActionResult<string> Get() => JsonConvert.SerializeObject(liveScore.GetScores(), Formatting.Indented);
+
+        // GET api/score
+        [HttpGet]
+        [Route("test")]
+        public ActionResult<string> GetTest()
+        {
+            liveScore.LiveScoreCheckTimerEvent(new object());
+            return JsonConvert.SerializeObject(liveScore.GetScores(), Formatting.Indented);
+        }
     }
 }

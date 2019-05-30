@@ -7,5 +7,7 @@ namespace FantasyCricket.Service
     {
         ConcurrentDictionary<int, Points[]> GetScores();
 
+        void LiveScoreCheckTimerEvent(object state);
+
     }
 }

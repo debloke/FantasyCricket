@@ -30,7 +30,7 @@ namespace FantasyCricket.Service
 
         private readonly string ADDUNEWSERTEAM = "INSERT OR REPLACE INTO [UserTeam] (  username, currentteam ) VALUES (  @username,  @currentteam)";
 
-        private readonly string UPDATECURRENTSERTEAM = "UPDATE [UserTeam] SET currentteam = @currentteam where where username=@username";
+        private readonly string UPDATECURRENTSERTEAM = "UPDATE [UserTeam] SET currentteam = @currentteam where username=@username";
 
         private readonly string UPDATECURRENTSERTEAMWITHSUBS = "UPDATE [UserTeam] SET currentteam = @currentteam , remsub = @remsub where where username=@username";
 
@@ -191,16 +191,16 @@ namespace FantasyCricket.Service
                     {
                         if (reader.HasRows)
                         {
-
+                            reader.Read();
                             // Get Column ordinal
                             int ordinal = reader.GetOrdinal("lastteam");
 
-                            UserTeam lastTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+                            string lastteamstr = (reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal));
 
                             int subsOrdinal = reader.GetOrdinal("lastremsub");
                             int lastRemSubs = reader.GetInt32(subsOrdinal);
 
-                            if (lastTeam == null)
+                            if (String.IsNullOrEmpty(lastteamstr))
                             {
                                 // Saving for first time just update currentteam
                                 using (SQLiteCommand commandAddUser = new SQLiteCommand(UPDATECURRENTSERTEAM, connection))
@@ -214,6 +214,8 @@ namespace FantasyCricket.Service
                             }
                             else
                             {
+                                UserTeam lastTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
                                 int subUsed = 0;
                                 //user already played last match
                                 List<int> lastPlayers = new List<int>(lastTeam.PlayerIds);
@@ -295,7 +297,7 @@ namespace FantasyCricket.Service
                     {
                         if (reader.HasRows)
                         {
-
+                            reader.Read();
                             // Get Column ordinal
                             int ordinal = reader.GetOrdinal("currentteam");
 

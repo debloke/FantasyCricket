@@ -17,12 +17,9 @@ namespace FantasyCricket.Service
     {
         private readonly HttpClient httpClient = new HttpClient();
 
-        private static readonly string SQLSELECT_SCHEDULED_OR_STARTED_MATCHES = "SELECT * FROM [Match] WHERE (STATUS = 0 OR Status = 1) AND MatchTime < date('now')";
+        private static readonly string SQLSELECT_SCHEDULED_OR_STARTED_MATCHES = "SELECT * FROM [Match] WHERE (STATUS = 0 OR Status = 1) AND MatchTime < datetime('now')";
 
         private static readonly string SQLSETMATCHSTARTED = "UPDATE [Match] SET Status =@status WHERE unique_id =@unique_id";
-
-        private static readonly string SQLSETMATCHPOINTS = "INSERT OR REPLACE INTO [MatchPoints] (unique_id,points) values( @unique_id , @points)";
-
 
         private static readonly string UPDATEUSERLASTTEAM = "update UserTeam set lastteam = currentteam,lastremsub=remsub";
 
@@ -40,7 +37,6 @@ namespace FantasyCricket.Service
         private Timer LiveScoreCheckTimer { get; set; }
 
         private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
-
         public CricApiLiveScore()
         {
             LoadCricApiLiveScoreTimer();
@@ -186,7 +182,7 @@ namespace FantasyCricket.Service
             }
         }
 
-        private void LiveScoreCheckTimerEvent(object state)
+        public  void LiveScoreCheckTimerEvent(object state)
         {
 
             liveScores = new ConcurrentDictionary<int, Points[]>();
