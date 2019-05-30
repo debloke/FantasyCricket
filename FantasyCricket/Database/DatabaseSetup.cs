@@ -105,11 +105,30 @@ namespace FantasyCricket.Database
                                         username      VARCHAR(255) NOT NULL,
                                         unique_id integer NOT NULL,
                                         selectedteam VARCHAR(255) ,
-                                        points integer,
+                                        points integer DEFAULT 0,
                                         PRIMARY KEY (username, unique_id),
                                         FOREIGN KEY (username) REFERENCES User (username) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION,
                                         FOREIGN KEY (unique_id) REFERENCES Match (unique_id) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION)";
+            sqlite_cmd.ExecuteNonQuery();
+
+
+            // Create Gang
+            sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Gangs (
+                                        name      VARCHAR(255) NOT NULL PRIMARY KEY)";
+            sqlite_cmd.ExecuteNonQuery();
+
+
+
+            // Create GangUserMap
+            sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS GangUserMap (
+                                        username      VARCHAR(255) NOT NULL,
+                                        name      VARCHAR(255) NOT NULL,
+                                        PRIMARY KEY (username, name),
+                                        FOREIGN KEY (username) REFERENCES User (username) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION,
+                                        FOREIGN KEY (name) REFERENCES Gangs (name) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION)";
             sqlite_cmd.ExecuteNonQuery();
 

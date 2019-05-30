@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Service;
+﻿using FantasyCricket.Models;
+using FantasyCricket.Service;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -26,5 +27,24 @@ namespace FantasyCricket.Controllers
             liveScore.LiveScoreCheckTimerEvent(new object());
             return JsonConvert.SerializeObject(liveScore.GetScores(), Formatting.Indented);
         }
+
+
+        // GET api/score
+        [HttpGet]
+        [Route("points")]
+        public ActionResult<UserPoints[]> GetUserPoints()
+        {
+            return liveScore.GetUserPoints();
+        }
+
+
+        [HttpGet]
+        [Route("points/{gang}")]
+        public ActionResult<UserPoints[]> GetUserPointsInGang(string gang)
+        {
+            return liveScore.GetUserPoints(gang);
+        }
+
+
     }
 }

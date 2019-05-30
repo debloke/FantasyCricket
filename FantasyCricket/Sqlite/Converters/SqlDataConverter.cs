@@ -94,8 +94,30 @@ namespace Sqlite.Converters
                 case "GUID":
                     return SqlDbType.UniqueIdentifier;
             }
-            
+
             return (SqlDbType)Enum.Parse(typeof(SqlDbType), dataTypeName, true);
         }
+
+        public static SqlDbType ConvertFieldType(Type type)
+        {
+            // SqlLite conversions 
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Int16:
+                    return SqlDbType.SmallInt;
+                case TypeCode.Int32:
+                    return SqlDbType.Int;
+                case TypeCode.Int64:
+                    return SqlDbType.BigInt;
+                default:
+                    throw new Exception("Unable to figure field type");
+
+
+            }
+
+        }
+
+
+
     }
 }

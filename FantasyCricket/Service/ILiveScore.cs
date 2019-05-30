@@ -9,5 +9,10 @@ namespace FantasyCricket.Service
 
         void LiveScoreCheckTimerEvent(object state);
 
+
+        UserPoints[] GetUserPoints();
+
+        UserPoints[] GetUserPoints(string gang);
+
     }
 }

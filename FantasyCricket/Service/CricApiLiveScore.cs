@@ -30,6 +30,12 @@ namespace FantasyCricket.Service
 
         private static readonly string UPDATEUSERMATCHMAP = "UPDATE UserTeamPointsHistory SET points=@points where username=@username and unique_id=unique_id";
 
+        private static readonly string GETALLUSERSCORE = "SELECT u.username,SUM(p.points) FROM User u, UserTeamPointsHistory p WHERE u.username=p.username GROUP BY u.username;";
+
+        private static readonly string GETALLUSERSCOREINGANG = "SELECT g.username,SUM(p.points) FROM GangUserMap g, UserTeamPointsHistory p WHERE g.username=p.username AND g.name=@gang GROUP BY g.username;";
+
+
+
         private ConcurrentDictionary<int, Points[]> liveScores = new ConcurrentDictionary<int, Points[]>();
 
 
@@ -39,13 +45,11 @@ namespace FantasyCricket.Service
 
         private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
 
-#if DEBUG
         public CricApiLiveScore()
         {
 
             LoadCricApiLiveScoreTimer();
         }
-#endif
 
         private Points[] GetScore(Match match)
         {
@@ -222,6 +226,39 @@ namespace FantasyCricket.Service
         public ConcurrentDictionary<int, Points[]> GetScores()
         {
             return liveScores;
+        }
+
+        public UserPoints[] GetUserPoints()
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(GETALLUSERSCORE, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        return reader.ReadAll<UserPoints>();
+                    }
+                }
+            }
+        }
+
+        public UserPoints[] GetUserPoints(string gang)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(GETALLUSERSCOREINGANG, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@gang", gang);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        return reader.ReadAll<UserPoints>();
+                    }
+                }
+            }
         }
     }
 }

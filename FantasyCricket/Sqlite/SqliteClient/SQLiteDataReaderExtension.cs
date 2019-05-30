@@ -1,12 +1,11 @@
 ﻿
+using Sqlite.Converters;
+using Sqlite.SqliteAttributes;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
-
-using Sqlite.Converters;
-using Sqlite.SqliteAttributes;
 
 namespace Sqlite.SqlClient
 {
@@ -51,9 +50,18 @@ namespace Sqlite.SqlClient
                         // Create column's converter
                         ISqlDataConverter converter = SqlDataConverterFactory.Create(sqlColumnAttribute, propertyInfo.PropertyType);
 
+
                         // Get SqlDbType from column's meta-data
-                        SqlDbType sqlDbType = SqlDataConverter.ConvertDbType(
-                            reader.GetDataTypeName(ordinal));
+                        SqlDbType sqlDbType;
+                        string dataTypeName = reader.GetDataTypeName(ordinal);
+                        if (!string.IsNullOrEmpty(dataTypeName))
+                        {
+                            sqlDbType = SqlDataConverter.ConvertDbType(dataTypeName);
+                        }
+                        else
+                        {
+                            sqlDbType = SqlDataConverter.ConvertFieldType(reader.GetFieldType(ordinal));
+                        }
 
                         // Apply the converted object to the property's object
                         propertyInfo.SetValue(
