@@ -36,12 +36,16 @@ namespace FantasyCricket.Service
 
         private Timer LiveScoreCheckTimer { get; set; }
 
+
         private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
+
+#if DEBUG
         public CricApiLiveScore()
         {
-           LoadCricApiLiveScoreTimer();
-        }
 
+            LoadCricApiLiveScoreTimer();
+        }
+#endif
 
         private Points[] GetScore(Match match)
         {
@@ -124,31 +128,32 @@ namespace FantasyCricket.Service
                             {
                                 if (reader.HasRows)
                                 {
-
-                                    // Get Column ordinal
-                                    int ordinal = reader.GetOrdinal("selectedteam");
-
-                                    UserTeam selectedTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
-
-
-                                    int userOrdinal = reader.GetOrdinal("username");
-
-                                    string username = reader.GetString(userOrdinal);
-
-
-
-                                    //calculate points
-
-                                    using (SQLiteCommand updateuserpointmap = new SQLiteCommand(UPDATEUSERMATCHMAP, connection))
+                                    while (reader.Read())
                                     {
-                                        insertCommand.CommandType = System.Data.CommandType.Text;
-                                        insertCommand.Parameters.AddWithValue("@points", PointsCalculator.CalculatePoints(points, selectedTeam));
-                                        insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
-                                        insertCommand.Parameters.AddWithValue("@username", username);
-                                        insertCommand.ExecuteNonQuery();
+                                        // Get Column ordinal
+                                        int ordinal = reader.GetOrdinal("selectedteam");
+
+                                        UserTeam selectedTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
+
+                                        int userOrdinal = reader.GetOrdinal("username");
+
+                                        string username = reader.GetString(userOrdinal);
+
+
+
+                                        //calculate points
+
+                                        using (SQLiteCommand updateuserpointmap = new SQLiteCommand(UPDATEUSERMATCHMAP, connection))
+                                        {
+                                            updateuserpointmap.CommandType = System.Data.CommandType.Text;
+                                            updateuserpointmap.Parameters.AddWithValue("@points", PointsCalculator.CalculatePoints(points, selectedTeam));
+                                            updateuserpointmap.Parameters.AddWithValue("@unique_id", match.MatchId);
+                                            updateuserpointmap.Parameters.AddWithValue("@username", username);
+                                            updateuserpointmap.ExecuteNonQuery();
+                                        }
+
                                     }
-
-
 
                                 }
                             }
@@ -182,7 +187,7 @@ namespace FantasyCricket.Service
             }
         }
 
-        public  void LiveScoreCheckTimerEvent(object state)
+        public void LiveScoreCheckTimerEvent(object state)
         {
 
             liveScores = new ConcurrentDictionary<int, Points[]>();
