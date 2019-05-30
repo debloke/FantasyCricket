@@ -14,7 +14,7 @@ namespace FantasyCricket.ScoreCalculator
             {
                 if (playedIds.Contains(point.PlayerId))
                 {
-                    totalPoints += (point.BattingPoints + point.BowlingPoints + point.FieldingPoints);
+                    totalPoints += (point.BattingPoints + point.BowlingPoints + point.FieldingPoints + point.Bonus);
                 }
                 if (point.PlayerId == userTeam.BattingCaptain)
                 {

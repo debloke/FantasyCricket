@@ -59,10 +59,16 @@ namespace FantasyCricket.ScoreCalculator
                 {
                     playerScores.TryGetValue(fieldingScore.Pid, out Points points);
                     points.FieldingScore = fieldingScore;
+                    points.FieldingPoints = CalculateFieldingPoints(points.FieldingScore);
                 }
             }
 
+            if (playerScoresResponse.Data.MOM != null)
+            {
+                playerScores.TryGetValue(playerScoresResponse.Data.MOM.PlayerId, out Points points);
+                points.Bonus = 50;
 
+            }
 
 
 
@@ -74,6 +80,14 @@ namespace FantasyCricket.ScoreCalculator
             int points = 0;
             // 1 point for every run
             points += battingScore.Runs;
+
+            // -10 if duck out
+            if ((battingScore.Runs == 0) && !String.IsNullOrEmpty(battingScore.Dismissal))
+            {
+                points -= 10;
+            }
+
+
             // If run ab ball or more then double less balls
             int runsDiff = battingScore.Runs - battingScore.Balls;
             if (runsDiff >= 0)
@@ -105,11 +119,56 @@ namespace FantasyCricket.ScoreCalculator
             }
 
             //Every 100 run-> + 20 point
-            int noOf100s = battingScore.Runs / 25;
+            int noOf100s = battingScore.Runs / 100;
             if (noOf100s >= 1)
             {
                 points += (noOf100s * 20);
             }
+
+            //Every 125 run-> + 25 point
+            int noOf125s = battingScore.Runs / 125;
+            if (noOf125s >= 1)
+            {
+                points += (noOf125s * 25);
+            }
+
+            //Every 150 run-> + 30 point
+            int noOf150s = battingScore.Runs / 150;
+            if (noOf150s >= 1)
+            {
+                points += (noOf150s * 30);
+            }
+
+            //Every 175 run-> + 35 point
+            int noOf175s = battingScore.Runs / 175;
+            if (noOf175s >= 1)
+            {
+                points += (noOf175s * 35);
+            }
+
+            //Every 200 run-> + 40 point
+            int noOf200s = battingScore.Runs / 200;
+            if (noOf200s >= 1)
+            {
+                points += (noOf200s * 40);
+            }
+
+            //Every 225 run-> + 45 point
+            int noOf225s = battingScore.Runs / 225;
+            if (noOf225s >= 1)
+            {
+                points += (noOf225s * 45);
+            }
+
+            //Every 250 run-> + 50 point
+            int noOf250s = battingScore.Runs / 250;
+            if (noOf250s >= 1)
+            {
+                points += (noOf250s * 50);
+            }
+
+
+
             // Every four-> 1 point
             points += (battingScore.Fours);
 
@@ -208,7 +267,8 @@ namespace FantasyCricket.ScoreCalculator
         private int CalculateFieldingPoints(FieldingScore fieldingScore)
         {
             int points = 0;
-            points += (fieldingScore.Runout*15);
+            points += (fieldingScore.Catch * 15);
+            points += (fieldingScore.Runout * 15);
             points += (fieldingScore.Stumped * 20);
             return points;
         }

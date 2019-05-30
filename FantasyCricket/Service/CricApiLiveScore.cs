@@ -39,7 +39,7 @@ namespace FantasyCricket.Service
         private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
         public CricApiLiveScore()
         {
-            LoadCricApiLiveScoreTimer();
+           LoadCricApiLiveScoreTimer();
         }
 
 
