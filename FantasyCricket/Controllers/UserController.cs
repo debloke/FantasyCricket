@@ -47,7 +47,7 @@ namespace FantasyCricket.Controllers
         public ActionResult<string[]> GetUsers()
 
         {
-            return user.GetTeam(magicKey);
+            return user.GetUsers();
         }
 
         // PUT api/user
