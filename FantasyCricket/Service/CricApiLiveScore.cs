@@ -165,8 +165,9 @@ namespace FantasyCricket.Service
                     }
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                Console.WriteLine(exception);
                 // TODO
             }
             return points;
@@ -194,7 +195,7 @@ namespace FantasyCricket.Service
         public void LiveScoreCheckTimerEvent(object state)
         {
 
-            liveScores = new ConcurrentDictionary<int, Points[]>();
+
             Match[] liveMatches;
 
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
@@ -209,6 +210,12 @@ namespace FantasyCricket.Service
                     }
                 }
             }
+
+            if (liveMatches.Length > 0)
+            {
+                liveScores = new ConcurrentDictionary<int, Points[]>();
+            }
+
 
             foreach (Match match in liveMatches)
             {

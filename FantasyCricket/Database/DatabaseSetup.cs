@@ -116,7 +116,10 @@ namespace FantasyCricket.Database
 
             // Create Gang
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Gangs (
-                                        name      VARCHAR(255) NOT NULL PRIMARY KEY)";
+                                        name      VARCHAR(255) NOT NULL PRIMARY KEY,
+                                        owner      VARCHAR(255) NOT NULL,
+                                        FOREIGN KEY (username) REFERENCES User (username) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION))";
             sqlite_cmd.ExecuteNonQuery();
 
 

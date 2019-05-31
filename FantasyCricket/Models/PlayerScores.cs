@@ -19,6 +19,7 @@ namespace FantasyCricket.Models
         public Team[] Team { get; set; }
 
         [JsonProperty("winner_team")]
+        [JsonConverter(typeof(CountryNameJsonConverter))]
         public CountryTeamName WinnerTeam { get; set; }
 
         [JsonProperty("matchStarted")]

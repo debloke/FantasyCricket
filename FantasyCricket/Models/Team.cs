@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FantasyCricket.Converter;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace FantasyCricket.Models
 
 
         [JsonProperty("name")]
+        [JsonConverter(typeof(CountryNameJsonConverter))]
         public string TeamName { get; set; }
 
 
