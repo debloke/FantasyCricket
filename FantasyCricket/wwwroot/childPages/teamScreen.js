@@ -75,30 +75,32 @@ function populateTeamData(id, listOfMyPlayers) {
         let captains = "";
         ALL_PLAYERS.map(function(player){
             if(myPlayers.indexOf(player.pid) > -1) {
-                if(player.pid == listOfMyPlayers.BattingCaptain) {
-                    captains += "<div>Batting Captain: " + player.name +"</div>";
+                let role = "";
+                if(listOfMyPlayers.BattingCaptain == player.pid) {
+                    role += "<span class='captain'><img src='/icons/roles/BAT.png'></span>"
                 }
-                if(player.pid == listOfMyPlayers.BowlingCaptain) {
-                    captains += "<div>Bowling Captain: " + player.name +"</div>";
+                if(listOfMyPlayers.BowlingCaptain == player.pid) {
+                    role += "<span class='captain'><img src='/icons/roles/BOWL.png'></span>"
                 }
-                if(player.pid == listOfMyPlayers.FieldingCaptain) {
-                    captains += "<div>Fielding Captain: " + player.name +"</div>";
+                if(listOfMyPlayers.FieldingCaptain == player.pid) {
+                    role += "<span class='captain'><img src='/icons/roles/WK.png'></span>"
                 }
                 
                 myPlayersFullDetail.push(player);
-                let mPDate = "<li>";
-                player.name = (player.name.length > 13) ? (player.name.substring(0,13) + "..") : player.name;
-                mPDate += "<div class='iconContainer'><img class='allCountries "+player.TeamName.replace(/ /gi, "")+"'/>";
-                mPDate += "<img class='roles' src='/icons/roles/"+player.Role+".png'/></div>";
-                mPDate += "<div class='playerInfo'><span class='pName'>"+player.name+"</span>";
-                mPDate += "<span class='pPrice'>"+player.Cost+"</span></div>";
-                mPDate += "<img src='/icons/delete.png' class='deletePlayer' data='"+player.pid+"'></li>";
+                let mPData = "<li>";
+                player.name = player.name;
+                mPData += "<div class='iconContainer'><img class='allCountries "+player.TeamName.replace(/ /gi, "")+"'/>";
+                mPData += "<img class='roles' src='/icons/roles/"+player.Role+".png'/></div>";
+                mPData += "<div class='playerInfo'><span class='pName'>"+player.name+"</span>";
+                mPData += "<span class='pPrice'>"+player.Cost+"</span></div>";
+                mPData += role;
+                mPData += "<img src='/icons/delete.png' class='deletePlayer' data='"+player.pid+"'></li>";
 
                 switch(player.Role) {
-                    case "BAT": myBatsmanData+= mPDate; break;
-                    case "WK": myWicketKeeperData+= mPDate; break;
-                    case "ALL": myAllRounderData+= mPDate; break;
-                    case "BOWL": myBowlerData+= mPDate; break;
+                    case "BAT": myBatsmanData+= mPData; break;
+                    case "WK": myWicketKeeperData+= mPData; break;
+                    case "ALL": myAllRounderData+= mPData; break;
+                    case "BOWL": myBowlerData+= mPData; break;
                     default: break;
                 }
             }
@@ -106,8 +108,7 @@ function populateTeamData(id, listOfMyPlayers) {
         let uiData = "<div class='myTeam'>";
         uiData += "<p id='errorMessage'></p>";
         uiData += "<span id='saveteam'>Submit</span>";
-        uiData += "<p id='budgetLeftMessage'></p>";
-        uiData += "<p id='subsLeftMessage'></p>";
+        uiData += "<p id='budgetAndSubsLeftMessage'></p>";
         uiData += "<div><ul>"+myBatsmanData+"</ul></div>";
         uiData += "<div><ul>"+myWicketKeeperData+"</ul></div>";
         uiData += "<div><ul>"+myAllRounderData+"</ul></div>";
@@ -122,9 +123,13 @@ function populateTeamData(id, listOfMyPlayers) {
         let teamValidation = new validator(myPlayersFullDetail);
         let response = teamValidation.runValidations();
         (response.isError) && $("#errorMessage").html(response.error);
-        $("#budgetLeftMessage").html("Budget Left: " + response.budgetLeft + captains);
-        $("#subsLeftMessage").html("Substitutions Left: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;"));
+        let budgetAndSubs = "";
+        budgetAndSubs += "<div class='budgetSub'>Budget Left: " + response.budgetLeft + "</div>";
+        budgetAndSubs += "<div class='budgetSub'>Substitutions Left: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;</div>");
+        
+        $("#budgetAndSubsLeftMessage").html(budgetAndSubs);
         $("#saveteam").css("visibility", ( response.isError ? "hidden" : "visible" ));
+        $("#errorMessage").css("visibility", ( response.isError ? "visible" : "hidden" ));
         
         // Save Team
         $("#saveteam").bind("click", function() {

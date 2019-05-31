@@ -5,45 +5,34 @@ var myLeagueScreen = function() {
     };
 };
 
-function populateLeagueData(id) {
-    let myLeagueData = [
-        {
-            "Name": "BahutHard",
-            "Members": [
-                { "Player": "Debloke Maitra", "Points" : 15345 },
-                { "Player": "Nakul Shrivastava", "Points" : 15445 },
-                { "Player": "Pranay Ranjan", "Points" : 15120 },
-                { "Player": "Saurabh Agarwal", "Points" : 15094 }
-            ]
+function populateLeagueData(id) {   
+    let utility = new UtilityClass();
+    utility.getRequest(
+        "/api/score/points",
+        function( data ) {
+            let response = "<div id='leagueList'><ul>";
+            // Only one entry as of now, Gangs will fit in here
+            let myLeagueData = [
+                {
+                    "Name": "Leaderboard",
+                    "Members": data
+                }
+            ];
+            myLeagueData.map(function(lData){
+                response += "<li>"+ lData.Name +"</li>";
+            });
+            response += "</ul></div><div id='leagueInfo'></div>";
+            $(id).html(response);
+            $("#leagueList li").bind("click", function() {
+                $("#leagueList li").css({"color": "#fff", "font-weight": "normal", "background": "#46e285"});
+                $(this).css({"color": "#f00", "font-weight": "bold", "background": "#eef456"});
+                displayLeagueInfo(this.textContent, myLeagueData);
+            });
         },
-        {
-            "Name": "Houston Rockers",
-            "Members": [
-                { "Player": "Debloke Maitra", "Points" : 15345 },
-                { "Player": "Nakul Shrivastava", "Points" : 15445 },
-                { "Player": "Pranay Ranjan", "Points" : 15120 }
-            ]
-        },
-        {
-            "Name": "HP",
-            "Members": [
-                { "Player": "Gaurav Gandhi", "Points" : 11094 },
-                { "Player": "Nakul Shrivastava", "Points" : 15445 },
-                { "Player": "Pranay Ranjan", "Points" : 15120 }
-            ]
+        function(err) {
+            alert( "Unable to fetch Leaderboard data" );
         }
-    ];
-    let response = "<div id='leagueList'><ul>";
-    myLeagueData.map(function(lData){
-        response += "<li>"+ lData.Name +"</li>";
-    });
-    response += "</ul></div><div id='leagueInfo'></div>";
-    $(id).html(response);
-    $("#leagueList li").bind("click", function() {
-        $("#leagueList li").css({"color": "#fff", "font-weight": "normal", "background": "#46e285"});
-        $(this).css({"color": "#f00", "font-weight": "bold", "background": "#eef456"});
-        displayLeagueInfo(this.textContent, myLeagueData);
-    });
+    );
 }
 
 function displayLeagueInfo(leagueName, allData) {
@@ -52,11 +41,11 @@ function displayLeagueInfo(leagueName, allData) {
         let resp = "<table border='1'><tr><th>Rank</th><th>Member</th><th>Points</th></tr>";
         let leagueMembers = memberData[0].Members;
         leagueMembers = leagueMembers.sort(function(a,b) {
-            return b.Points - a.Points;
+            return b.Total - a.Total;
         });
         let rank = 1;
         leagueMembers.map(function(members) {
-            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam()'>" + members.Player + "</td><td>" + members.Points + "</td></tr>";
+            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam()'>" + members.Username + "</td><td>" + members.Total + "</td></tr>";
         });
         resp += "</table>"
         $("#leagueInfo").html(resp);        

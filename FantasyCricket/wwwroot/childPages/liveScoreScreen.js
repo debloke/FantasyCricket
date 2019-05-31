@@ -9,8 +9,6 @@ function populateLiveData(id) {
     let oldData = [];
     let newData = [];
     let utility = new UtilityClass();
-    // AJAX call : HARDCODED FOR NOW
-    // TO BE CHANGED WITH LIVE GAME ID
     utility.getRequest(
         "/api/score",
         function( data ) {

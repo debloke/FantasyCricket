@@ -11,16 +11,16 @@ let validator = function(dataObj) {
         let response = { isError : false };
         // Classiication per role
         let roles = {
-            canBat: { count: 0, minAllowed: 6, error: "You need to have atleast 6 Batsmen" },
-            canBowl: { count: 0, minAllowed: 5, error: "You need to have atleast 5 Bowlers" },
-            canKeep: { count: 0, minAllowed: 1, error: "You need to have atleast 1 Wicket Keeper" },
-            canPlay: {count: self.data.length, minAllowed: 11, maxAllowed: 11, error: "You need to have 11 players" }
+            canBat: { count: 0, minAllowed: 6, error: "Select 6 Batsmen" },
+            canBowl: { count: 0, minAllowed: 5, error: "Select 5 Bowlers" },
+            canKeep: { count: 0, minAllowed: 1, error: "Select 1 Wicket Keeper" },
+            canPlay: {count: self.data.length, minAllowed: 11, maxAllowed: 11, error: "Select 11 players" }
         };
         // Check for Max players in a team
         let playersInATeam = {};
-        let maxPlayerFromATeamAllowed = { count: 6, error: "We can not have more than 6 players from single team" };
+        let maxPlayerFromATeamAllowed = { count: 6, error: "More than 6 players from single team" };
         // Check for budget
-        let maxAllowedBudget = { count: 1000, error: "We can not have budget more than 1000" };
+        let maxAllowedBudget = { count: 1000, error: "Budget more than 1000" };
         let totalBudget = 0;      
         // Loop through the players list within the team
         // And determine the roles each player play
