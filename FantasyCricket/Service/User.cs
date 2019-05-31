@@ -235,7 +235,7 @@ namespace FantasyCricket.Service
                                         commandAddUser.CommandType = System.Data.CommandType.Text;
                                         commandAddUser.Parameters.AddWithValue("@username", username);
                                         commandAddUser.Parameters.AddWithValue("@currentteam", JsonConvert.SerializeObject(userTeam));
-                                        commandAddUser.Parameters.AddWithValue("@remsubs", lastRemSubs - subUsed);
+                                        commandAddUser.Parameters.AddWithValue("@remsub", lastRemSubs - subUsed);
                                         commandAddUser.ExecuteNonQuery();
                                     }
                                 }
