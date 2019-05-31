@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Service;
+﻿using FantasyCricket.Converter;
+using FantasyCricket.Service;
 using Newtonsoft.Json;
 
 namespace FantasyCricket.Models
@@ -19,8 +20,7 @@ namespace FantasyCricket.Models
         public Team[] Team { get; set; }
 
         [JsonProperty("winner_team")]
-        [JsonConverter(typeof(CountryNameJsonConverter))]
-        public CountryTeamName WinnerTeam { get; set; }
+        public string WinnerTeam { get; set; }
 
         [JsonProperty("matchStarted")]
         public bool MatchStarted { get; set; }

@@ -15,7 +15,6 @@ namespace FantasyCricket.Models
 
 
         [JsonProperty("name")]
-        [JsonConverter(typeof(CountryNameJsonConverter))]
         public string TeamName { get; set; }
 
 
