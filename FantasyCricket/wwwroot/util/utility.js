@@ -24,13 +24,14 @@ let UtilityClass = function() {
      * @param        {Callback} successCB - Callback for success
      * @param        {Callback} errorCB - Callback for error
      * @param        {Object} data - Data to post
+     * @param        {String} contentType
      * @return       N/A
      **************************************************/
-    that.postRequest = function(url, successCB, errorCB, data) {
+    that.postRequest = function(url, successCB, errorCB, data, contentType) {
         let obj = {url: (that.baseURL + url), type: "POST"};
         if(data) {
             obj.data = JSON.stringify(data);
-            obj.contentType = "application/json";
+            obj.contentType = contentType || "application/json";
         }
         makeHTTPCall(
             obj, 

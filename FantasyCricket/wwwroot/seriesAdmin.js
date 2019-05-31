@@ -90,7 +90,7 @@ function processData(data) {
         $(".seriesLeftBlock ul li").removeClass("selected");
         $(this).addClass("selected");
         let selectedSeries = this.innerText;
-        localStorage.SeriesId = this.getAttribute("seriesId");
+        sessionStorage.SeriesId = this.getAttribute("seriesId");
         data.map(function (mData) {
             if (mData.SeriesName == selectedSeries) {
                 displayInRightContainer(mData);
@@ -186,7 +186,7 @@ function displayUnassignedMatches(unAssignedMatches, utility, assignedMatches) {
     $(".addBtn").bind("click", function() {
         let uniqueId = +this.getAttribute("matchId");
         let currentObj = tempObj[uniqueId];
-        currentObj.SeriesId = +localStorage.SeriesId;
+        currentObj.SeriesId = +sessionStorage.SeriesId;
         utility.postRequest(
             "/api/series",
             function (data) {

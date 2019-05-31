@@ -20,7 +20,7 @@ let targetScreens = [
  * @returns        N/A                                                       *
  ****************************************************************************/
 $(function() {
-    if(!localStorage.loggedInUser) window.location.href = "index.html";
+    if(!sessionStorage.loggedInUser) window.location.href = "index.html";
     
     $(".myMenu li a").click( function() {
         $(".myMenu li a").removeClass("current");

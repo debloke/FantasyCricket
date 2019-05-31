@@ -3,21 +3,35 @@ let ALL_PLAYERS = [];
 var teamScreen = function() {
     this.returnDataForDisplay = function(id) {
         let utility = new UtilityClass();
-        utility.getRequest(
-            "/api/player/?tournament=ODI",
-            function (data) {
-                ALL_PLAYERS = data;
-                populateTeamData( id);
-            },
-            function (err) {
-                alert("Unable to fetch players data");
-            }
-        ); 
+        let listOfPromises = [];
+        function createPromise(url) {
+            return new Promise(function(resolve, reject) {
+                utility.getRequest(
+                    url,
+                    function (data) {
+                        resolve(data);
+                    },
+                    function (err) {
+                        alert("Unable to fetch players data for " + url);
+                    }
+                );
+            });
+        }
+            
+        // Promise to fetch all players info
+        listOfPromises.push(createPromise("/api/player/?tournament=ODI"));
+        // Promise to fetch my players info
+        listOfPromises.push(createPromise("/api/user/team/?magic=" + sessionStorage.guid));
+
+        Promise.all(listOfPromises).then(function (values) {
+            ALL_PLAYERS = values[0];       
+            populateTeamData(id, values[1]);
+        });
     };
 };
 
-function populateTeamData(id) {
-    let myPlayers = [];
+function populateTeamData(id, listOfMyPlayers) {
+    let myPlayers = listOfMyPlayers.PlayerIds || [];
     let myPlayersFullDetail = [];
     let listOfRoleFilters = ["FULL"];
     let listOfTeamFilters = ["FULL"];
@@ -58,10 +72,22 @@ function populateTeamData(id) {
         let myBowlerData = "";
         let myAllRounderData = "";
         let myWicketKeeperData = "";
+        let captains = "";
         ALL_PLAYERS.map(function(player){
             if(myPlayers.indexOf(player.pid) > -1) {
+                if(player.pid == listOfMyPlayers.BattingCaptain) {
+                    captains += "<div>Batting Captain: " + player.name +"</div>";
+                }
+                if(player.pid == listOfMyPlayers.BowlingCaptain) {
+                    captains += "<div>Bowling Captain: " + player.name +"</div>";
+                }
+                if(player.pid == listOfMyPlayers.FieldingCaptain) {
+                    captains += "<div>Fielding Captain: " + player.name +"</div>";
+                }
+                
                 myPlayersFullDetail.push(player);
                 let mPDate = "<li>";
+                player.name = (player.name.length > 13) ? (player.name.substring(0,13) + "..") : player.name;
                 mPDate += "<div class='iconContainer'><img class='allCountries "+player.TeamName.replace(/ /gi, "")+"'/>";
                 mPDate += "<img class='roles' src='/icons/roles/"+player.Role+".png'/></div>";
                 mPDate += "<div class='playerInfo'><span class='pName'>"+player.name+"</span>";
@@ -96,9 +122,14 @@ function populateTeamData(id) {
         let teamValidation = new validator(myPlayersFullDetail);
         let response = teamValidation.runValidations();
         (response.isError) && $("#errorMessage").html(response.error);
-        $("#budgetLeftMessage").html("Budget Left: " + response.budgetLeft);
-        $("#subsLeftMessage").html("Substitutions Left: &#8734;");
+        $("#budgetLeftMessage").html("Budget Left: " + response.budgetLeft + captains);
+        $("#subsLeftMessage").html("Substitutions Left: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;"));
         $("#saveteam").css("visibility", ( response.isError ? "hidden" : "visible" ));
+        
+        // Save Team
+        $("#saveteam").bind("click", function() {
+            openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail);
+        });
 
         $( ".leftTeamItems li" ).unbind( "click" );
         $( ".leftTeamItems li" ).bind("click", function() {
@@ -133,4 +164,53 @@ function populateTeamData(id) {
     }
 
     fillDataInUI();
+}
+
+function openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail) {
+    let selectBattingCaptain = "Batting Captain: <select id='myBatCaptain'><option value='0'>Select</option>";
+    let selectBowlingCaptain = "Bowling Captain: <select id='myBowlCaptain'><option value='0'>Select</option>";
+    let selectFieldingCaptain = "Fielding Captain: <select id='myFieldCaptain'><option value='0'>Select</option>";
+    listOfMyPlayers.PlayerIds = [];
+    myPlayersFullDetail.map(function(player) {
+        listOfMyPlayers.PlayerIds.push(player.pid);
+        selectBattingCaptain += "<option value='"+ player.pid +"'>"+ player.name +"</option>";
+        selectBowlingCaptain += "<option value='"+ player.pid +"'>"+ player.name +"</option>";
+        selectFieldingCaptain += "<option value='"+ player.pid +"'>"+ player.name +"</option>";
+    });
+    selectBattingCaptain += "</select><br/>";
+    selectBowlingCaptain += "</select><br/>";
+    selectFieldingCaptain += "</select><br/>";
+    let submitBtn = "<button id='saveMyTeam'>Save</button>";
+        
+    $(".inputContainer").html(selectBattingCaptain + selectBowlingCaptain + selectFieldingCaptain + submitBtn).css({"color":"white", "background":"#8a3737", "width":"40%", "height":"auto", "left":"30%", "border-radius": "10px"});
+    
+    $("#inputPopup").css({"z-index": 20}).show();
+    
+    $(".glassBackground").unbind("click");
+    $("#saveMyTeam").unbind("click");
+    $(".glassBackground").bind("click", function() {
+        $("#inputPopup").hide();
+    });
+    
+    $("#saveMyTeam").bind("click", function() {
+        listOfMyPlayers.BattingCaptain = +$("#myBatCaptain").val();
+        listOfMyPlayers.BowlingCaptain = +$("#myBowlCaptain").val();
+        listOfMyPlayers.FieldingCaptain = +$("#myFieldCaptain").val();
+        if(!listOfMyPlayers.BattingCaptain || !listOfMyPlayers.BowlingCaptain || !listOfMyPlayers.FieldingCaptain) {
+            alert("Select all 3 captains");
+        }
+        else {
+            let utility = new UtilityClass();
+            utility.postRequest(
+                "/api/user/team/?magic=" + sessionStorage.guid,
+                function (data) {
+                    window.location.reload(true);
+                },
+                function (err) {
+                    alert(err);
+                },
+                listOfMyPlayers
+            );
+        }
+    });      
 }

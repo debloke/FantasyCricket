@@ -16,12 +16,15 @@
                 utility.postRequest(
                     "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val(),
                     function( data ) {
-                        localStorage.loggedInUser = $("#userName").val();
+                        sessionStorage.guid = data;
+                        sessionStorage.loggedInUser = $("#userName").val();
                         window.location.href = "main.html";
                     },
                     function() {
                         $("#errorMessageBox").html( "Unable to Login" );
-                    }
+                    },
+                    null,
+                    "text/plain"
                 );
             }
             function showRules() {
