@@ -32,7 +32,7 @@ namespace FantasyCricket.Service
 
         private readonly string UPDATECURRENTSERTEAM = "UPDATE [UserTeam] SET currentteam = @currentteam where username=@username";
 
-        private readonly string UPDATECURRENTSERTEAMWITHSUBS = "UPDATE [UserTeam] SET currentteam = @currentteam , remsub = @remsub where where username=@username";
+        private readonly string UPDATECURRENTSERTEAMWITHSUBS = "UPDATE [UserTeam] SET currentteam = @currentteam , remsub = @remsub where username=@username";
 
         private readonly string GETLASTTEAM = "SELECT * FROM [UserTeam] where username=@username";
 
