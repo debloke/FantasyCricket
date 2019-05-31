@@ -26,7 +26,7 @@ namespace FantasyCricket.Service
         private static readonly string UPDATEUSERTEAMMATCHMAP = "INSERT OR REPLACE INTO UserTeamPointsHistory (username, selectedteam,unique_id) SELECT username, lastteam,@unique_id FROM UserTeam";
 
 
-        private static readonly string GETALLUSERMATCHMAP = "SELECT username,selectedteam FROM UserTeamPointsHistory where unique_id=unique_id";
+        private static readonly string GETALLUSERMATCHMAP = "SELECT username,selectedteam FROM UserTeamPointsHistory where unique_id=@unique_id";
 
         private static readonly string UPDATEUSERMATCHMAP = "UPDATE UserTeamPointsHistory SET points=@points where username=@username and unique_id=@unique_id";
 
