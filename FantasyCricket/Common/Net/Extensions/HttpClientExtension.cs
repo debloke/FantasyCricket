@@ -14,18 +14,6 @@ namespace Common.Net.Extensions
         }
 
 
-        public static string InvokeGeneric(this HttpClient client, HttpMethod method, Uri uri, HttpContent content)
-        {
-            using (HttpRequestMessage httpRequestMessage = new HttpRequestMessage(method, uri))
-            {
-                httpRequestMessage.Content = content;
-                using (var response = client.SendAsync(httpRequestMessage).Result)
-                {
-                    return ReadResponseAsString(response);
-                }
-            }
-        }
-
         public static string InvokeGet(this HttpClient client, string requestUri, CancellationToken cancellationToken)
         {
             return InvokeWebOperation<string>(() =>
@@ -37,64 +25,7 @@ namespace Common.Net.Extensions
             });
         }
 
-        public static string InvokePut(this HttpClient client, string requestUri, string content, string contentType = "application/json")
-        {
-            return InvokePut(client, requestUri, content, contentType, CancellationToken.None);
-        }
-
-        public static string InvokePut(this HttpClient client, string requestUri, string content, string contentType, CancellationToken cancellationToken)
-        {
-            return InvokeWebOperation<string>(() =>
-            {
-                using (var stringContent = new StringContent(content))
-                {
-                    stringContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-
-                    using (var response = client.PutAsync(requestUri, stringContent, cancellationToken).Result)
-                    {
-                        return ReadResponseAsString(response);
-                    }
-                }
-            });
-        }
-
-        public static string InvokePost(this HttpClient client, string requestUri, string content, string contentType = "application/json")
-        {
-            return InvokePost(client, requestUri, content, contentType, CancellationToken.None);
-        }
-
-        public static string InvokePost(this HttpClient client, string requestUri, string content, string contentType, CancellationToken cancellationToken)
-        {
-            return InvokeWebOperation<string>(() =>
-            {
-                using (var stringContent = new StringContent(content))
-                {
-                    stringContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-
-                    using (var response = client.PostAsync(requestUri, stringContent, cancellationToken).Result)
-                    {
-                        return ReadResponseAsString(response);
-                    }
-                }
-            });
-        }
-
-        public static string InvokeDelete(this HttpClient client, string requestUri)
-        {
-            return InvokeDelete(client, requestUri, CancellationToken.None);
-        }
-
-        public static string InvokeDelete(this HttpClient client, string requestUri, CancellationToken cancellationToken)
-        {
-            return InvokeWebOperation<string>(() =>
-            {
-                using (HttpResponseMessage response = client.DeleteAsync(requestUri, cancellationToken).Result)
-                {
-                    return ReadResponseAsString(response);
-                }
-            });
-        }
-
+      
         private static string ReadResponseAsString(HttpResponseMessage response)
         {
             using (HttpContent content = response.Content)

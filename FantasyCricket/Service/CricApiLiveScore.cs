@@ -1,5 +1,6 @@
 ﻿using Common.Net.Extensions;
 using FantasyCricket.Database;
+using FantasyCricket.KeyManager;
 using FantasyCricket.Models;
 using FantasyCricket.ScoreCalculator;
 using Newtonsoft.Json;
@@ -15,8 +16,6 @@ namespace FantasyCricket.Service
 {
     public class CricApiLiveScore : ILiveScore
     {
-        private readonly HttpClient httpClient = new HttpClient();
-
         private static readonly string SQLSELECT_SCHEDULED_OR_STARTED_MATCHES = "SELECT * FROM [Match] WHERE (STATUS = 0 OR Status = 1) AND MatchTime < datetime('now')";
 
         private static readonly string SQLSETMATCHSTARTED = "UPDATE [Match] SET Status =@status WHERE unique_id =@unique_id";
@@ -57,11 +56,7 @@ namespace FantasyCricket.Service
 
             try
             {
-                string response = httpClient.InvokeGet(string.Format("https://cricapi.com/api/fantasySummary?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2&unique_id={0}", match.MatchId));
-                PlayerScoresResponse playerScoresResponse = JsonConvert.DeserializeObject<PlayerScoresResponse>(response, new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
+                PlayerScoresResponse playerScoresResponse = new RestExecutor<PlayerScoresResponse>().Invoke(string.Format("https://cricapi.com/api/fantasySummary?unique_id={0}&", match.MatchId));
 
 
                 if (match.Status != MatchStatus.STARTED && playerScoresResponse.Data.MatchStarted)

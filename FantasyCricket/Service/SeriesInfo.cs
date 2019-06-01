@@ -1,17 +1,13 @@
-﻿using Common.Net.Extensions;
-using FantasyCricket.Database;
+﻿using FantasyCricket.Database;
+using FantasyCricket.KeyManager;
 using FantasyCricket.Models;
-using Newtonsoft.Json;
 using Sqlite.SqlClient;
 using System.Data.SQLite;
-using System.Net.Http;
 
 namespace FantasyCricket.Service
 {
     public class SeriesInfo : ISeriesInfo
     {
-        private readonly HttpClient httpClient = new HttpClient();
-
         private static readonly string SQLSELECTMATCH = "SELECT * FROM Match";
 
 
@@ -88,7 +84,8 @@ namespace FantasyCricket.Service
 
         public Match[] GetUnAssignedMatches()
         {
-            Matches matches = JsonConvert.DeserializeObject<Matches>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/matches?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2")));
+
+            Matches matches = new RestExecutor<Matches>().Invoke(string.Format("https://cricapi.com/api/matches?"));
             return matches.AllMatch;
         }
 

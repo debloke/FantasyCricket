@@ -7,7 +7,7 @@ namespace FantasyCricket.Models
     public class SquadResponse
     {
 
-        [JsonProperty("squad")]
+        [JsonProperty("squad",Required = Required.Always)]
         public Team[] Teams { get; set; }
 
     }

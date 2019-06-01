@@ -11,7 +11,8 @@ namespace FantasyCricket.Models
     public class PlayerScoresResponse
     {
 
-        [JsonProperty("data")]
+        [JsonProperty("data",Required = Required.Always)]
+        
         public PlayerScores Data { get; set; }
 
         [JsonProperty("type")]

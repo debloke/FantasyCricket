@@ -6,7 +6,7 @@ namespace FantasyCricket.Models
     public class Matches
     {
 
-        [JsonProperty("Matches")]
+        [JsonProperty("Matches", Required = Required.Always)]
         public Match[] AllMatch { get; set; }
 
     }

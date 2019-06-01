@@ -1,11 +1,9 @@
-﻿using Common.Net.Extensions;
-using FantasyCricket.Database;
+﻿using FantasyCricket.Database;
+using FantasyCricket.KeyManager;
 using FantasyCricket.Models;
-using Newtonsoft.Json;
 using Sqlite.SqlClient;
 using System;
 using System.Data.SQLite;
-using System.Net.Http;
 
 namespace FantasyCricket.Service
 {
@@ -47,7 +45,6 @@ namespace FantasyCricket.Service
     public class PlayerInfo : IPlayerInfo
     {
 
-        private readonly HttpClient httpClient = new HttpClient();
 
         private static readonly string ADDORUPDATEPLAYERIPL = "INSERT OR REPLACE INTO [IplPlayer] (  Pid, Pname, Team, Role ) VALUES (  @Pid, @Pname, @Team, @Role)";
 
@@ -92,7 +89,8 @@ namespace FantasyCricket.Service
         }
         public void UpdateCountryPlayers(int uniqueId)
         {
-            SquadResponse squadResponse = JsonConvert.DeserializeObject<SquadResponse>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/fantasySquad?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2&unique_id={0}", uniqueId)));
+            SquadResponse squadResponse = new RestExecutor<SquadResponse>().Invoke(string.Format("https://cricapi.com/api/fantasySquad?unique_id={0}&", uniqueId));
+
             foreach (Team team in squadResponse.Teams)
             {
                 string teamName = team.TeamName.Replace(" ", "");
@@ -133,7 +131,8 @@ namespace FantasyCricket.Service
         }
         void IPlayerInfo.UpdateIplPlayers(int uniqueId)
         {
-            SquadResponse squadResponse = JsonConvert.DeserializeObject<SquadResponse>(httpClient.InvokeGet(string.Format("https://cricapi.com/api/fantasySquad?apikey=ZlrRCAEEwjg9Vknh9hOgVlV17ls2&unique_id={0}", uniqueId)));
+            SquadResponse squadResponse = new RestExecutor<SquadResponse>().Invoke(string.Format("https://cricapi.com/api/fantasySquad?unique_id={0}&", uniqueId));
+
             foreach (Team team in squadResponse.Teams)
             {
                 string teamName = team.TeamName.Replace(" ", "");

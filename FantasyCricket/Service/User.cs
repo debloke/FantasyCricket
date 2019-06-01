@@ -14,8 +14,6 @@ namespace FantasyCricket.Service
     public class User : IUser
     {
 
-        private readonly HttpClient httpClient = new HttpClient();
-
         private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
         private readonly string SELECTUSER = "SELECT magickey,lastlogin,username FROM [User] where username = @username and password = @password";
