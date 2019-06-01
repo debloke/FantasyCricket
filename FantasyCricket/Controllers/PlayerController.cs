@@ -42,12 +42,21 @@ namespace FantasyCricket.Controllers
                     throw new Exception("Unsupported tournament");
             }
         }
+
+
+        [HttpDelete("{id}")]
+        public void Delete(int id, [FromQuery(Name = "tournament")] TeamType teamType)
+        {
+            playerInfo.DeletePlayer(id, teamType);
+        }
+
+
         // PUT api/player/{matchId}
         // Update Player Data base with Player Info         
         [HttpPut("{id}/{cost}/{role}")]
-        public void Put(int id, int cost,Role role, [FromQuery(Name = "tournament")] TeamType teamType)
+        public void Put(int id, int cost, Role role, [FromQuery(Name = "tournament")] TeamType teamType)
         {
-            playerInfo.UpdatePlayerCost(id,cost,role,teamType);
+            playerInfo.UpdatePlayerCost(id, cost, role, teamType);
         }
     }
 }

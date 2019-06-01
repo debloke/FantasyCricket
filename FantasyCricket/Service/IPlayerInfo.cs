@@ -9,6 +9,8 @@ namespace FantasyCricket.Service
         void UpdateIplPlayers(int uniqueId);
         void UpdateCountryPlayers(int uniqueId);
 
+        void DeletePlayer(int uniqueId, TeamType teamType);
+
         void UpdatePlayerCost(int uniqueId,int cost, Role role, TeamType teamType);
     }
 }

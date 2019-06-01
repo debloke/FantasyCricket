@@ -54,6 +54,10 @@ namespace FantasyCricket.Service
 
         private static readonly string SQLSELECTODI = "SELECT * FROM OdiPlayer";
 
+        private static readonly string SQLDELETEIPL = "DELETE FROM IplPlayer where Pid = @Pid";
+
+        private static readonly string SQLDELETEODI = "DELETE FROM OdiPlayer where Pid = @Pid";
+
         private static readonly string SQLUPDATEIPLCOST = "UPDATE [IplPlayer] SET Cost = @Cost, Role = @Role WHERE Pid = @Pid";
 
         private static readonly string SQLUPDATEODICOST = "UPDATE [OdiPlayer] SET Cost = @Cost, Role = @Role WHERE Pid = @Pid";
@@ -195,5 +199,34 @@ namespace FantasyCricket.Service
                 }
             }
         }
+
+        public void DeletePlayer(int uniqueId, TeamType teamType)
+        {
+            string query;
+            switch (teamType)
+            {
+
+                case TeamType.IPL:
+                    query = SQLDELETEIPL;
+                    break;
+                case TeamType.ODI:
+                    query = SQLDELETEODI;
+                    break;
+                default:
+                    throw new Exception("Unsupported tournament");
+            }
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@Pid", uniqueId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
