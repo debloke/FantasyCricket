@@ -14,18 +14,24 @@ function populateLeagueData(id) {
             // Only one entry as of now, Gangs will fit in here
             let myLeagueData = [
                 {
-                    "Name": "Leaderboard",
+                    "Name": "Overall",
                     "Members": data
                 }
             ];
             myLeagueData.map(function(lData){
-                response += "<li>"+ lData.Name +"</li>";
+                if(lData.Name == "Overall") {
+                    response += "<li style='border-top:4px solid #5554a2'>"+ lData.Name +"</li>";
+                }
+                else {
+                    response += "<li>"+ lData.Name +"</li>";
+                }
             });
             response += "</ul></div><div id='leagueInfo'></div>";
             $(id).html(response);
+            displayLeagueInfo("Overall", myLeagueData);
             $("#leagueList li").bind("click", function() {
-                $("#leagueList li").css({"color": "#fff", "font-weight": "normal", "background": "#46e285"});
-                $(this).css({"color": "#f00", "font-weight": "bold", "background": "#eef456"});
+                $("#leagueList li").css({"border-top": "none"});
+                $(this).css({"border-top": "4px solid #5554a2"});
                 displayLeagueInfo(this.textContent, myLeagueData);
             });
         },
@@ -45,41 +51,52 @@ function displayLeagueInfo(leagueName, allData) {
         });
         let rank = 1;
         leagueMembers.map(function(members) {
-            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam()'>" + members.Username + "</td><td>" + members.Total + "</td></tr>";
+            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam(\""+ members.Username +"\")'>" + members.Username + "</td><td>" + members.Total + "</td></tr>";
         });
         resp += "</table>"
         $("#leagueInfo").html(resp);        
     }
 }
 
-function displayPlayersTeam() {
-    let players = [
-        {"Name": "Rohit Sharma", role: "BAT", team: "India"},
-        {"Name": "Shikhar Dhawan", role: "BAT", team: "India"},
-        {"Name": "Virat Kohli", role: "BAT", team: "India"},
-        {"Name": "Babar Azam", role: "BAT", team: "Pakistan"},
-        {"Name": "MS Dhoni", role: "WK", team: "India"},
-        {"Name": "Shoaib Malik", role: "ALL", team: "Pakistan"},
-        {"Name": "Mohammad Hafeez", role: "ALL", team: "Pakistan"},
-        {"Name": "Haris Sohail", role: "ALL", team: "Pakistan"},
-        {"Name": "Hasan Ali", role: "BOWL", team: "Pakistan"},
-        {"Name": "Jasprit Bumrah", role: "BOWL", team: "India"},
-        {"Name": "Bhuvneshwar Kumar", role: "BOWL", team: "India"}
-    ];
-    circleDimensions(40, players);
-    let playerPos = "";
-    players.map(function(pl) {
-        let coord = "'top: " + pl.yValue + "%; left: " + pl.xValue + "%;'";
-        playerPos += "<span class='playerInGrid' style=" + coord +"><img class='roles' src='/icons/roles/"+pl.role+".png'/>"+ pl.Name +"</span>"
-    });
-    
-    let displayContent = "<div class='boundary'>" + playerPos + "<div class='innerCircle'><div class='pitch'></pitch></div></div><div class='close'>X</div>";
-    $(".inputContainer").html(displayContent);
-    $("#inputPopup").show();
-    $(".close").unbind("click");
-    $(".close").bind("click", function() {
-        $("#inputPopup").hide();
-    });
+function displayPlayersTeam(user) {
+    let utility = new UtilityClass();
+    utility.getRequest(
+        "/api/user/team/others?username="+user,
+        function( data ) {
+            let players = [];
+            let centralData = "";
+            ALL_PLAYERS.map(function(player) {
+                if(data.PlayerIds.indexOf(player.pid) > -1) {
+                    players.push(player);
+                }
+                if(data.BattingCaptain == player.pid) centralData += "<div class='popupBatCaptain'><img class='popupRoles' src='/icons/roles/BAT.png'/>" + player.name + "</div>";
+                if(data.BowlingCaptain == player.pid) centralData += "<div class='popupBowlCaptain'><img class='popupRoles' src='/icons/roles/BOWL.png'/>" + player.name + "</div>";
+                if(data.FieldingCaptain == player.pid) centralData += "<div class='popupFieldCaptain'><img class='popupRoles' src='/icons/roles/WK.png'/>" + player.name + "</div>";
+                
+            });
+            centralData += "<div class='subsPopup'>Subs Remaining : " + data.RemSubs + "</div>";
+            circleDimensions(40, players);
+            let playerPos = "";
+            players.map(function(pl) {
+                let coord = "'top: " + pl.yValue + "%; left: " + pl.xValue + "%;'";
+                playerPos += "<span class='playerInGrid' style=" + coord +">";
+                playerPos += "<img class='roles' src='/icons/roles/"+pl.Role+".png'/>";
+                playerPos += "<img class='allCountries "+ pl.TeamName.replace(/ /gi, "") +"'/>";
+                playerPos += "<p class='namePl'>"+ pl.name +" (" + pl.Cost + ")</p></span>"
+            });
+            
+            let displayContent = "<div class='boundary'>" + playerPos + "<div class='innerCircle'><div class='pitch'></pitch></div></div><div class='close'>X</div>";
+            $(".inputContainer").html(displayContent + centralData);
+            $("#inputPopup").show();
+            $(".close").unbind("click");
+            $(".close").bind("click", function() {
+                $("#inputPopup").hide();
+            });
+        },
+        function( err ) {
+            alert("Error fetching team for: " + user);
+        }
+    );
 }
 
 function circleDimensions(radius, players){
@@ -87,6 +104,6 @@ function circleDimensions(radius, players){
     let lengthOfPlayers = players.length;
     for (let i = 0; i < lengthOfPlayers; i++) {
         players[i].xValue = (44 + radius * Math.cos(Math.PI * i / lengthOfPlayers*2-Math.PI/2));
-        players[i].yValue = (48 + radius * Math.sin(Math.PI * i / lengthOfPlayers*2-Math.PI/2));
+        players[i].yValue = (44 + radius * Math.sin(Math.PI * i / lengthOfPlayers*2-Math.PI/2));
     }
 }
