@@ -28,7 +28,7 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR NAVIGATION END */
 
 /* CSS FOR MAIN SCREEN START */
-#mainContent{ color: white; width: 88%; left: 5%; bottom: 30px; top: 50px; position: absolute; padding: 1%; border-radius: 5px; margin: 0 auto; overflow: hidden; }
+#mainContent{ color: white; width: 88%; left: 5%; top: 50px; position: absolute; padding: 1%; border-radius: 5px; margin: 0 auto; overflow: hidden; }
 .roundedBoxContainer { margin: 0 auto; }
 .roundedBox { border: 5px solid #c46488; height: 150px; width: 150px; float: left; margin: 10px; padding: 0; position: relative;
     border-radius: 50px; background: #ef285f; color: black; font: bold 14 sans-serif; }
@@ -53,8 +53,8 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR POPUP END */
 
 /* CSS FOR TEAM START */
-.myTeam { float: left; width: 48%; height: 100%; overflow: auto; position: relative; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
-.teamList { float: right; width: 48%; height: 100%; overflow: auto; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
+.myTeam { float: left; width: 49%; height: auto; overflow: auto; position: relative; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
+.teamList { float: right; width: 49%; height: 100%; overflow: auto; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
 .leftTeamItems { float: left; width: 100%; }
 .leftTeamItems > ul { display: flex; margin: 0; width: 100%; }
 .centerTeamItems { float:left; width:90%; }
@@ -190,7 +190,13 @@ p.namePl { margin: 0; font-weight: bold; }
 /* CSS FOR ADMIN RULES START */
 
 @media screen and (max-width: 1200px) {
-  .myTeam, .teamList { width: 100%; }
+  .myTeam, .teamList { width: 98%; }
   body { overflow: auto; }
-  #mainContent { bottom: auto; }
+  #mainContent { overflow: auto; width: 90%; left: 4%; height: 100%; }
+  .teamList { float: left; }
 }
+@media screen and (min-width: 1201px) {
+  #mainContent { bottom: 30px;}
+}
+
+bottom: 30px;
