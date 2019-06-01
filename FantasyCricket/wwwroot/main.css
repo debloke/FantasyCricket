@@ -69,7 +69,7 @@ nav ul li a:hover:before, nav ul li a.current:before {
 .centerTeamItems ul li { padding: 6px 10px 3px 10px; background: #abced036; border-bottom: 1px solid grey; height: 21px; color: black; font-size: 13px; font-weight: bold; }
 span.playerName { width: 50%; float: left; }
 span.playerTeam { width: 35%; float: left; }
-span.playerPrice { width: 10%; float: left; }
+span.playerPrice { width: 10%; float: left; } 
 span.addPlayer { width: 5%; float: left; }
 .myTeam > div { width: 100%;}
 .myTeam li { padding: 3px 10px; border-bottom: 1px solid grey; text-align: center; margin: 0 10px 0 0; height: 30px; background: #ec9de347; position: relative; color: #000000; font-weight: bold; font-size: 13px; }
@@ -194,9 +194,8 @@ p.namePl { margin: 0; font-weight: bold; }
   body { overflow: auto; }
   #mainContent { overflow: auto; width: 90%; left: 4%; height: 100%; }
   .teamList { float: left; }
+  .myTeam li, .centerTeamItems ul li, #leagueInfo table td { font-size: 20px; }
 }
 @media screen and (min-width: 1201px) {
   #mainContent { bottom: 30px;}
 }
-
-bottom: 30px;
