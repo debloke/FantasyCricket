@@ -28,7 +28,7 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR NAVIGATION END */
 
 /* CSS FOR MAIN SCREEN START */
-#mainContent{ color: white; width: 88%; left: 5%; top: 50px; position: absolute; padding: 1%; border-radius: 5px; margin: 0 auto; overflow: hidden; }
+#mainContent{ color: black; width: 88%; left: 5%; top: 50px; position: absolute; padding: 1%; border-radius: 5px; margin: 0 auto; overflow: hidden; }
 .roundedBoxContainer { margin: 0 auto; }
 .roundedBox { border: 5px solid #c46488; height: 150px; width: 150px; float: left; margin: 10px; padding: 0; position: relative;
     border-radius: 50px; background: #ef285f; color: black; font: bold 14 sans-serif; }
@@ -113,8 +113,8 @@ span.captain > img { width: 20px; }
 .allLiveScores { position: absolute; left: 20%; right: 0; top: 15px; bottom : 0; overflow-x: hidden; overflow-y: auto; }
 .individualLiveScore { display: none; }
 .selectMatch { list-style: none; }
-.selectMatch li { background: #3b458e; padding: 10px; border-bottom: 1px solid grey; }
-.selectedLi { background: #bbbd18 !important; }
+.selectMatch li { background: transparent; padding: 10px; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset;; }
+.selectedLi { border-top: 4px solid #5554a2 !important; }
 .containerForUL { position: absolute; left: 0; width: 20%; }
 /* CSS FOR LIVE DATA END */
 
@@ -191,10 +191,16 @@ p.namePl { margin: 0; font-weight: bold; }
 
 @media screen and (max-width: 1200px) {
   .myTeam, .teamList { width: 98%; }
-  body { overflow: auto; }
-  #mainContent { overflow: auto; width: 90%; left: 4%; height: 100%; }
-  .teamList { float: left; }
-  .myTeam li, .centerTeamItems ul li, #leagueInfo table td { font-size: 20px; }
+  body { overflow: hidden; }
+  * { font-size: 20px !important; }
+  #mainContent { overflow: hidden; width: 90%; left: 4%; top: 50px; bottom: 0px; }
+  .teamList { float: left; max-height: 50%; }
+  .myTeam { max-height: 50%; margin-bottom: 1%; }
+  .myTeam li, .centerTeamItems ul li { padding: 10px; }
+  .boundary { left: 5%; width: 90%; }
+  .allLiveScores { position: relative; left: 0 }
+  .containerForUL { position: relative; left: 0; width: 100%; }
+  .liveData { overflow: auto; }
 }
 @media screen and (min-width: 1201px) {
   #mainContent { bottom: 30px;}

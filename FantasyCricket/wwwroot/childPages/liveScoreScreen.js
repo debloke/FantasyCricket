@@ -36,7 +36,7 @@ function populateLiveData(id) {
             }
             conObj.mainContent += "</div>";
             conObj.selection += "</ul></div>";
-            $(id).html(conObj.mainContent + conObj.selection);
+            $(id).html(conObj.selection + conObj.mainContent);
             
             $(".selectMatch li").bind("click", function() {
                 let matchId = this.getAttribute("data");
