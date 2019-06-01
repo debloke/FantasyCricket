@@ -319,6 +319,48 @@ namespace FantasyCricket.Service
 
         }
 
+
+        public UserTeam GetLastTeam(string username)
+        {
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                
+                // get next match info
+
+                using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@username", username);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            // Get Column ordinal
+                            int ordinal = reader.GetOrdinal("lastteam");
+
+                            UserTeam currentTeam = JsonConvert.DeserializeObject<UserTeam>(reader.GetString(ordinal));
+
+                            int subsOrdinal = reader.GetOrdinal("lastremsub");
+                            int lastRemSubs = reader.GetInt32(subsOrdinal);
+
+                            currentTeam.RemSubs = lastRemSubs;
+
+                            return currentTeam;
+                        }
+                    }
+
+                }
+
+            }
+            return new UserTeam();
+
+        }
+
+
+
         public string[] GetUsers()
         {
             List<string> userList = new List<string>();

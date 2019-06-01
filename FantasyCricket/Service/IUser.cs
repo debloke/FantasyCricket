@@ -12,6 +12,8 @@ namespace FantasyCricket.Service
 
         UserTeam GetTeam(Guid magicKey);
 
+        UserTeam GetLastTeam(string username);
+
         string[] GetUsers();
     }
 }
