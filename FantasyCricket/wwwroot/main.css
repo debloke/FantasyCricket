@@ -7,12 +7,12 @@ li { cursor: pointer; }
 ::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #000; }
 
-.selected { background: #ef285f !important; }
+.selected { padding: 7px 11px; margin: 0; text-decoration: none; position: relative; background: transparent; border: 4px solid #5554a2; border-left: none; border-right: none; border-bottom: none; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset; }
 
 /* CSS FOR NAVIGATION START */
 nav { margin: 10px auto; padding: 0 0 0 5px; border-width: 1px; border-style: solid; background: #efcdeb29; width: 90%; height: 40px; }
 nav ul { margin: 0; position: relative; z-index: 6; }
-nav ul li { padding: 0 5px; float: left; list-style: none; width: 15%; }
+nav ul li { padding: 0 5px; float: left; list-style: none; width: 30%; }
 nav ul li a { font: bold 17px Arial Narrow, sans-serif; color: #fff; text-decoration: none; text-transform: uppercase; padding: 13px 11px; display: block; }
 nav ul li a div { position: relative; z-index: 1; background-image: -webkit-linear-gradient(#32358e 45%, #52592a);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: #fff; text-align: center; }
@@ -53,25 +53,30 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR POPUP END */
 
 /* CSS FOR TEAM START */
-.myTeam { float: left; width: 50%; height: 100%; overflow: auto; position: relative; }
+.myTeam { float: left; width: 48%; height: 100%; overflow: auto; position: relative; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
 .teamList { float: right; width: 48%; height: 100%; overflow: auto; border: 1px solid black; border-radius: 6px; padding: 3px 5px; }
-.leftTeamItems { float:left; width:15%; }
-.centerTeamItems { float:left; width:65%; }
-.rightTeamItems { float:left; width:20%; }
+.leftTeamItems { float: left; width: 100%; }
+.leftTeamItems > ul { display: flex; margin: 0; width: 100%; }
+.centerTeamItems { float:left; width:90%; }
+.centerTeamItems > ul, .rightTeamItems > ul { margin: 0; }
+.rightTeamItems { float:left; width: 10%; }
 .myTeam ul { list-style: none; padding: 0; margin: 0; }
-#saveteam { position: absolute; top: 10px; right: 10px; padding: 3px 10px; border-radius: 10px; background: #776ec385; color: black; border: 1px solid black; }
+#saveteam { padding: 3px 10px; border-radius: 10px; background: #776ec385; color: black; border: 1px solid black; width: 50px; float: left; }
 .teamList ul { list-style: none; padding: 0; }
-.leftTeamItems ul li { padding: 9px; background: #6b9ea0; border-bottom: 1px solid grey; }
-.rightTeamItems ul li { padding: 9px; background: #6b9ea0; border-bottom: 1px solid grey; }
-.centerTeamItems ul li { padding: 3px 10px; background: #2a546d; border-bottom: 1px solid grey; height: 15px; }
+.leftTeamItems ul li { padding: 7px 0 0 0; background: #6b9ea075; border-bottom: 1px solid grey; width: 20%; text-align: center; color: black; }
+.leftTeamItems img { width: 25px; }
+.rightTeamItems ul li { padding: 9px; background: #6b9ea075; border-bottom: 1px solid grey; }
+.centerTeamItems ul li { padding: 6px 10px 3px 10px; background: #abced036; border-bottom: 1px solid grey; height: 21px; color: black; font-size: 13px; font-weight: bold; }
 span.playerName { width: 50%; float: left; }
 span.playerTeam { width: 35%; float: left; }
 span.playerPrice { width: 10%; float: left; }
 span.addPlayer { width: 5%; float: left; }
-.myTeam > div { width: 70%;}
-.myTeam li { padding: 3px 10px; border: 1px solid black; border-radius: 10px; width: 325px; text-align: center; margin: 10px; height: 30px; background: #ec9de347; position: relative; color: #000000; font-weight: bold; font-size: 13px; }
-.budgetSub { color: black; border: 1px solid black; background: #f395f55e; padding: 1px 5px; margin: 0 10px; }
-#budgetAndSubsLeftMessage { position: absolute; top: 50px; right: 0; width: 30%; }
+.myTeam > div { width: 100%;}
+.myTeam li { padding: 3px 10px; border-bottom: 1px solid grey; text-align: center; margin: 0 10px 0 0; height: 30px; background: #ec9de347; position: relative; color: #000000; font-weight: bold; font-size: 13px; }
+.budgetSub { color: black; padding: 10px 5px; width: 47%; float: left; margin: 0; text-decoration: none; position: relative; background: transparent; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset; }
+#budgetAndSubsLeftMessage { top: 0; right: 0; width: 100%; height: 40px; font-weight: bold; }
+
+.infoteams { margin-top: 5px; }
 
 /* COUNTRIES START */
 .allCountries { height:30px; width: 40px; background: url(../icons/flags/flags.png) no-repeat; }
@@ -99,7 +104,7 @@ span.captain > img { width: 20px; }
 
 .iconContainer { float:left; width: 60px; }
 .pPrice { margin-left: 6px; }
-#errorMessage { position: absolute; width: 30%; top: 100px; right: 0; color: red; font-weight: bold; font-size: 18px; padding: 2px 5px; border: 1px solid black; background: #d2d2a7; text-align: center; }
+#errorMessage { color: red; width: 60%; font-weight: bold; font-size: 18px; padding: 2px 5px; border: 1px solid black; background: #d2d2a7; text-align: center; float: left; display: inline; }
 /* CSS FOR TEAM END */
 
 /* CSS FOR LIVE DATA START */
@@ -175,3 +180,9 @@ button { border-radius: 10px; border: 1px solid black; padding: 5px 10px; backgr
 .redirectHome { position: absolute; z-index : 3; left: 20px; top: 5px; }
 .containerForSelectingRule ul li { background: #8fad47; padding: 20px; border-bottom: 1px solid grey; }
 /* CSS FOR ADMIN RULES START */
+
+@media screen and (max-width: 1200px) {
+  .myTeam, .teamList { width: 100%; }
+  body { overflow: auto; }
+  #mainContent { bottom: auto; }
+}

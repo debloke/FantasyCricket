@@ -2,15 +2,13 @@
 let teamScreenData = new teamScreen();
 let liveScoreScreenData = new liveScoreScreen();
 let myLeagueScreenData = new myLeagueScreen();
-let logout = new logoutPage();
 let mainContentId = "#mainContent";
 
 // This holds classes for all child pages
 let targetScreens = [
     teamScreenData,
     myLeagueScreenData,
-    liveScoreScreenData,
-    logout
+    liveScoreScreenData
 ];
 
  /****************************************************************************

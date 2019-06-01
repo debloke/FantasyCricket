@@ -17,14 +17,20 @@ var teamScreen = function() {
                 );
             });
         }
-            
+
         // Promise to fetch all players info
         listOfPromises.push(createPromise("/api/player/?tournament=ODI"));
         // Promise to fetch my players info
         listOfPromises.push(createPromise("/api/user/team/?magic=" + sessionStorage.guid));
 
         Promise.all(listOfPromises).then(function (values) {
-            ALL_PLAYERS = values[0];       
+            ALL_PLAYERS = values[0].sort(function(a,b) {
+                let val1 = a.TeamName;
+                let val2 = b.TeamName;
+                if (val1 == val2) return 0;
+                if (val1 > val2) return 1;
+                if (val1 < val2) return -1;
+            });
             populateTeamData(id, values[1]);
         });
     };
@@ -33,16 +39,15 @@ var teamScreen = function() {
 function populateTeamData(id, listOfMyPlayers) {
     let myPlayers = listOfMyPlayers.PlayerIds || [];
     let myPlayersFullDetail = [];
-    let listOfRoleFilters = ["FULL"];
+    let listOfRoleFilters = ["BAT", "WK", "ALL", "BOWL", "FULL"];
     let listOfTeamFilters = ["FULL"];
     let filter = { Role: "FULL", TeamName: "FULL" };
     ALL_PLAYERS.map(function(player) {
-        if(listOfRoleFilters.indexOf(player.Role) == -1) listOfRoleFilters.push(player.Role);
         if(listOfTeamFilters.indexOf(player.TeamName) == -1) listOfTeamFilters.push(player.TeamName);
     });
 
     function displayPlayerList() {
-        let list = "";    
+        let list = "";
         ALL_PLAYERS.map(function(player) {
             if( myPlayers.indexOf(player.pid) == -1 ) {
                 if(((filter.Role == "FULL") || (filter.Role == player.Role)) && ((filter.TeamName == "FULL") || (filter.TeamName == player.TeamName))) {
@@ -62,10 +67,22 @@ function populateTeamData(id, listOfMyPlayers) {
         let rightColData = "";
         centerColData = displayPlayerList();
         listOfRoleFilters.map(function(role){
-            leftColData += (role == filter.Role) ? "<li class='selected'>"+role+"</li>" : "<li>"+role+"</li>";
+            let isSelectedClass = (role == filter.Role) ? " class='selected'" : "";
+            if( role == "FULL" ) {
+                leftColData += "<li" + isSelectedClass + " data='"+role+"'>"+role+"</li>";
+            }
+            else {
+                leftColData += "<li" + isSelectedClass + " data='"+role+"'><img src='/icons/roles/"+role+".png'/></li>";
+            }
         });
         listOfTeamFilters.map(function(team){
-            rightColData += (team == filter.TeamName) ? "<li class='selected'>"+team+"</li>" : "<li>"+team+"</li>";
+            let isSelectedClass = (team == filter.TeamName) ? " class='selected'" : "";
+            if( team == "FULL" ) {
+                rightColData += "<li" + isSelectedClass + " data='"+team+"'>ALL</li>";
+            }
+            else {
+                rightColData += "<li" + isSelectedClass + " data='"+team+"'><img class='allCountries "+team.replace(/ /gi, "")+"'/></li>";
+            }
         });
         myPlayersFullDetail = [];
         let myBatsmanData = "";
@@ -85,7 +102,7 @@ function populateTeamData(id, listOfMyPlayers) {
                 if(listOfMyPlayers.FieldingCaptain == player.pid) {
                     role += "<span class='captain'><img src='/icons/roles/WK.png'></span>"
                 }
-                
+
                 myPlayersFullDetail.push(player);
                 let mPData = "<li>";
                 player.name = player.name;
@@ -106,13 +123,14 @@ function populateTeamData(id, listOfMyPlayers) {
             }
         });
         let uiData = "<div class='myTeam'>";
-        uiData += "<p id='errorMessage'></p>";
-        uiData += "<span id='saveteam'>Submit</span>";
-        uiData += "<p id='budgetAndSubsLeftMessage'></p>";
+
+        uiData += "<div id='budgetAndSubsLeftMessage'></div>";
         uiData += "<div><ul>"+myBatsmanData+"</ul></div>";
         uiData += "<div><ul>"+myWicketKeeperData+"</ul></div>";
         uiData += "<div><ul>"+myAllRounderData+"</ul></div>";
-        uiData += "<div><ul>"+myBowlerData+"</ul></div></div>";
+        uiData += "<div><ul>"+myBowlerData+"</ul></div>";
+        uiData += "<div class='infoteams'><div id='errorMessage'></div>";
+        uiData += "<div id='saveteam'>Submit</div></div></div>";
 
         let innerData = "<div class='leftTeamItems'><ul>"+leftColData+"</ul></div>";
         innerData += "<div class='centerTeamItems'><ul>"+centerColData+"</ul></div>";
@@ -126,11 +144,11 @@ function populateTeamData(id, listOfMyPlayers) {
         let budgetAndSubs = "";
         budgetAndSubs += "<div class='budgetSub'>Budget Left: " + response.budgetLeft + "</div>";
         budgetAndSubs += "<div class='budgetSub'>Substitutions Left: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;</div>");
-        
+
         $("#budgetAndSubsLeftMessage").html(budgetAndSubs);
         $("#saveteam").css("visibility", ( response.isError ? "hidden" : "visible" ));
         $("#errorMessage").css("visibility", ( response.isError ? "visible" : "hidden" ));
-        
+
         // Save Team
         $("#saveteam").bind("click", function() {
             openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail);
@@ -140,14 +158,14 @@ function populateTeamData(id, listOfMyPlayers) {
         $( ".leftTeamItems li" ).bind("click", function() {
             $( ".leftTeamItems li" ).removeClass("selected");
             $(this).addClass("selected");
-            filter.Role = $(this)[0].innerText;
+            filter.Role = this.getAttribute("data");
             fillDataInUI();
         });
         $( ".rightTeamItems li" ).unbind( "click" );
         $( ".rightTeamItems li" ).bind("click", function() {
             $( ".rightTeamItems li" ).removeClass("selected");
             $(this).addClass("selected");
-            filter.TeamName = $(this)[0].innerText;
+            filter.TeamName = this.getAttribute("data");
             fillDataInUI();
         });
         $( ".addPlayer" ).unbind( "click" );
@@ -186,17 +204,17 @@ function openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail) {
     selectBowlingCaptain += "</select><br/>";
     selectFieldingCaptain += "</select><br/>";
     let submitBtn = "<button id='saveMyTeam'>Save</button>";
-        
-    $(".inputContainer").html(selectBattingCaptain + selectBowlingCaptain + selectFieldingCaptain + submitBtn).css({"color":"white", "background":"#8a3737", "width":"40%", "height":"auto", "left":"30%", "border-radius": "10px"});
-    
+
+    $(".inputContainer").html(selectBattingCaptain + selectBowlingCaptain + selectFieldingCaptain + submitBtn).css({"background":"#7e7cc3", "width": "auto", "height": "auto", "padding": "20px", "margin": "0px auto", "border-radius": "10px", "left": "40%", "color": "black"});
+
     $("#inputPopup").css({"z-index": 20}).show();
-    
+
     $(".glassBackground").unbind("click");
     $("#saveMyTeam").unbind("click");
     $(".glassBackground").bind("click", function() {
         $("#inputPopup").hide();
     });
-    
+
     $("#saveMyTeam").bind("click", function() {
         listOfMyPlayers.BattingCaptain = +$("#myBatCaptain").val();
         listOfMyPlayers.BowlingCaptain = +$("#myBowlCaptain").val();
@@ -217,5 +235,5 @@ function openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail) {
                 listOfMyPlayers
             );
         }
-    });      
+    });
 }
