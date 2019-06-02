@@ -1,5 +1,4 @@
-﻿using Common.Net.Extensions;
-using FantasyCricket.Database;
+﻿using FantasyCricket.Database;
 using FantasyCricket.KeyManager;
 using FantasyCricket.Models;
 using FantasyCricket.ScoreCalculator;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Data.SQLite;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 
 namespace FantasyCricket.Service
@@ -43,6 +41,8 @@ namespace FantasyCricket.Service
 
 
         private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
+
+        private const int TimerStartImmediate = 0;
 
         public CricApiLiveScore()
         {
@@ -160,7 +160,7 @@ namespace FantasyCricket.Service
                     }
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 // TODO
@@ -174,7 +174,7 @@ namespace FantasyCricket.Service
             {
                 LiveScoreCheckTimer = null;   // Ensure null initialization
 
-                LiveScoreCheckTimer = new Timer(new TimerCallback(LiveScoreCheckTimerEvent), this, LiveScoreCheckTimerPeriod, LiveScoreCheckTimerPeriod);
+                LiveScoreCheckTimer = new Timer(new TimerCallback(LiveScoreCheckTimerEvent), this, TimerStartImmediate, LiveScoreCheckTimerPeriod);
             }
             catch (Exception exception)
             {

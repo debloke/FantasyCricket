@@ -24,7 +24,7 @@ namespace FantasyCricket.Service
 
         private readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username and password = @password";
 
-        private readonly string UPDATEUSERGUID = "UPDATE [User] SET magickey = @newmagickey WHERE magickey = @oldmagickey";
+        private readonly string UPDATEUSERGUID = "UPDATE [User] SET magickey = @newmagickey WHERE username = @username";
 
         private readonly string ADDUNEWSERTEAM = "INSERT OR REPLACE INTO [UserTeam] (  username, currentteam ) VALUES (  @username,  @currentteam)";
 
@@ -39,7 +39,7 @@ namespace FantasyCricket.Service
 
         private Timer UserMaintenanceTimer { get; set; }
 
-        private const int UserMaintenanceTimerPeriod = 3600000;  // once an hour
+        private const int UserMaintenanceTimerPeriod = 60000;  // once an minute
 
         public User()
         {
@@ -138,13 +138,13 @@ namespace FantasyCricket.Service
                             MagicKey[] keys = reader.ReadAll<MagicKey>();
                             foreach (MagicKey key in keys)
                             {
-                                if (key.LastLogin != null && (((DateTime.UtcNow - key.LastLogin).TotalHours >= 3)))
+                                if (key.LastLogin != null && (DateTime.UtcNow - key.LastLogin).TotalHours >= 1)
                                 {
                                     using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
                                     {
                                         command1.CommandType = System.Data.CommandType.Text;
 
-                                        command1.Parameters.AddWithValue("@oldmagickey", key.Magic);
+                                        command1.Parameters.AddWithValue("@username", key.username);
                                         command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid().ToString());
                                         command1.ExecuteNonQuery();
                                     }
@@ -324,7 +324,7 @@ namespace FantasyCricket.Service
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
                 connection.Open();
-                
+
                 // get next match info
 
                 using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
