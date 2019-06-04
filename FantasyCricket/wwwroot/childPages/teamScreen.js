@@ -123,8 +123,8 @@ function populateTeamData(id, listOfMyPlayers) {
             }
         });
         let uiData = "<div class='myTeam'>";
-
         uiData += "<div id='budgetAndSubsLeftMessage'></div>";
+        uiData += "<div class='playerHeader'>Selected Players</div>";
         uiData += "<div><ul>"+myBatsmanData+"</ul></div>";
         uiData += "<div><ul>"+myWicketKeeperData+"</ul></div>";
         uiData += "<div><ul>"+myAllRounderData+"</ul></div>";
@@ -133,7 +133,7 @@ function populateTeamData(id, listOfMyPlayers) {
         uiData += "<div id='saveteam'>Submit</div></div></div>";
 
         let innerData = "<div class='leftTeamItems'><ul>"+leftColData+"</ul></div>";
-        innerData += "<div class='centerTeamItems'><ul>"+centerColData+"</ul></div>";
+        innerData += "<div class='centerTeamItems'><div class='playerHeader'>Available Players</div><ul>"+centerColData+"</ul></div>";
         innerData += "<div class='rightTeamItems'><ul>"+rightColData+"</ul></div>";
         uiData += "<div class='teamList'>"+innerData+"</div>";
         $(id).html(uiData);
@@ -179,6 +179,14 @@ function populateTeamData(id, listOfMyPlayers) {
             myPlayers.splice(deleteIndex,1);
             fillDataInUI();
         });
+
+        // Loop through all images on team filter
+        setTimeout(function(){
+            let allTeams = $( ".rightTeamItems li img" );
+            for( let index = 0, len = allTeams.length; index < len; index++ ) {
+                allTeams[index].title = allTeams[index].parentElement.getAttribute("data");
+            }
+        }, 10);
     }
 
     function fillInMyList(id) {
