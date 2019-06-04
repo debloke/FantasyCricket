@@ -7,7 +7,7 @@ namespace FantasyCricket.Models
     {
 
         [SQLiteColumn("unique_id")]
-        public string MatchId { get; set; }
+        public int MatchId { get; set; }
 
         [SQLiteColumn("selectedteam")]
         public UserTeam SelectedTeam { get; set; }
