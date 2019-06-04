@@ -34,6 +34,8 @@ namespace FantasyCricket.Service
 
         private readonly string GETLASTTEAM = "SELECT * FROM [UserTeam] where username=@username";
 
+        private readonly string GETUSERTEAMHISTORY = "SELECT * FROM [UserTeamPointsHistory] where username=@username";
+
 
         private readonly object login = new object();
 
@@ -356,6 +358,32 @@ namespace FantasyCricket.Service
             return new UserTeam();
 
         }
+
+
+        public UserTeamHistory[] GetUserTeamHistory(string username)
+        {
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+
+                // get next match info
+
+                using (SQLiteCommand command = new SQLiteCommand(GETUSERTEAMHISTORY, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@username", username);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        return reader.ReadAll<UserTeamHistory>();
+                    }
+
+                }
+
+            }
+
+        }
+
 
 
 

@@ -51,6 +51,16 @@ namespace FantasyCricket.Controllers
             return user.GetLastTeam(username);
         }
 
+
+        [HttpGet]
+        [Route("team/history")]
+        public UserTeamHistory[] GetHistoryTeam([FromQuery(Name = "username")] string username)
+
+        {
+            return user.GetHistoryTeam(username);
+        }
+
+
         [HttpGet]
         public ActionResult<string[]> GetUsers()
 
