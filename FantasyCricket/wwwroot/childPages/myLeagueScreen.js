@@ -51,7 +51,7 @@ function displayLeagueInfo(leagueName, allData) {
         });
         let rank = 1;
         leagueMembers.map(function(members) {
-            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam(\""+ members.Username +"\")'>" + members.Username + "</td><td>" + members.Total + "</td></tr>";
+            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam(\""+ members.Username +"\")'>" + members.DisplayName + "</td><td>" + members.Total + "</td></tr>";
         });
         resp += "</table>"
         $("#leagueInfo").html(resp);        

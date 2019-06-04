@@ -27,7 +27,7 @@ namespace FantasyCricket.Service
 
         private static readonly string UPDATEUSERMATCHMAP = "UPDATE UserTeamPointsHistory SET points=@points where username=@username and unique_id=@unique_id";
 
-        private static readonly string GETALLUSERSCORE = "SELECT u.username,SUM(p.points) FROM User u, UserTeamPointsHistory p WHERE u.username=p.username GROUP BY u.username;";
+        private static readonly string GETALLUSERSCORE = "SELECT u.displayname,u.username,SUM(p.points) FROM User u, UserTeamPointsHistory p WHERE u.username=p.username GROUP BY u.username;";
 
         private static readonly string GETALLUSERSCOREINGANG = "SELECT g.username,SUM(p.points) FROM GangUserMap g, UserTeamPointsHistory p WHERE g.username=p.username AND g.name=@gang GROUP BY g.username;";
 

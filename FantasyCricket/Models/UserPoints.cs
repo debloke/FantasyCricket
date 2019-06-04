@@ -9,6 +9,9 @@ namespace FantasyCricket.Models
         [SQLiteColumn("username")]
         public string Username { get; set; }
 
+        [SQLiteColumn("displayname")]
+        public string DisplayName { get; set; }
+
         [SQLiteColumn("SUM(p.points)")]
         public Int64 Total { get; set; }
 
