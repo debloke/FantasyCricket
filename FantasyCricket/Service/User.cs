@@ -360,7 +360,7 @@ namespace FantasyCricket.Service
         }
 
 
-        public UserTeamHistory[] GetUserTeamHistory(string username)
+        public UserTeamHistory[] GetHistoryTeam(string username)
         {
 
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
