@@ -47,26 +47,36 @@ namespace Sqlite.SqlClient
                         // Get Column ordinal
                         int ordinal = reader.GetOrdinal(sqlColumnAttribute.ColumnName);
 
-                        // Create column's converter
-                        ISqlDataConverter converter = SqlDataConverterFactory.Create(sqlColumnAttribute, propertyInfo.PropertyType);
-
-
-                        // Get SqlDbType from column's meta-data
-                        SqlDbType sqlDbType;
-                        string dataTypeName = reader.GetDataTypeName(ordinal);
-                        if (!string.IsNullOrEmpty(dataTypeName))
+                        if (reader.IsDBNull(ordinal))
                         {
-                            sqlDbType = SqlDataConverter.ConvertDbType(dataTypeName);
+                            propertyInfo.SetValue(
+                           genericObject,
+                           null);
                         }
                         else
                         {
-                            sqlDbType = SqlDataConverter.ConvertFieldType(reader.GetFieldType(ordinal));
-                        }
+                            // Create column's converter
+                            ISqlDataConverter converter = SqlDataConverterFactory.Create(sqlColumnAttribute, propertyInfo.PropertyType);
 
-                        // Apply the converted object to the property's object
-                        propertyInfo.SetValue(
-                            genericObject,
-                            converter.ReadValue(reader, ordinal, sqlDbType, propertyInfo.PropertyType));
+
+                            // Get SqlDbType from column's meta-data
+                            SqlDbType sqlDbType;
+                            string dataTypeName = reader.GetDataTypeName(ordinal);
+                            if (!string.IsNullOrEmpty(dataTypeName))
+                            {
+                                sqlDbType = SqlDataConverter.ConvertDbType(dataTypeName);
+                            }
+                            else
+                            {
+                                sqlDbType = SqlDataConverter.ConvertFieldType(reader.GetFieldType(ordinal));
+                            }
+
+                            // Apply the converted object to the property's object
+                            propertyInfo.SetValue(
+                                genericObject,
+                                converter.ReadValue(reader, ordinal, sqlDbType, propertyInfo.PropertyType));
+
+                        }
                     }
                 }
 
