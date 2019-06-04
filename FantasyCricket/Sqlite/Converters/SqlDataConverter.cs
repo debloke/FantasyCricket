@@ -79,7 +79,7 @@ namespace Sqlite.Converters
         public static SqlDbType ConvertDbType(string dataTypeName)
         {
             // SqlLite conversions 
-            switch (dataTypeName)
+            switch (dataTypeName.ToUpper())
             {
                 case "NVARCHAR(255)":
                     return SqlDbType.NVarChar;

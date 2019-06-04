@@ -1,5 +1,5 @@
-﻿using Sqlite.SqliteAttributes;
-using System;
+﻿using Newtonsoft.Json;
+using Sqlite.SqliteAttributes;
 
 namespace FantasyCricket.Models
 {
@@ -9,11 +9,23 @@ namespace FantasyCricket.Models
         [SQLiteColumn("unique_id")]
         public int MatchId { get; set; }
 
+
+        public UserTeam SelectedTeam
+        {
+            get
+            {
+                return JsonConvert.DeserializeObject<UserTeam>(this.SelectedTeamString);
+            }
+            set { }
+        }
+
+
         [SQLiteColumn("selectedteam")]
-        public UserTeam SelectedTeam { get; set; }
+        [JsonIgnore]
+        public string SelectedTeamString { get; set; }
 
         [SQLiteColumn("points")]
-        public Int64 Points { get; set; }
+        public int Points { get; set; }
 
 
     }
