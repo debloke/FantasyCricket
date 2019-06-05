@@ -14,7 +14,7 @@ function populateLiveData(id) {
         function( data ) {            
             oldData = JSON.parse(data);
             newData = JSON.parse(data);
-            getOldnNewData();
+            getOldnNewData(true);
             getSocketData();
         },
         function(err) {
@@ -39,12 +39,12 @@ function populateLiveData(id) {
         });
     }
     
-    function getOldnNewData() {
+    function getOldnNewData(onLoad) {
         $(id).html();
         let plotData = {};
         let conObj = {
-            "selection" :"<div class='containerForUL'><ul class='selectMatch'>",
-            "mainContent" :"<div class='allLiveScores'>"
+            "selection" : "",
+            "mainContent" : ""
         };
         for(let mKey in oldData) {
             plotData[mKey] = {};
@@ -58,23 +58,29 @@ function populateLiveData(id) {
         }
         
         for(let key in plotData) {
-            plotDataToUI(plotData[key].oldData, plotData[key].newData, id, conObj, key);
+            plotDataToUI(plotData[key].oldData, plotData[key].newData, id, conObj, key, onLoad);
         }
-        conObj.mainContent += "</div>";
-        conObj.selection += "</ul></div>";
-        $(id).html(conObj.selection + conObj.mainContent);
+
+        if(onLoad) {
+            conObj.selection = "<div class='containerForUL'><ul class='selectMatch'>" + conObj.selection + "</ul></div>";
+            conObj.mainContent = "<div class='allLiveScores'>" + conObj.mainContent + "</div>";
+            $(id).html(conObj.selection + conObj.mainContent);
         
-        $(".selectMatch li").bind("click", function() {
-            let matchId = this.getAttribute("data");
-            $(".individualLiveScore").hide();
-            $(".match" + matchId).show();
-            $(".selectMatch li").removeClass("selectedLi");
-            $(this).addClass("selectedLi");
-        });            
+            $(".selectMatch li").bind("click", function() {
+                let matchId = this.getAttribute("data");
+                $(".individualLiveScore").hide();
+                $(".match" + matchId).show();
+                $(".selectMatch li").removeClass("selectedLi");
+                $(this).addClass("selectedLi");
+            });
+        }
+        else {
+            $(".allLiveScores").html(conObj.mainContent);
+        }
     }
 }
 
-function plotDataToUI(oData, nData, id, conObj, key) {
+function plotDataToUI(oData, nData, id, conObj, key, onLoad) {
     let player = {};
     let playerPerTeam = {};
     
@@ -91,10 +97,10 @@ function plotDataToUI(oData, nData, id, conObj, key) {
         player[npData.pid].NewPoints = npData.BattingPoints + npData.FieldingPoints + npData.BowlingPoints;
         playerPerTeam[npData.Team].push(player[npData.pid]);
     });
-    drawData(playerPerTeam, id, conObj, key);
+    drawData(playerPerTeam, id, conObj, key, onLoad);
 }
 
-function drawData(data, id, conObj, key) {
+function drawData(data, id, conObj, key, onLoad) {
     let response = "";
     let teamList = [];
 
@@ -124,5 +130,5 @@ function drawData(data, id, conObj, key) {
         "<table border='1'>" +
         "<tr>" + response + "</tr>" +
         "</table></div>");
-    conObj.selection += "<li data='"+ key +"'>"+ teamList.join(" VS ") + "</li>";
+    if(onLoad) conObj.selection += "<li data='"+ key +"'>"+ teamList.join(" VS ") + "</li>";
 }
