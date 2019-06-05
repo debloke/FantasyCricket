@@ -63,7 +63,7 @@ function populateLiveData(id) {
 
         if(onLoad) {
             conObj.selection = "<div class='containerForUL'><ul class='selectMatch'>" + conObj.selection + "</ul></div>";
-            conObj.mainContent = "<div class='allLiveScores'>" + conObj.mainContent + "</div>";
+            conObj.mainContent = "<div class='allLiveScores' id='allLiveScores'>" + conObj.mainContent + "</div>";
             $(id).html(conObj.selection + conObj.mainContent);
         
             $(".selectMatch li").bind("click", function() {
@@ -75,7 +75,7 @@ function populateLiveData(id) {
             });
         }
         else {
-            $(".allLiveScores")[0].innerHTML=conObj.mainContent;
+            $("#allLiveScores").html(conObj.mainContent);
         }
     }
 }
@@ -126,7 +126,7 @@ function drawData(data, id, conObj, key, onLoad) {
         });
         response += "<td style='vertical-align: top;'><table style='display:inline;'>" + tData + "</table></td>";
     }
-    conObj.mainContent += ( "<div align='center' class='liveData individualLiveScore match"+ key +"'>" + 
+    conObj.mainContent += ("<div align='center' class='liveData" + (onLoad ? " individualLiveScore" : "") + " match"+ key +"'>" + 
         "<table border='1'>" +
         "<tr>" + response + "</tr>" +
         "</table></div>");
