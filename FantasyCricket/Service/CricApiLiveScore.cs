@@ -37,15 +37,9 @@ namespace FantasyCricket.Service
 
         private ConcurrentDictionary<int, Points[]> liveScores = new ConcurrentDictionary<int, Points[]>();
 
-
-
         private Timer LiveScoreCheckTimer { get; set; }
 
-
-        //private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
-
-        private const int LiveScoreCheckTimerPeriod = 10000;  // once every second for testing
-
+        private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
 
         private const int TimerStartImmediate = 0;
 
