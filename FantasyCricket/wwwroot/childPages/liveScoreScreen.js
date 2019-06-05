@@ -11,45 +11,67 @@ function populateLiveData(id) {
     let utility = new UtilityClass();
     utility.getRequest(
         "/api/score",
-        function( data ) {
-            $(id).html();
-            let plotData = {};
-            let conObj = {
-                "selection" :"<div class='containerForUL'><ul class='selectMatch'>",
-                "mainContent" :"<div class='allLiveScores'>"
-            };
+        function( data ) {            
             oldData = JSON.parse(data);
             newData = JSON.parse(data);
-            for(let mKey in oldData) {
-                plotData[mKey] = {};
-                plotData[mKey].oldData = oldData[mKey];
-            }
-            
-            for(let nKey in newData) {
-                plotData[nKey] = plotData[nKey] || {};
-                plotData[nKey].oldData = plotData[nKey].oldData || [];
-                plotData[nKey].newData = newData[nKey];
-            }
-            
-            for(let key in plotData) {
-                plotDataToUI(plotData[key].oldData, plotData[key].newData, id, conObj, key);
-            }
-            conObj.mainContent += "</div>";
-            conObj.selection += "</ul></div>";
-            $(id).html(conObj.selection + conObj.mainContent);
-            
-            $(".selectMatch li").bind("click", function() {
-                let matchId = this.getAttribute("data");
-                $(".individualLiveScore").hide();
-                $(".match" + matchId).show();
-                $(".selectMatch li").removeClass("selectedLi");
-                $(this).addClass("selectedLi");
-            });
+            getOldnNewData();
+            getSocketData();
         },
         function(err) {
             alert( "Unable to fetch Live data" );
         }
     );
+    
+    function getSocketData() {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/livescore")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().then(function () {
+            console.log("connected");
+        });
+
+        connection.on("ReceiveLiveScores", (livescores) => {
+            oldData = JSON.parse( JSON.stringify (newData) );
+            newData = JSON.parse( livescores );
+            getOldnNewData();
+        });
+    }
+    
+    function getOldnNewData() {
+        $(id).html();
+        let plotData = {};
+        let conObj = {
+            "selection" :"<div class='containerForUL'><ul class='selectMatch'>",
+            "mainContent" :"<div class='allLiveScores'>"
+        };
+        for(let mKey in oldData) {
+            plotData[mKey] = {};
+            plotData[mKey].oldData = oldData[mKey];
+        }
+        
+        for(let nKey in newData) {
+            plotData[nKey] = plotData[nKey] || {};
+            plotData[nKey].oldData = plotData[nKey].oldData || [];
+            plotData[nKey].newData = newData[nKey];
+        }
+        
+        for(let key in plotData) {
+            plotDataToUI(plotData[key].oldData, plotData[key].newData, id, conObj, key);
+        }
+        conObj.mainContent += "</div>";
+        conObj.selection += "</ul></div>";
+        $(id).html(conObj.selection + conObj.mainContent);
+        
+        $(".selectMatch li").bind("click", function() {
+            let matchId = this.getAttribute("data");
+            $(".individualLiveScore").hide();
+            $(".match" + matchId).show();
+            $(".selectMatch li").removeClass("selectedLi");
+            $(this).addClass("selectedLi");
+        });            
+    }
 }
 
 function plotDataToUI(oData, nData, id, conObj, key) {
