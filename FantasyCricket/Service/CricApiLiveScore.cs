@@ -44,7 +44,7 @@ namespace FantasyCricket.Service
 
         //private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
 
-        private const int LiveScoreCheckTimerPeriod = 5000;  // once every second for testing
+        private const int LiveScoreCheckTimerPeriod = 10000;  // once every second for testing
 
 
         private const int TimerStartImmediate = 0;

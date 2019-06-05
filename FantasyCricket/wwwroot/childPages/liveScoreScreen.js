@@ -75,7 +75,7 @@ function populateLiveData(id) {
             });
         }
         else {
-            $(".allLiveScores").html(conObj.mainContent);
+            $(".allLiveScores")[0].innerHTML=conObj.mainContent;
         }
     }
 }
