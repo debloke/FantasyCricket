@@ -2,6 +2,8 @@
 using FantasyCricket.KeyManager;
 using FantasyCricket.Models;
 using FantasyCricket.ScoreCalculator;
+using FantasyCricket.SignalR.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Sqlite.SqlClient;
 using System;
@@ -31,7 +33,7 @@ namespace FantasyCricket.Service
 
         private static readonly string GETALLUSERSCOREINGANG = "SELECT g.username,SUM(p.points) FROM GangUserMap g, UserTeamPointsHistory p WHERE g.username=p.username AND g.name=@gang GROUP BY g.username;";
 
-
+        private IHubContext<LiveScoreHub> hubContext;
 
         private ConcurrentDictionary<int, Points[]> liveScores = new ConcurrentDictionary<int, Points[]>();
 
@@ -40,13 +42,16 @@ namespace FantasyCricket.Service
         private Timer LiveScoreCheckTimer { get; set; }
 
 
-        private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
+        //private const int LiveScoreCheckTimerPeriod = 300000;  // once every 5 minutes
+
+        private const int LiveScoreCheckTimerPeriod = 5000;  // once every second for testing
+
 
         private const int TimerStartImmediate = 0;
 
-        public CricApiLiveScore()
+        public CricApiLiveScore(IHubContext<LiveScoreHub> hubContext)
         {
-
+            this.hubContext = hubContext;
             LoadCricApiLiveScoreTimer();
         }
 
@@ -223,6 +228,11 @@ namespace FantasyCricket.Service
                     // TO DO
                 }
             }
+
+            hubContext.Clients.All.SendAsync("ReceiveLiveScores", JsonConvert.SerializeObject(liveScores, Formatting.Indented));
+
+
+
         }
 
         public ConcurrentDictionary<int, Points[]> GetScores()

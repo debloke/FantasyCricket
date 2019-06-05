@@ -1,6 +1,7 @@
 ﻿using FantasyCricket.Common.Filters;
 using FantasyCricket.Database;
 using FantasyCricket.Service;
+using FantasyCricket.SignalR.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,11 @@ namespace FantasyCricket
         .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
+            services.AddSignalR();
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddSingleton<ILiveScore, CricApiLiveScore>();
             services.AddSingleton<IPlayerInfo, PlayerInfo>();
             services.AddSingleton<ISeriesInfo, SeriesInfo>();
@@ -57,6 +62,12 @@ namespace FantasyCricket
             app.UseFileServer();
             app.UseCors("MyPolicy");
             app.UseMvc();
+
+            app.UseSignalR(routes =>
+            {
+      routes.MapHub<LiveScoreHub>("/livescore");
+            });
+
         }
     }
 }
