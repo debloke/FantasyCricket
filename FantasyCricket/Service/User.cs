@@ -5,8 +5,6 @@ using Sqlite.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Net;
-using System.Net.Http;
 using System.Threading;
 
 namespace FantasyCricket.Service
@@ -16,11 +14,13 @@ namespace FantasyCricket.Service
 
         private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
-        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username FROM [User] where username = @username and password = @password";
+        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username,displayname FROM [User] where username = @username and password = @password";
 
-        private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username FROM [User]";
+        private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username,displayname FROM [User]";
 
-        private readonly string SELECTUSERBYGUID = "SELECT magickey,lastlogin,username FROM [User] where magickey=@magickey";
+        private readonly string SELECTUSERBYGUID = "SELECT magickey,lastlogin,username,displayname FROM [User] where magickey=@magickey";
+
+        private readonly string SELECTUSERBYUSERNAME = "SELECT magickey,lastlogin,username,displayname FROM [User] where username=@username";
 
         private readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username and password = @password";
 
@@ -80,30 +80,81 @@ namespace FantasyCricket.Service
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             MagicKey key = reader.Read<MagicKey>();
-                            if (key == null || key.Magic == null || key.Magic == Guid.Empty)
+                            if (key != null)
                             {
-                                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Yoy are trying to look at something you should not, RUN AWAY boy", "", null);
-                            }
-                            else
-                            {
-
-                                using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERLOGINTIME, connection))
+                                if (key.Magic == null || key.Magic == Guid.Empty)
                                 {
-                                    command1.CommandType = System.Data.CommandType.Text;
-                                    command1.Parameters.AddWithValue("@username", username);
-                                    command1.Parameters.AddWithValue("@password", password);
-                                    command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
-                                    command1.ExecuteNonQuery();
+                                    key.Magic = Guid.NewGuid();
+                                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                                    {
+                                        command1.CommandType = System.Data.CommandType.Text;
+                                        command1.Parameters.AddWithValue("@username", username);
+                                        command1.Parameters.AddWithValue("@newmagickey", key.Magic.ToString());
+                                        command1.ExecuteNonQuery();
+                                    }
                                 }
-
-                                return key;
+                                else
+                                {
+                                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERLOGINTIME, connection))
+                                    {
+                                        command1.CommandType = System.Data.CommandType.Text;
+                                        command1.Parameters.AddWithValue("@username", username);
+                                        command1.Parameters.AddWithValue("@password", password);
+                                        command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
+                                        command1.ExecuteNonQuery();
+                                    }
+                                }
                             }
+                            return key;
                         }
                     }
                 }
 
             }
         }
+
+
+        public MagicKey LoginUser(Guid magicKey)
+        {
+            lock (login)
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                {
+                    connection.Open();
+                    using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
+                    {
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.Parameters.AddWithValue("@magickey", magicKey.ToString());
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            return reader.Read<MagicKey>();
+                        }
+                    }
+
+                }
+            }
+        }
+
+        public void LogoutUser(string username)
+        {
+            lock (login)
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                {
+                    connection.Open();
+                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                    {
+                        command1.CommandType = System.Data.CommandType.Text;
+
+                        command1.Parameters.AddWithValue("@username", username);
+                        command1.Parameters.AddWithValue("@newmagickey", null);
+                        command1.ExecuteNonQuery();
+                    }
+
+                }
+            }
+        }
+
 
 
         public void LoadUserMaintenanceTimer()
@@ -159,29 +210,12 @@ namespace FantasyCricket.Service
             }
         }
 
-        public void SaveTeam(UserTeam userTeam, Guid magicKey)
+        public void SaveTeam(UserTeam userTeam, string username)
         {
-            string username;
 
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
                 connection.Open();
-                using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
-                {
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.Parameters.AddWithValue("@magickey", magicKey.ToString());
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        MagicKey[] keys = reader.ReadAll<MagicKey>();
-                        if (keys.Length != 1)
-                        {
-                            throw new Exception("Unauthorised access");
-                        }
-                        username = keys[0].username;
-                    }
-                }
-
-                // get next match info
 
                 using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
                 {
@@ -262,32 +296,11 @@ namespace FantasyCricket.Service
             }
         }
 
-        public UserTeam GetTeam(Guid magicKey)
+        public UserTeam GetTeam(string username)
         {
-
-
-
-            string username;
-
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
                 connection.Open();
-                using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYGUID, connection))
-                {
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.Parameters.AddWithValue("@magickey", magicKey.ToString());
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        MagicKey[] keys = reader.ReadAll<MagicKey>();
-                        if (keys.Length != 1)
-                        {
-                            throw new Exception("Unauthorised access");
-                        }
-                        username = keys[0].username;
-                    }
-                }
-
-                // get next match info
 
                 using (SQLiteCommand command = new SQLiteCommand(GETLASTTEAM, connection))
                 {
@@ -408,6 +421,27 @@ namespace FantasyCricket.Service
                 }
             }
             return userList.ToArray();
+        }
+
+        public MagicKey LoginUser(string username)
+        {
+            lock (login)
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                {
+                    connection.Open();
+                    using (SQLiteCommand command = new SQLiteCommand(SELECTUSERBYUSERNAME, connection))
+                    {
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.Parameters.AddWithValue("@username", username);
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            return reader.Read<MagicKey>();
+                        }
+                    }
+
+                }
+            }
         }
     }
 }

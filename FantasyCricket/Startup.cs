@@ -1,7 +1,9 @@
-﻿using FantasyCricket.Common.Filters;
+﻿using FantasyCricket.Authentication;
+using FantasyCricket.Common.Filters;
 using FantasyCricket.Database;
 using FantasyCricket.Service;
 using FantasyCricket.SignalR.Hubs;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +42,16 @@ namespace FantasyCricket
         .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
+            // configure basic authentication 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            // configure basic authentication 
+            services.AddAuthentication("MagickeyAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, MagickeyAuthentication>("MagickeyAuthentication", null);
+
+            services.AddHttpContextAccessor();
+
             services.AddSignalR();
 
 
@@ -69,7 +81,12 @@ namespace FantasyCricket
 
             app.UseFileServer();
             app.UseCors("MyPolicy");
+
+
+            app.UseAuthentication();
+
             app.UseMvc();
+
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using FantasyCricket.Models;
 using FantasyCricket.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 
 namespace FantasyCricket.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MagickeyAuthentication")]
     [Route("api/[controller]")]
     [ApiController]
     public class PlayerController : ControllerBase

@@ -8,9 +8,15 @@ namespace FantasyCricket.Service
         void CreateUser(string username, string password, string displayName);
         MagicKey LoginUser(string username, string password);
 
-        void SaveTeam(UserTeam userTeam, Guid magicKey);
+        MagicKey LoginUser(Guid magicKey);
 
-        UserTeam GetTeam(Guid magicKey);
+        MagicKey LoginUser(string username);
+
+        void LogoutUser(string username);
+
+        void SaveTeam(UserTeam userTeam, string username);
+
+        UserTeam GetTeam(string username);
 
         UserTeam GetLastTeam(string username);
 

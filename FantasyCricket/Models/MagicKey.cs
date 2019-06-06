@@ -16,6 +16,9 @@ namespace FantasyCricket.Models
         [SQLiteColumn("username")]
         public string username { get; set; }
 
+        [SQLiteColumn("displayname")]
+        public string DisplayName { get; set; }
+
 
 
     }
