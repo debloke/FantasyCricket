@@ -59,15 +59,17 @@ namespace FantasyCricket
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseFileServer();
-            app.UseCors("MyPolicy");
-            app.UseMvc();
 
             app.UseSignalR(routes =>
             {
-      routes.MapHub<LiveScoreHub>("/livescore");
+
+                routes.MapHub<LiveScoreHub>("/livescore");
+
             });
 
+            app.UseFileServer();
+            app.UseCors("MyPolicy");
+            app.UseMvc();
         }
     }
 }
