@@ -5,6 +5,8 @@ var liveScoreScreen = function() {
     };
 };
 
+let selectedMatch = "";
+
 function populateLiveData(id) {
     let oldData = [];
     let newData = [];
@@ -67,9 +69,8 @@ function populateLiveData(id) {
             $(id).html(conObj.selection + conObj.mainContent);
         
             $(".selectMatch li").bind("click", function() {
-                let matchId = this.getAttribute("data");
-                $(".individualLiveScore").hide();
-                $(".match" + matchId).show();
+                selectedMatch = this.getAttribute("data"); 
+                $(".match" + selectedMatch).show();
                 $(".selectMatch li").removeClass("selectedLi");
                 $(this).addClass("selectedLi");
             });
@@ -124,7 +125,8 @@ function drawData(data, id, conObj, key, onLoad) {
             rowData += "<td>"+ pData.NewPoints + determineIcon(pData.Points, pData.NewPoints) + "</td>";
             tData += "<tr>"+ rowData +"</tr>"
         });
-        response += "<td style='vertical-align: top;'><table style='display:inline;'>" + tData + "</table></td>";
+        let styleTable = (key == selectedMatch) ? "inline" : "hidden";
+        response += "<td style='vertical-align: top;'><table style='display:"+ styleTable +";'>" + tData + "</table></td>";
     }
     conObj.mainContent += ("<div align='center' class='liveData" + (onLoad ? " individualLiveScore" : "") + " match"+ key +"'>" + 
         "<table border='1'>" +

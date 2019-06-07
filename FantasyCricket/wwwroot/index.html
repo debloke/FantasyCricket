@@ -7,6 +7,9 @@
     </head>
     <body class="loginPageBG">
         <script type="text/javascript">
+            if (localStorage.guid) {
+                window.location.href = "main.html";
+            }
             let utility = new UtilityClass();
             function register() {
                 window.location.href = "register.html";
@@ -14,17 +17,20 @@
             function login() {
                 // AJAX call
                 utility.postRequest(
-                    "/api/user/?username=" + $("#userName").val() + "&password=" + $("#password").val(),
-                    function( data ) {
-                        sessionStorage.guid = data;
-                        sessionStorage.loggedInUser = $("#userName").val();
+                    "/api/user",
+                    function (data) {
+                        localStorage.guid = data.Magic;
+                        localStorage.LastLogin = data.LastLogin;
+                        localStorage.loggedInUser = data.UserName;
+                        localStorage.loggedInUserDisplay = data.DisplayName;
                         window.location.href = "main.html";
                     },
                     function() {
                         $("#errorMessageBox").html( "Unable to Login" );
                     },
                     null,
-                    "text/plain"
+                    "text/plain",
+                    {"Authorization": "Basic " + btoa($("#userName").val() + ":" + $("#password").val())}
                 );
             }
             function showRules() {

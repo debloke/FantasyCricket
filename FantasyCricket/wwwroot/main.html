@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script type="text/javascript" src="lib/signalr.js"> </script>
-        <script type="text/javascript" src="jquery.min.js"> </script>
-        <script type="text/javascript" src="util/utility.js"> </script>
-        <script type="text/javascript" src="childPages/teamValidations.js"> </script>
-        <script type="text/javascript" src="childPages/teamScreen.js"> </script>
-        <script type="text/javascript" src="childPages/myLeagueScreen.js"> </script>
-        <script type="text/javascript" src="childPages/liveScoreScreen.js"> </script>
-        <script type="text/javascript" src="childPages/logoutPage.js"> </script>
-        <script type="text/javascript" src="main.js"> </script>
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <title>Fantasy League</title>
-    </head>
-    <body>
-        <nav>
-            <ul class="myMenu">
-                <li><a href="#" class="current" data-text="Manage Teams"><div>Manage Team</div></a></li>
-                <li><a href="#" data-text="My League"><div>Leaderboard</div></a></li>
-                <li><a href="#" data-text="Live Scores"><div>Live Scores</div></a></li>
-            </ul>
-        </nav>
-        <div id="mainContent"></div>
-        <div id="inputPopup">
-            <div class="glassBackground"></div>
-            <div class="inputContainer"></div>
-        </div>
-    </body>
+<head>
+    <script type="text/javascript" src="lib/signalr.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="canvasjs.min.js"></script>
+    <script type="text/javascript" src="util/utility.js"></script>
+    <script type="text/javascript" src="childPages/teamValidations.js"></script>
+    <script type="text/javascript" src="childPages/teamScreen.js"></script>
+    <script type="text/javascript" src="childPages/myLeagueScreen.js"></script>
+    <script type="text/javascript" src="childPages/liveScoreScreen.js"></script>
+    <script type="text/javascript" src="childPages/logoutPage.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Fantasy League</title>
+</head>
+<body>
+    <nav>
+        <ul class="myMenu">
+            <li><a href="#" class="current" data-text="Manage Teams"><div>Manage Team</div></a></li>
+            <li><a href="#" data-text="My League"><div>Leaderboard</div></a></li>
+            <li><a href="#" data-text="Live Scores"><div>Live Scores</div></a></li>
+        </ul>
+    </nav>
+    <div id="mainContent"></div>
+    <div id="inputPopup">
+        <div class="glassBackground"></div>
+        <div class="inputContainer"></div>
+    </div>
+    <div id="accountInfo"><img src="icons/user.png"/></div>
+    <div id="accountDetail"></div>
+</body>
 </html>
 

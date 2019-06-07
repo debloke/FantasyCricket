@@ -6,39 +6,30 @@ var myLeagueScreen = function() {
 };
 
 function populateLeagueData(id) {   
-    let utility = new UtilityClass();
-    utility.getRequest(
-        "/api/score/points",
-        function( data ) {
-            let response = "<div id='leagueList'><ul>";
-            // Only one entry as of now, Gangs will fit in here
-            let myLeagueData = [
-                {
-                    "Name": "Overall",
-                    "Members": data
-                }
-            ];
-            myLeagueData.map(function(lData){
-                if(lData.Name == "Overall") {
-                    response += "<li style='border-top:4px solid #5554a2'>"+ lData.Name +"</li>";
-                }
-                else {
-                    response += "<li>"+ lData.Name +"</li>";
-                }
-            });
-            response += "</ul></div><div id='leagueInfo'></div>";
-            $(id).html(response);
-            displayLeagueInfo("Overall", myLeagueData);
-            $("#leagueList li").bind("click", function() {
-                $("#leagueList li").css({"border-top": "none"});
-                $(this).css({"border-top": "4px solid #5554a2"});
-                displayLeagueInfo(this.textContent, myLeagueData);
-            });
-        },
-        function(err) {
-            alert( "Unable to fetch Leaderboard data" );
+    let response = "<div id='leagueList'><ul>";
+    // Only one entry as of now, Gangs will fit in here
+    let myLeagueData = [
+        {
+            "Name": "Overall",
+            "Members": ALL_POINTS
         }
-    );
+    ];
+    myLeagueData.map(function(lData){
+        if(lData.Name == "Overall") {
+            response += "<li style='border-top:4px solid #5554a2'>"+ lData.Name +"</li>";
+        }
+        else {
+            response += "<li>"+ lData.Name +"</li>";
+        }
+    });
+    response += "</ul></div><div id='leagueInfo'></div>";
+    $(id).html(response);
+    displayLeagueInfo("Overall", myLeagueData);
+    $("#leagueList li").bind("click", function() {
+        $("#leagueList li").css({"border-top": "none"});
+        $(this).css({"border-top": "4px solid #5554a2"});
+        displayLeagueInfo(this.textContent, myLeagueData);
+    });
 }
 
 function displayLeagueInfo(leagueName, allData) {
@@ -50,12 +41,116 @@ function displayLeagueInfo(leagueName, allData) {
             return b.Total - a.Total;
         });
         let rank = 1;
-        leagueMembers.map(function(members) {
-            resp += "<tr><td>" + (rank++) + "</td><td onclick='displayPlayersTeam(\""+ members.Username +"\")'>" + members.DisplayName + "</td><td>" + members.Total + "</td></tr>";
+        leagueMembers.map(function (members) {
+            resp += "<tr><td>" + (rank++) + "</td>";
+            resp += "<td onclick='displayPlayersTeam(\"" + members.Username + "\")'>" + members.DisplayName + "</td>";
+            resp += "<td>" + members.Total + "</td>";
+            resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td></tr>";
         });
         resp += "</table>"
-        $("#leagueInfo").html(resp);        
+        $("#leagueInfo").html(resp);
     }
+}
+
+function compareWithMyScores(player) {
+    let utility = new UtilityClass();
+    let listOfPromises = [];
+    function createPromise(url) {
+        return new Promise(function (resolve, reject) {
+            utility.getRequest(
+                url,
+                function (data) {
+                    resolve(data);
+                },
+                function (err) {
+                    alert("Unable to fetch players data for " + url);
+                }
+            );
+        });
+    }
+
+    // Promise to fetch my points history
+    listOfPromises.push(createPromise("/api/user/team/history?username=" + localStorage.loggedInUser));
+    // Promise to fetch other player's points history
+    listOfPromises.push(createPromise("/api/user/team/history?username=" + player));
+
+    Promise.all(listOfPromises).then(function (values) {
+        let comparisionObj = {};
+        comparisionObj[localStorage.loggedInUser] = values[0];
+        comparisionObj[player] = values[1];
+        drawComparision(comparisionObj);
+    });
+}
+
+function drawComparision(dataToPlot) {
+    let tempData = {};
+    let tempMatchData = {};
+    let tableData = "<div class='comparisionTable'><div><span class='show0'>Table</span><span class='show1'>Chart</span></div>";
+    tableData += "<table id='flip0' width='100%'><tr><th>Match</th>";
+    ALL_MATCHES.map(function (match) {
+        tempMatchData[match.unique_id] = match;
+        tempMatchData[match.unique_id].game = match["team-1"] + " VS " + match["team-2"];
+    });
+    let pointsForChart = [];
+    for (let mKey in dataToPlot) {
+        pointsForChart[mKey] = {
+            type: "line",
+            dataPoints: []
+        };
+        tableData += "<th>"+ mKey +"</th>";
+        dataToPlot[mKey].map(function (mD) {
+            tempData[mD.MatchId] = tempData[mD.MatchId] || {};
+            if (mKey == localStorage.loggedInUser) {
+                tempData[mD.MatchId].myPoints = mD.Points;
+            }
+            else {
+                tempData[mD.MatchId].otherPoints = mD.Points;
+            }
+            
+            if (pointsForChart[mKey].dataPoints.length == 1) {
+                pointsForChart[mKey].dataPoints.push({ y: mD.Points, indexLabel: mKey });
+            }
+            else {
+                pointsForChart[mKey].dataPoints.push({ y: mD.Points });
+            }
+
+            
+        });
+    }
+    tableData += "</tr>";
+
+    for (let key in tempData) {
+        tableData += "<tr><td>" + tempMatchData[key].game + "</td><td>" + tempData[key].myPoints + "</td><td>" + tempData[key].otherPoints + "</td></tr>";
+    }
+    tableData += "</table><div id='flip1' style='width:100%; height:auto;'></div></div><div class='close'>X</div>";
+    $(".inputContainer").html(tableData).css({"width": "50%", "left": "25%", "background": "white"});
+    $("#inputPopup").show();
+
+    var chart = new CanvasJS.Chart("flip1", {
+        animationEnabled: true,
+        theme: "light2",
+        title: { text: "Points Comparision" },
+        axisY: { includeZero: false },
+        data: Object.values(pointsForChart)
+    });
+    chart.render();
+
+
+    $(".close").unbind("click");
+    $(".close").bind("click", function () {
+        $("#inputPopup").hide();
+    });
+    $(".show0").unbind("click");
+    $(".show1").unbind("click");
+    $(".flip1").hide();
+    $(".show0").bind("click", function () {
+        $("#flip0").show();
+        $("#flip1").hide();
+    });
+    $(".show1").bind("click", function () {
+        $("#flip0").hide();
+        $("#flip1").show();
+    });
 }
 
 function displayPlayersTeam(user) {

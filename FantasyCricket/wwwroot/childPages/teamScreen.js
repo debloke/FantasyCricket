@@ -1,5 +1,7 @@
 "use strict";
 let ALL_PLAYERS = [];
+let ALL_POINTS = [];
+let ALL_MATCHES = [];
 var teamScreen = function() {
     this.returnDataForDisplay = function(id) {
         let utility = new UtilityClass();
@@ -21,7 +23,13 @@ var teamScreen = function() {
         // Promise to fetch all players info
         listOfPromises.push(createPromise("/api/player/?tournament=ODI"));
         // Promise to fetch my players info
-        listOfPromises.push(createPromise("/api/user/team/?magic=" + sessionStorage.guid));
+        listOfPromises.push(createPromise("/api/user/team"));
+        // Promise to fetch Series info
+        listOfPromises.push(createPromise("/api/series"));
+        // Promise to fetch Matches info
+        listOfPromises.push(createPromise("/api/series/matches"));
+        // Promise to fetch Points info
+        listOfPromises.push(createPromise("/api/score/points"));
 
         Promise.all(listOfPromises).then(function (values) {
             ALL_PLAYERS = values[0].sort(function(a,b) {
@@ -31,12 +39,42 @@ var teamScreen = function() {
                 if (val1 > val2) return 1;
                 if (val1 < val2) return -1;
             });
-            populateTeamData(id, values[1]);
+
+
+            let seriesData = values[2];
+            ALL_MATCHES = values[3];
+            let allMatches = [];
+            let tempData = {};
+            // Hardcoding current Series as - WorldCup2019
+            // This will change once we have option to select series
+            let currentSeries = "WorldCup2019";
+            let seriesId = "";
+            let upcomingMatchesToBeDisplayed = 3;
+            // Find Series Id with selected series name
+            seriesData.map(function (sD) {
+                if (tempData[sD.SeriesName] = currentSeries) seriesId = sD.SeriesId;
+            });
+            // Find all assigned match for that series
+            // Remove old matches and get pick next 4 matches
+            ALL_MATCHES.map(function (mD) {
+                if (seriesId == mD.SeriesId) {
+                    if ((allMatches.length < upcomingMatchesToBeDisplayed) && (new Date(mD.dateTimeGMT)) > (new Date())) {
+                        allMatches.push(mD);
+                    }
+                }
+            });
+            // Sort the matches
+            allMatches.sort(function (a, b) {
+                return (new Date(a.dateTimeGMT) - new Date(b.dateTimeGMT));
+            });
+
+            ALL_POINTS = values[4];
+            populateTeamData(id, values[1], allMatches);
         });
     };
 };
 
-function populateTeamData(id, listOfMyPlayers) {
+function populateTeamData(id, listOfMyPlayers, allMatches) {
     let myPlayers = listOfMyPlayers.PlayerIds || [];
     let myPlayersFullDetail = [];
     let listOfRoleFilters = ["BAT", "WK", "ALL", "BOWL", "FULL"];
@@ -130,7 +168,7 @@ function populateTeamData(id, listOfMyPlayers) {
         uiData += "<div><ul>"+myAllRounderData+"</ul></div>";
         uiData += "<div><ul>"+myBowlerData+"</ul></div>";
         uiData += "<div class='infoteams'><div id='errorMessage'></div>";
-        uiData += "<div id='saveteam'>Submit</div></div></div>";
+        uiData += "<div id='saveteam'>Submit</div></div><div id='rankAndUpcomingMatch'></div></div>";
 
         let innerData = "<div class='leftTeamItems'><ul>"+leftColData+"</ul></div>";
         innerData += "<div class='centerTeamItems'><div class='playerHeader'>Available Players</div><ul>"+centerColData+"</ul></div>";
@@ -142,10 +180,29 @@ function populateTeamData(id, listOfMyPlayers) {
         let response = teamValidation.runValidations();
         (response.isError) && $("#errorMessage").html(response.error);
         let budgetAndSubs = "";
-        budgetAndSubs += "<div class='budgetSub'>Budget Left: " + response.budgetLeft + "</div>";
-        budgetAndSubs += "<div class='budgetSub'>Substitutions Left: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;</div>");
+        let rankAndUpcoming = "";
+        let myPoints = "";
+        let usersLowerThanMe = [];
+        ALL_POINTS.map(function (pPoint) {
+            if (pPoint.Username == localStorage.loggedInUser) myPoints = pPoint.Total;
+        });
+
+        ALL_POINTS.map(function (pPoint) {
+            if (pPoint.Total > myPoints) usersLowerThanMe.push(1);
+        });
+
+        budgetAndSubs += "<div class='budgetSub'>Budget: " + response.budgetLeft + "</div>";
+        budgetAndSubs += "<div class='budgetSub'>Substitutions: " + (myPlayers.length ? listOfMyPlayers.RemSubs : "&#8734;" ) + "</div>";
+        budgetAndSubs += "<div class='budgetSub'>Points: " + myPoints + "</div>";
+        budgetAndSubs += "<div class='budgetSub'>Rank: " + (usersLowerThanMe.length + 1) + "/" + ALL_POINTS.length + "</div>";
+
+        allMatches.map(function (match) {
+            rankAndUpcoming += "<div class='upcoming'>" + match["team-1"] + " VS " + match["team-2"] + "<br/>" + formatDate(match["dateTimeGMT"])  +"</div>";
+        });
 
         $("#budgetAndSubsLeftMessage").html(budgetAndSubs);
+        $("#rankAndUpcomingMatch").html(rankAndUpcoming);
+
         $("#saveteam").css("visibility", ( response.isError ? "hidden" : "visible" ));
         $("#errorMessage").css("visibility", ( response.isError ? "visible" : "hidden" ));
 
@@ -233,7 +290,7 @@ function openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail) {
         else {
             let utility = new UtilityClass();
             utility.postRequest(
-                "/api/user/team/?magic=" + sessionStorage.guid,
+                "/api/user/team",
                 function (data) {
                     window.location.reload(true);
                 },
@@ -244,4 +301,15 @@ function openPopupForCaptains(listOfMyPlayers, myPlayersFullDetail) {
             );
         }
     });
+}
+
+/****************************************************************************
+* @function       formatDate                                                *
+* @brief          Formats date                                              *
+* @param          {Object} date                                             *
+****************************************************************************/
+function formatDate(date) {
+    date = new Date(date);
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return ((months[date.getMonth()]) + ' ' + date.getDate() + ', ' + date.getFullYear());
 }
