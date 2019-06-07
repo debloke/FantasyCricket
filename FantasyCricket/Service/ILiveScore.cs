@@ -14,5 +14,9 @@ namespace FantasyCricket.Service
 
         UserPoints[] GetUserPoints(string gang);
 
+        void UpdateMatchPointsHistory(int unique_id);
+
+        Points[] GetMatchPointsHistory(int unique_id);
+
     }
 }

@@ -41,6 +41,18 @@ namespace FantasyCricket.Controllers
             return liveScore.GetUserPoints();
         }
 
+        [HttpPost("points/{id}")]
+        public void UpdateMatchPointsHistory(int id)
+        {
+            liveScore.UpdateMatchPointsHistory(id);
+        }
+
+        [HttpGet("points/{id}")]
+        public ActionResult<Points[]> GetMatchPointsHistory(int id)
+        {
+            return liveScore.GetMatchPointsHistory(id);
+        }
+
 
         [HttpGet]
         [Route("points/{gang}")]

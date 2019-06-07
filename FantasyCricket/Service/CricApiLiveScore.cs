@@ -29,7 +29,11 @@ namespace FantasyCricket.Service
 
         private static readonly string UPDATEUSERMATCHMAP = "UPDATE UserTeamPointsHistory SET points=@points where username=@username and unique_id=@unique_id";
 
-        private static readonly string GETALLUSERSCORE = "SELECT u.displayname,u.username,SUM(p.points) FROM User u, UserTeamPointsHistory p WHERE u.username=p.username GROUP BY u.username;";
+        private static readonly string UPDATEMATCHPOINTSHISTORY = "INSERT OR REPLACE INTO MatchPointsHistory (unique_id,points) VALUES (@unique_id, @points)";
+
+        private static readonly string GETMATCHPOINTSHISTORY = "Select points FROM MatchPointsHistory WHERE unique_id = @unique_id";
+
+        private static readonly string GETALLUSERSCORE = "SELECT u.displayname,u.username,SUM(p.points) FROM User u, UserTeamPointsHistory p WHERE u.username=p.username GROUP BY u.username";
 
         private static readonly string GETALLUSERSCOREINGANG = "SELECT g.username,SUM(p.points) FROM GangUserMap g, UserTeamPointsHistory p WHERE g.username=p.username AND g.name=@gang GROUP BY g.username;";
 
@@ -156,6 +160,16 @@ namespace FantasyCricket.Service
                                 }
                             }
                         }
+
+
+                        using (SQLiteCommand insertCommand = new SQLiteCommand(UPDATEMATCHPOINTSHISTORY, connection))
+                        {
+                            insertCommand.CommandType = System.Data.CommandType.Text;
+                            insertCommand.Parameters.AddWithValue("@points", JsonConvert.SerializeObject(points));
+                            insertCommand.Parameters.AddWithValue("@unique_id", match.MatchId);
+                            insertCommand.ExecuteNonQuery();
+                        }
+
                     }
                 }
             }
@@ -266,5 +280,68 @@ namespace FantasyCricket.Service
                 }
             }
         }
+
+
+        public void UpdateMatchPointsHistory(int unique_id)
+        {
+            PlayerScoresResponse playerScoresResponse = new RestExecutor<PlayerScoresResponse>().Invoke(string.Format("https://cricapi.com/api/fantasySummary?unique_id={0}&", unique_id));
+
+            Points[] points = null;
+            IScoreCalculator scoreCalulator;
+            switch (playerScoresResponse.MatchType)
+            {
+                case MatchType.ODI:
+                    scoreCalulator = new OdiScoreCalculator();
+                    points = scoreCalulator.CalculateScore(playerScoresResponse).Values.ToArray();
+                    break;
+                default:
+                    throw new Exception("Unknown match type");
+
+            }
+
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand insertCommand = new SQLiteCommand(UPDATEMATCHPOINTSHISTORY, connection))
+                {
+                    insertCommand.CommandType = System.Data.CommandType.Text;
+                    insertCommand.Parameters.AddWithValue("@points", JsonConvert.SerializeObject(points));
+                    insertCommand.Parameters.AddWithValue("@unique_id", unique_id);
+                    insertCommand.ExecuteNonQuery();
+                }
+
+            }
+
+
+        }
+
+
+        public Points[] GetMatchPointsHistory(int unique_id)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand insertCommand = new SQLiteCommand(GETMATCHPOINTSHISTORY, connection))
+                {
+                    insertCommand.CommandType = System.Data.CommandType.Text;
+                    insertCommand.Parameters.AddWithValue("@unique_id", unique_id);
+                    using (SQLiteDataReader reader = insertCommand.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // Get Column ordinal
+                                int ordinal = reader.GetOrdinal("points");
+
+                                return JsonConvert.DeserializeObject<Points[]>(reader.GetString(ordinal));
+                            }
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
     }
 }
+
