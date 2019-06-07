@@ -38,7 +38,7 @@ namespace FantasyCricket.Authentication
             {
                 user = userService.LoginUser(Guid.Parse(Request.Headers["Magic"]));
             }
-            catch(Exception exception)
+            catch
             {
                 return AuthenticateResult.Fail("Invalid Magic");
             }
@@ -47,7 +47,7 @@ namespace FantasyCricket.Authentication
                 return AuthenticateResult.Fail("Invalid Magic");
 
             var claims = new[] {
-                new Claim(ClaimTypes.Name, user.username),
+                new Claim(ClaimTypes.Name, user.UserName),
             };
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);

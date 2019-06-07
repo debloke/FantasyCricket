@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FantasyCricket.Common.Net.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -7,18 +8,9 @@ namespace FantasyCricket.Common.Filters
 {
     public class ExceptionFilter : IExceptionFilter
     {
-        internal class ErrorCodes
-        {
-            public const string UnhandledServiceError = "7150";
-            public const string InvalidInputParameter = "7151";
-            public const string DestinationHostUnreachableError = "7152";
-            public const string DualcomOperationError = "7153";
-        }
-
         internal class HttpFault
         {
             public HttpStatusCode HttpStatusCode { get; set; }
-            public string ErrorCode { get; set; }
             public string Message { get; set; }
             public string Resolution { get; set; }
             public string Detail { get; set; }
@@ -33,23 +25,30 @@ namespace FantasyCricket.Common.Filters
                 httpFault = new HttpFault
                 {
                     HttpStatusCode = HttpStatusCode.BadRequest,
-                    ErrorCode = ErrorCodes.InvalidInputParameter,
                     Message = context.Exception.Message,
                     Resolution = "Correct input parameter",
                     Detail = context.Exception.ToString()
                 };
             }
 
-
+            else if (context.Exception is UserAlreadyExistsException)
+            {
+                httpFault = new HttpFault
+                {
+                    HttpStatusCode = HttpStatusCode.Conflict,
+                    Message = context.Exception.Message,
+                    Resolution = "Use a different UserName",
+                    Detail = context.Exception.ToString()
+                };
+            }
 
             else  // Unhandled Exception Handler
             {
                 httpFault = new HttpFault
                 {
                     HttpStatusCode = HttpStatusCode.InternalServerError,
-                    ErrorCode = ErrorCodes.UnhandledServiceError,
                     Message = string.Format("Unhandled Fantasy Cricket Server error. {0}", context.Exception.Message),
-                    Resolution = "Check with fFantasy Cricket support.",
+                    Resolution = "Check with Fantasy Cricket support.",
                     Detail = context.Exception.ToString()
                 };
             }

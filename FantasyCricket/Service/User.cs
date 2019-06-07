@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Database;
+﻿using FantasyCricket.Common.Net.Exceptions;
+using FantasyCricket.Database;
 using FantasyCricket.Models;
 using Newtonsoft.Json;
 using Sqlite.SqlClient;
@@ -50,18 +51,31 @@ namespace FantasyCricket.Service
 
         public void CreateUser(string username, string password, string displayName)
         {
-
-            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            try
             {
-                connection.Open();
-                using (SQLiteCommand command = new SQLiteCommand(ADDORUPDATEUSER, connection))
+                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
                 {
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.Parameters.AddWithValue("@username", username);
-                    command.Parameters.AddWithValue("@password", password);
-                    command.Parameters.AddWithValue("@displayname", displayName);
-                    command.Parameters.AddWithValue("@magickey", Guid.NewGuid().ToString());
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    using (SQLiteCommand command = new SQLiteCommand(ADDORUPDATEUSER, connection))
+                    {
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.Parameters.AddWithValue("@username", username);
+                        command.Parameters.AddWithValue("@password", password);
+                        command.Parameters.AddWithValue("@displayname", displayName);
+                        command.Parameters.AddWithValue("@magickey", Guid.NewGuid().ToString());
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch(SQLiteException exception)
+            {
+                if (exception.ResultCode == SQLiteErrorCode.Constraint)
+                {
+                    throw new UserAlreadyExistsException($"username:{username} is already taken");
+                }
+                else
+                {
+                    throw exception;
                 }
             }
         }
@@ -197,7 +211,7 @@ namespace FantasyCricket.Service
                                     {
                                         command1.CommandType = System.Data.CommandType.Text;
 
-                                        command1.Parameters.AddWithValue("@username", key.username);
+                                        command1.Parameters.AddWithValue("@username", key.UserName);
                                         command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid().ToString());
                                         command1.ExecuteNonQuery();
                                     }
@@ -414,7 +428,7 @@ namespace FantasyCricket.Service
                         MagicKey[] keys = reader.ReadAll<MagicKey>();
                         foreach (MagicKey key in keys)
                         {
-                            userList.Add(key.username);
+                            userList.Add(key.UserName);
                         }
 
                     }

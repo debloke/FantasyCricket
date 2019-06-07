@@ -40,7 +40,7 @@ namespace FantasyCricketTests
                                 {
                                     command1.CommandType = System.Data.CommandType.Text;
 
-                                    command1.Parameters.AddWithValue("@username", key.username);
+                                    command1.Parameters.AddWithValue("@username", key.UserName);
                                     command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid());
                                     command1.ExecuteNonQuery();
                                 }

@@ -94,11 +94,9 @@ namespace FantasyCricket.Controllers
 
         // PUT api/user
         [HttpPut]
-        public void CreateUser([FromQuery(Name = "username")] string username,
-            [FromQuery(Name = "password")] string password,
-            [FromQuery(Name = "displayname")] string displayName)
+        public void CreateUser(UserRegistration userRegistration)
         {
-            user.CreateUser(username, password, displayName);
+            user.CreateUser(userRegistration.UserName, userRegistration.Password, userRegistration.DisplayName);
         }
 
     }

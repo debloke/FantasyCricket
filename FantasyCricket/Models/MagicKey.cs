@@ -14,7 +14,7 @@ namespace FantasyCricket.Models
         public DateTime LastLogin { get; set; }
 
         [SQLiteColumn("username")]
-        public string username { get; set; }
+        public string UserName { get; set; }
 
         [SQLiteColumn("displayname")]
         public string DisplayName { get; set; }
