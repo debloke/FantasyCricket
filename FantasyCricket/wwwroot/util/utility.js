@@ -1,6 +1,6 @@
 let UtilityClass = function() {
     let that = this;
-    that.baseURL = "";
+    that.baseURL = "https://cricketfantasy.azurewebsites.net/";
     
     /**************************************************
      * @function     getRequest
