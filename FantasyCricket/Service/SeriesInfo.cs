@@ -19,6 +19,8 @@ namespace FantasyCricket.Service
 
         private static readonly string DELETEMATCH = "DELETE FROM [Match] where unique_id=@unique_id";
 
+        private static readonly string CANCELMATCH = "UPDATE [Match] SET Status=3 where unique_id=@unique_id";
+
         public void AddMatch(Match match)
         {
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
@@ -47,6 +49,20 @@ namespace FantasyCricket.Service
                 {
                     insertCommand.CommandType = System.Data.CommandType.Text;
                     insertCommand.Parameters.AddWithValue("@Seriesname", seriesName);
+                    insertCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CancelMatch(int uniqueid)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand insertCommand = new SQLiteCommand(CANCELMATCH, connection))
+                {
+                    insertCommand.CommandType = System.Data.CommandType.Text;
+                    insertCommand.Parameters.AddWithValue("@unique_id", uniqueid);
                     insertCommand.ExecuteNonQuery();
                 }
             }

@@ -58,8 +58,16 @@ namespace FantasyCricket.ScoreCalculator
                 foreach (FieldingScore fieldingScore in fieldingDetails.FieldingScores)
                 {
                     playerScores.TryGetValue(fieldingScore.Pid, out Points points);
-                    points.FieldingScore = fieldingScore;
-                    points.FieldingPoints = CalculateFieldingPoints(points.FieldingScore);
+
+                    if (points != null)
+                    {
+
+                        // points = new Points() { PlayerId = fieldingScore.Pid, PlayerName = fieldingScore.Name };
+                        // playerScores.TryAdd(fieldingScore.Pid, points);
+
+                        points.FieldingScore = fieldingScore;
+                        points.FieldingPoints = CalculateFieldingPoints(points.FieldingScore);
+                    }
                 }
             }
 

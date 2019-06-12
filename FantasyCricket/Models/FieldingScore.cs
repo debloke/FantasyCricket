@@ -8,6 +8,11 @@ namespace FantasyCricket.Models
 {
     public class FieldingScore
     {
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+
         [JsonProperty("pid")]
         public int Pid { get; set; }
 

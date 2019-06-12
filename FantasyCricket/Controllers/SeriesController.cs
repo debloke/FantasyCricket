@@ -61,6 +61,11 @@ namespace FantasyCricket.Controllers
             seriesInfo.AddMatch(match);
         }
 
+        [HttpPost("cancel/{id}")]
+        public void CancelMatch(int id)
+        {
+            seriesInfo.CancelMatch(id);
+        }
 
 
     }
