@@ -1,6 +1,7 @@
 ﻿using FantasyCricket.Common.Net.Exceptions;
 using FantasyCricket.Database;
 using FantasyCricket.Models;
+using FantasyCricket.Namak;
 using Newtonsoft.Json;
 using Sqlite.SqlClient;
 using System;
@@ -15,7 +16,7 @@ namespace FantasyCricket.Service
 
         private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
-        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username,displayname FROM [User] where username = @username and password = @password";
+        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username,displayname,password FROM [User] where username = @username and password = @password";
 
         private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username,displayname FROM [User]";
 
@@ -60,14 +61,14 @@ namespace FantasyCricket.Service
                     {
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddWithValue("@username", username);
-                        command.Parameters.AddWithValue("@password", password);
+                        command.Parameters.AddWithValue("@password", NamakGenerator.Get(password));
                         command.Parameters.AddWithValue("@displayname", displayName);
                         command.Parameters.AddWithValue("@magickey", Guid.NewGuid().ToString());
                         command.ExecuteNonQuery();
                     }
                 }
             }
-            catch(SQLiteException exception)
+            catch (SQLiteException exception)
             {
                 if (exception.ResultCode == SQLiteErrorCode.Constraint)
                 {
@@ -90,32 +91,35 @@ namespace FantasyCricket.Service
                     {
                         command.CommandType = System.Data.CommandType.Text;
                         command.Parameters.AddWithValue("@username", username);
-                        command.Parameters.AddWithValue("@password", password);
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             MagicKey key = reader.Read<MagicKey>();
                             if (key != null)
                             {
-                                if (key.Magic == null || key.Magic == Guid.Empty)
+                                // Verify password
+                                if (NamakGenerator.Verify(key.Password, password))
                                 {
-                                    key.Magic = Guid.NewGuid();
-                                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                                    if (key.Magic == null || key.Magic == Guid.Empty)
                                     {
-                                        command1.CommandType = System.Data.CommandType.Text;
-                                        command1.Parameters.AddWithValue("@username", username);
-                                        command1.Parameters.AddWithValue("@newmagickey", key.Magic.ToString());
-                                        command1.ExecuteNonQuery();
+                                        key.Magic = Guid.NewGuid();
+                                        using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                                        {
+                                            command1.CommandType = System.Data.CommandType.Text;
+                                            command1.Parameters.AddWithValue("@username", username);
+                                            command1.Parameters.AddWithValue("@newmagickey", key.Magic.ToString());
+                                            command1.ExecuteNonQuery();
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERLOGINTIME, connection))
+                                    else
                                     {
-                                        command1.CommandType = System.Data.CommandType.Text;
-                                        command1.Parameters.AddWithValue("@username", username);
-                                        command1.Parameters.AddWithValue("@password", password);
-                                        command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
-                                        command1.ExecuteNonQuery();
+                                        using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERLOGINTIME, connection))
+                                        {
+                                            command1.CommandType = System.Data.CommandType.Text;
+                                            command1.Parameters.AddWithValue("@username", username);
+                                            command1.Parameters.AddWithValue("@password", password);
+                                            command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
+                                            command1.ExecuteNonQuery();
+                                        }
                                     }
                                 }
                             }

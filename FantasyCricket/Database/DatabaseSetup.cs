@@ -88,7 +88,7 @@ namespace FantasyCricket.Database
                                      [lastlogin]     DATETIME  ,
                                      [magickey]     GUID,
                                      [displayname]     VARCHAR(255) NOT NULL )";
-            sqlite_cmd.ExecuteNonQuery();
+            sqlite_cmd.ExecuteNonQuery();      
 
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS UserTeam (
                                         username      VARCHAR(255) NOT NULL,

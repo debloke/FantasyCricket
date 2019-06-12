@@ -1,4 +1,5 @@
-﻿using Sqlite.SqliteAttributes;
+﻿using Newtonsoft.Json;
+using Sqlite.SqliteAttributes;
 using System;
 
 namespace FantasyCricket.Models
@@ -18,6 +19,10 @@ namespace FantasyCricket.Models
 
         [SQLiteColumn("displayname")]
         public string DisplayName { get; set; }
+
+        [SQLiteColumn("password")]
+        [JsonIgnore]
+        public string Password { get; set; }
 
 
 
