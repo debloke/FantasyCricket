@@ -17,10 +17,21 @@ namespace FantasyCricket.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Gang[]> GetGangs([FromQuery(Name = "magic")] Guid magicKey)
+        public ActionResult<Gang[]> GetGangs()
 
         {
             return gangs.GetGangs(magicKey);
         }
+
+        [HttpGet]
+        public void CreateGang([FromQuery(Name = "magic")] Guid magicKey)
+
+        {
+
+            httpContextAccessor.HttpContext.User.Identity.Name
+            return gangs.GetGangs(magicKey);
+        }
+
+
     }
 }

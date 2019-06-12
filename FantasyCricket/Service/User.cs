@@ -24,7 +24,7 @@ namespace FantasyCricket.Service
 
         private readonly string SELECTUSERBYUSERNAME = "SELECT magickey,lastlogin,username,displayname FROM [User] where username=@username";
 
-        private readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username and password = @password";
+        private readonly string UPDATEUSERLOGINTIME = "UPDATE [User] SET lastlogin = @lastlogin WHERE username = @username";
 
         private readonly string UPDATEUSERGUID = "UPDATE [User] SET magickey = @newmagickey WHERE username = @username";
 
@@ -116,7 +116,6 @@ namespace FantasyCricket.Service
                                         {
                                             command1.CommandType = System.Data.CommandType.Text;
                                             command1.Parameters.AddWithValue("@username", username);
-                                            command1.Parameters.AddWithValue("@password", password);
                                             command1.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow);
                                             command1.ExecuteNonQuery();
                                         }
