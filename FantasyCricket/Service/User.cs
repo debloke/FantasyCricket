@@ -16,7 +16,7 @@ namespace FantasyCricket.Service
 
         private readonly string ADDORUPDATEUSER = "INSERT INTO [User] (  username, password, displayname ,magickey) VALUES (  @username, @password, @displayname,@magickey)";
 
-        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username,displayname,password FROM [User] where username = @username and password = @password";
+        private readonly string SELECTUSER = "SELECT magickey,lastlogin,username,displayname,password FROM [User] where username = @username";
 
         private readonly string SELECTALLUSER = "SELECT magickey,lastlogin,username,displayname FROM [User]";
 
@@ -121,6 +121,10 @@ namespace FantasyCricket.Service
                                             command1.ExecuteNonQuery();
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    return null;
                                 }
                             }
                             return key;
