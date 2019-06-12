@@ -27,7 +27,7 @@ $(function () {
     });
 
     let display = "<div>" + localStorage.loggedInUserDisplay + "</div>";
-    display += "<div><a onclick='logout()'>Logout</a></div>";
+    display += "<div><a onclick='logout()' href='#'>Logout</a></div>";
     $("#accountDetail").html(display);
     $("#accountInfo").click(function () {
         $("#accountDetail").toggle();

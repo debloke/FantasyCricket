@@ -42,13 +42,14 @@ nav ul li a:hover:before, nav ul li a.current:before {
 /* CSS FOR MAIN SCREEN END */
 
 /* CSS FOR POPUP START */
-#inputPopup { display: none; position: fixed; left: 0; right: 0; top: 0; bottom: 0; }
+#inputPopup { display: none; position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 9; }
 .glassBackground { position: absolute; left: 0; right: 0; top: 0; bottom: 0; padding: 0; z-index: 10; opacity: 0.8; background: #000; }
 .inputContainer { width: 80%; height: 80%; margin: 0 auto; z-index: 10; position: absolute; left: 10%; line-height: 60px; text-align: center; top: 10%; }
 .boundary { border: 1px solid white; width: 60%; height: 80%; top: 10%; left: 20%; position: absolute; border-radius: 50%; background: #38dc63; }
 .innerCircle { position: absolute; width: 50%; height: 50%; border: 1px solid white; left: 25%; top: 25%; border-radius: 50%; }
 .pitch { position: absolute; width: 20%; height: 60%; top: 20%; left: 40%; background: #b7b719; }
-.close { position: absolute; right: 0; top: 0; color: red; width: 30px; height: 30px; border: 2px solid #80862d; line-height: 2; border-radius: 15px; }
+
+.close { position: absolute; right: 20px; top: 10px; color: #bb6223; width: 30px; height: 30px; border: 2px solid #bb6223; background: aliceblue; line-height: 2; border-radius: 15px; font-weight: bold; }
 .playerInGrid { position: absolute; height: 20px; width: 100px; line-height: 1; font-size: 10px; }
 /* CSS FOR POPUP END */
 
@@ -145,10 +146,10 @@ p.namePl { margin: 0; font-weight: bold; }
 .comparisionTable { position: absolute; left: 0; top: 0; padding: 5%; width: 90%; bottom: 10%; overflow-y: auto; }
 .showParent { height: 40px; margin-bottom: 25px; }
 .show0, .show1, .show2 { float: left; width: 30%; background: #5aa75ab0; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
-.comaparisionItems { width: 50%; left: 25%; background: white; }
+.comaparisionItems { width: 50%; left: 25%; background: #1a3f82ad; border-radius: 10px; }
 
-#accountInfo { position: absolute; top: 10px; right: 10px; }
-#accountDetail { position: absolute; display: none; background: white; top: 40px; right: 0px; width: auto; padding: 10px; }
+#accountInfo { position: absolute; top: 20px; right: 20px; }
+#accountDetail { position: absolute; display: none; background: #a6d027; border-radius: 10px; border: 1px solid grey; top: 40px; right: 5px; width: auto; padding: 10px; }
 
 .centralData { position: absolute; left: 35%; top: 35%; }
 .popupRoles { width: 13px; padding: 0; margin: 0; }

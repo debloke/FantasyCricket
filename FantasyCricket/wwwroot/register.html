@@ -28,7 +28,7 @@
                                 alert( "Unable to register" );
                             }
                         },
-                        {"UserName": $("#userName").val(), "Password": $("#password").val(), "DisplayName": $("#displayName").val() }
+                        {"UserName": $("#userName").val(), "Password": btoa($("#password").val()), "DisplayName": $("#displayName").val() }
                     );
                 }
                 else {

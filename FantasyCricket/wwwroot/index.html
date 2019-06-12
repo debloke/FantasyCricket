@@ -30,7 +30,7 @@
                     },
                     null,
                     "text/plain",
-                    {"Authorization": "Basic " + btoa($("#userName").val() + ":" + $("#password").val())}
+                    {"Authorization": "Basic " + btoa($("#userName").val() + ":" + btoa($("#password").val()))}
                 );
             }
             function showRules() {
