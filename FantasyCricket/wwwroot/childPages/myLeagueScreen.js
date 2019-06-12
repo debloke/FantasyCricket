@@ -45,9 +45,15 @@ function displayLeagueInfo(leagueName, allData) {
             resp += "<tr><td>" + (rank++) + "</td>";
             resp += "<td onclick='displayPlayersTeam(\"" + members.Username + "\")'>" + members.DisplayName + "</td>";
             resp += "<td>" + members.Total + "</td>";
-            resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td></tr>";
+            if (localStorage.loggedInUser === members.Username) {
+                resp += "<td></td></tr>";
+            }
+            else {
+                resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td></tr>";
+            }
+            
         });
-        resp += "</table>"
+        resp += "</table>";
         $("#leagueInfo").html(resp);
     }
 }
@@ -85,19 +91,22 @@ function compareWithMyScores(player) {
 function drawComparision(dataToPlot) {
     let tempData = {};
     let tempMatchData = {};
-    let tableData = "<div class='comparisionTable'><div><span class='show0'>Table</span><span class='show1'>Chart</span></div>";
+    let tableData = "<div class='comparisionTable'><div class='showParent'>";
+    tableData += "<div class='show0'>Table</div>";
+    tableData += "<div class='show1'>Chart</div>";
+    tableData += "<div class='show2'>Aggregate</div></div>";
     tableData += "<table id='flip0' width='100%'><tr><th>Match</th>";
     ALL_MATCHES.map(function (match) {
         tempMatchData[match.unique_id] = match;
         tempMatchData[match.unique_id].game = match["team-1"] + " VS " + match["team-2"];
     });
-    let pointsForChart = [];
+    let pointsForChart = {};
+    let sumOfPointsForChart = {};
     for (let mKey in dataToPlot) {
-        pointsForChart[mKey] = {
-            type: "line",
-            dataPoints: []
-        };
-        tableData += "<th>"+ mKey +"</th>";
+        let sum = 0;
+        pointsForChart[mKey] = { type: "spline", showInLegend: true, name: mKey, dataPoints: [] };
+        sumOfPointsForChart[mKey] = { type: "line", dataPoints: [{ y: 0 }] };
+        tableData += "<th>" + mKey + "</th>";
         dataToPlot[mKey].map(function (mD) {
             tempData[mD.MatchId] = tempData[mD.MatchId] || {};
             if (mKey == localStorage.loggedInUser) {
@@ -106,15 +115,16 @@ function drawComparision(dataToPlot) {
             else {
                 tempData[mD.MatchId].otherPoints = mD.Points;
             }
+            sum += mD.Points;
             
-            if (pointsForChart[mKey].dataPoints.length == 1) {
-                pointsForChart[mKey].dataPoints.push({ y: mD.Points, indexLabel: mKey });
+            if (pointsForChart[mKey].dataPoints.length === (dataToPlot[mKey].length - 1)) {
+                pointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: mD.Points, indexLabel: mKey });
+                sumOfPointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: sum, indexLabel: mKey });
             }
             else {
-                pointsForChart[mKey].dataPoints.push({ y: mD.Points });
-            }
-
-            
+                pointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: mD.Points });
+                sumOfPointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: sum });
+            }         
         });
     }
     tableData += "</tr>";
@@ -122,20 +132,18 @@ function drawComparision(dataToPlot) {
     for (let key in tempData) {
         tableData += "<tr><td>" + tempMatchData[key].game + "</td><td>" + tempData[key].myPoints + "</td><td>" + tempData[key].otherPoints + "</td></tr>";
     }
-    tableData += "</table><div id='flip1' style='width:100%; height:auto;'></div></div><div class='close'>X</div>";
-    $(".inputContainer").html(tableData).css({"width": "50%", "left": "25%", "background": "white"});
+    tableData += "</table>";
+    tableData += "<div id='flip1' style='width:100%; height:auto; display:none;'></div>";
+    tableData += "<div id='flip2' style='width:100%; height:auto; display:none;'></div>";
+    tableData += "</div><div class='close'>X</div>";
+    $(".inputContainer").html(tableData).addClass("comaparisionItems");
     $("#inputPopup").show();
 
-    var chart = new CanvasJS.Chart("flip1", {
-        animationEnabled: true,
-        theme: "light2",
-        title: { text: "Points Comparision" },
-        axisY: { includeZero: false },
-        data: Object.values(pointsForChart)
-    });
-    chart.render();
-
-
+    // Draw chart for Individual match scores
+    drawChart("flip1", "Points Comparision", "Score per Game", "Matches", pointsForChart);
+    // Draw chart for Individual match scores
+    drawChart("flip2", "Net Score Comparision", "Total Score", "Matches", sumOfPointsForChart);
+ 
     $(".close").unbind("click");
     $(".close").bind("click", function () {
         $("#inputPopup").hide();
@@ -146,10 +154,17 @@ function drawComparision(dataToPlot) {
     $(".show0").bind("click", function () {
         $("#flip0").show();
         $("#flip1").hide();
+        $("#flip2").hide();
     });
     $(".show1").bind("click", function () {
         $("#flip0").hide();
         $("#flip1").show();
+        $("#flip2").hide();
+    });
+    $(".show2").bind("click", function () {
+        $("#flip0").hide();
+        $("#flip1").hide();
+        $("#flip2").show();
     });
 }
 
@@ -181,7 +196,7 @@ function displayPlayersTeam(user) {
             });
             
             let displayContent = "<div class='boundary'>" + playerPos + "<div class='innerCircle'><div class='pitch'></pitch></div></div><div class='close'>X</div>";
-            $(".inputContainer").html(displayContent + centralData);
+            $(".inputContainer").html(displayContent + centralData).removeClass("comaparisionItems");
             $("#inputPopup").show();
             $(".close").unbind("click");
             $(".close").bind("click", function() {
@@ -201,4 +216,17 @@ function circleDimensions(radius, players){
         players[i].xValue = (44 + radius * Math.cos(Math.PI * i / lengthOfPlayers*2-Math.PI/2));
         players[i].yValue = (44 + radius * Math.sin(Math.PI * i / lengthOfPlayers*2-Math.PI/2));
     }
+}
+
+function drawChart(uiId, title, xLabel, yLabel, data) {
+    let chart = new CanvasJS.Chart(uiId, {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light2",
+        title: { text: title },
+        axisY: { title: yLabel, titleFontSize: 24 },
+        axisX: { title: xLabel, titleFontSize: 24 },
+        data: Object.values(data)
+    });
+    chart.render();
 }

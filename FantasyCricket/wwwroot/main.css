@@ -143,18 +143,14 @@ button { border-radius: 10px; border: 1px solid black; padding: 5px 10px; backgr
 #leagueInfo table td { border: none; padding: 6px 10px 3px 10px; background: #abced036; border-bottom: 1px solid grey; height: 21px; color: black; font-size: 13px; font-weight: bold; }
 p.namePl { margin: 0; font-weight: bold; }
 .comparisionTable { position: absolute; left: 0; top: 0; padding: 5%; width: 90%; bottom: 10%; overflow-y: auto; }
-
-.show0 { display: inline-block; width: 45%; background: #f3727294; }
-.show1 { display: inline-block; width: 45%; background: #5aa75ab0; }
+.showParent { height: 40px; margin-bottom: 25px; }
+.show0, .show1, .show2 { float: left; width: 30%; background: #5aa75ab0; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
+.comaparisionItems { width: 50%; left: 25%; background: white; }
 
 #accountInfo { position: absolute; top: 10px; right: 10px; }
 #accountDetail { position: absolute; display: none; background: white; top: 40px; right: 0px; width: auto; padding: 10px; }
 
-.centralData {
-    position: absolute;
-    left: 35%;
-    top: 35%;
-}
+.centralData { position: absolute; left: 35%; top: 35%; }
 .popupRoles { width: 13px; padding: 0; margin: 0; }
 .popupBowlCaptain { position: absolute; top: 60%; left: 40%; font-size: 10px; }
 .popupFieldCaptain { position: absolute; top: 38%; left: 57%; font-size: 10px; }
