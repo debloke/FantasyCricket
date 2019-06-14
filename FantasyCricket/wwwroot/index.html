@@ -1,10 +1,11 @@
 <html>
-    <head>
-        <script type="text/javascript" src="jquery.min.js"> </script>
-        <script type="text/javascript" src="util/utility.js"> </script>
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <title>Fantasy League</title>
-    </head>
+<head>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="util/utility.js"></script>
+    <script type="text/javascript" src="util/navigation.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Fantasy League</title>
+</head>
     <body class="loginPageBG">
         <script type="text/javascript">
             if (localStorage.guid) {
@@ -64,5 +65,15 @@
                 </table>
             </div>
         </div>
+        <footer>
+            <div class="copyrightText">&copy; 2019 Copyright : Sports Fantasy</div>
+            <div class="copyrightIcon">
+                <ul>
+                    <li><img src="/icons/twitter.png" onclick="navigateTo('twitter')" /></li>
+                    <li><img src="/icons/facebook.png" onclick="navigateTo('facebook')" /></li>
+                    <li><img src="/icons/snapchat.png" onclick="navigateTo('snapchat')" /></li>
+                </ul>
+            </div>
+        </footer>
     </body>
 </html>

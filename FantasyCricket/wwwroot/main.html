@@ -5,6 +5,7 @@
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="canvasjs.min.js"></script>
     <script type="text/javascript" src="util/utility.js"></script>
+    <script type="text/javascript" src="util/navigation.js"></script>
     <script type="text/javascript" src="childPages/teamValidations.js"></script>
     <script type="text/javascript" src="childPages/teamScreen.js"></script>
     <script type="text/javascript" src="childPages/myLeagueScreen.js"></script>
@@ -27,8 +28,18 @@
         <div class="glassBackground"></div>
         <div class="inputContainer"></div>
     </div>
-    <div id="accountInfo"><img src="icons/user.png"/></div>
+    <div id="accountInfo"><img src="icons/user.png" /></div>
     <div id="accountDetail"></div>
+    <footer>
+        <div class="copyrightText">&copy; 2019 Copyright : Sports Fantasy</div>
+        <div class="copyrightIcon">
+            <ul>
+                <li><img src="/icons/twitter.png" onclick="navigateTo('twitter')"/></li>
+                <li><img src="/icons/facebook.png" onclick="navigateTo('facebook')"/></li>
+                <li><img src="/icons/snapchat.png" onclick="navigateTo('snapchat')"/></li>
+            </ul>
+        </div>
+    </footer>
 </body>
 </html>
 

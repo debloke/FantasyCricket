@@ -92,10 +92,10 @@ function drawComparision(dataToPlot) {
     let tempData = {};
     let tempMatchData = {};
     let tableData = "<div class='comparisionTable'><div class='showParent'>";
-    tableData += "<div class='show0'>Table</div>";
-    tableData += "<div class='show1'>Chart</div>";
-    tableData += "<div class='show2'>Aggregate</div></div>";
-    tableData += "<table id='flip0' width='100%'><tr><th>Match</th>";
+    tableData += "<div class='show0 showI'>Table</div>";
+    tableData += "<div class='show1 showI'>Chart</div>";
+    tableData += "<div class='show2 showI'>Aggregate</div></div>";
+    tableData += "<div class='comparisionItem'><table id='flip0' class='showP' width='100%'><thead><tr><th>Match</th>";
     ALL_MATCHES.map(function (match) {
         tempMatchData[match.unique_id] = match;
         tempMatchData[match.unique_id].game = match["team-1"] + " VS " + match["team-2"];
@@ -105,7 +105,7 @@ function drawComparision(dataToPlot) {
     for (let mKey in dataToPlot) {
         let sum = 0;
         pointsForChart[mKey] = { type: "spline", showInLegend: true, name: mKey, dataPoints: [] };
-        sumOfPointsForChart[mKey] = { type: "line", dataPoints: [{ y: 0 }] };
+        sumOfPointsForChart[mKey] = { type: "spline", showInLegend: true, name: mKey, dataPoints: [{ y: 0 }] };
         tableData += "<th>" + mKey + "</th>";
         dataToPlot[mKey].map(function (mD) {
             tempData[mD.MatchId] = tempData[mD.MatchId] || {};
@@ -117,32 +117,26 @@ function drawComparision(dataToPlot) {
             }
             sum += mD.Points;
             
-            if (pointsForChart[mKey].dataPoints.length === (dataToPlot[mKey].length - 1)) {
-                pointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: mD.Points, indexLabel: mKey });
-                sumOfPointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: sum, indexLabel: mKey });
-            }
-            else {
-                pointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: mD.Points });
-                sumOfPointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: sum });
-            }         
+            pointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: mD.Points });
+            sumOfPointsForChart[mKey].dataPoints.push({ label: tempMatchData[mD.MatchId].game, y: sum });                   
         });
     }
-    tableData += "</tr>";
+    tableData += "</tr></thead><tbody>";
 
     for (let key in tempData) {
         tableData += "<tr><td>" + tempMatchData[key].game + "</td><td>" + tempData[key].myPoints + "</td><td>" + tempData[key].otherPoints + "</td></tr>";
     }
-    tableData += "</table>";
-    tableData += "<div id='flip1' style='width:100%; height:auto; display:none;'></div>";
-    tableData += "<div id='flip2' style='width:100%; height:auto; display:none;'></div>";
-    tableData += "</div><div class='close'>X</div>";
+    tableData += "</tbody></table>";
+    tableData += "<div id='flip1' class='flip showP'></div>";
+    tableData += "<div id='flip2' class='flip showP'></div>";
+    tableData += "</div></div><div class='close'>X</div>";
     $(".inputContainer").html(tableData).addClass("comaparisionItems");
     $("#inputPopup").show();
 
     // Draw chart for Individual match scores
-    drawChart("flip1", "Points Comparision", "Score per Game", "Matches", pointsForChart);
+    drawChart("flip1", "Points Comparision", "Matches", "Score per Game", pointsForChart);
     // Draw chart for Individual match scores
-    drawChart("flip2", "Net Score Comparision", "Total Score", "Matches", sumOfPointsForChart);
+    drawChart("flip2", "Net Score Comparision", "Matches", "Total Score", sumOfPointsForChart);
  
     $(".close").unbind("click");
     $(".close").bind("click", function () {
@@ -152,19 +146,22 @@ function drawComparision(dataToPlot) {
     $(".show1").unbind("click");
     $(".flip1").hide();
     $(".show0").bind("click", function () {
+        $(".showP").hide();
+        $(".showI").css("background", "#a56b2f");
         $("#flip0").show();
-        $("#flip1").hide();
-        $("#flip2").hide();
+        $(this).css("background", "#ecda96");
     });
     $(".show1").bind("click", function () {
-        $("#flip0").hide();
+        $(".showP").hide();
+        $(".showI").css("background", "#a56b2f");
         $("#flip1").show();
-        $("#flip2").hide();
+        $(this).css("background", "#ecda96");
     });
     $(".show2").bind("click", function () {
-        $("#flip0").hide();
-        $("#flip1").hide();
+        $(".showP").hide();
+        $(".showI").css("background", "#a56b2f");
         $("#flip2").show();
+        $(this).css("background", "#ecda96");
     });
 }
 
@@ -225,7 +222,12 @@ function drawChart(uiId, title, xLabel, yLabel, data) {
         theme: "light2",
         title: { text: title },
         axisY: { title: yLabel, titleFontSize: 24 },
-        axisX: { title: xLabel, titleFontSize: 24 },
+        axisX: { title: xLabel,
+                 titleFontSize: 24,
+                 labelFormatter: function(e){
+				    return  "";
+			     }
+        },
         data: Object.values(data)
     });
     chart.render();

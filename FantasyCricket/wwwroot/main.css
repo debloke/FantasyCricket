@@ -143,11 +143,15 @@ button { border-radius: 10px; border: 1px solid black; padding: 5px 10px; backgr
 #leagueInfo table th { padding: 7px 0; background: #6b9ea075; border-bottom: 1px solid grey; width: 20%; text-align: center; color: black; }
 #leagueInfo table td { border: none; padding: 6px 10px 3px 10px; background: #abced036; border-bottom: 1px solid grey; height: 21px; color: black; font-size: 13px; font-weight: bold; }
 p.namePl { margin: 0; font-weight: bold; }
-.comparisionTable { position: absolute; left: 0; top: 0; padding: 5%; width: 90%; bottom: 10%; overflow-y: auto; }
+.comparisionTable { position: absolute; left: 0; top: 50px; padding: 0 5%; width: 90%; bottom: 10%; overflow: hidden; }
+.comparisionItem { position: absolute; top: 65px; bottom: 0; width: 90%; overflow-y: auto; }
 .showParent { height: 40px; margin-bottom: 25px; }
-.show0, .show1, .show2 { float: left; width: 30%; background: #5aa75ab0; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
-.comaparisionItems { width: 50%; left: 25%; background: #1a3f82ad; border-radius: 10px; }
-
+.show0, .show1, .show2 { float: left; width: 33%; background: #a56b2f; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
+.show0 { background: #ecda96; }
+.comaparisionItems { width: 50%; left: 25%; background: #70bdb2; border-radius: 10px; }
+#flip0 { width: 90%; line-height: 2; }
+#flip0 tbody tr:nth-child(odd) { background: #a28484; }
+.flip { width:90%; display:none; position:absolute; top:0; bottom: 0; } 
 #accountInfo { position: absolute; top: 20px; right: 20px; }
 #accountDetail { position: absolute; display: none; background: #a6d027; border-radius: 10px; border: 1px solid grey; top: 40px; right: 5px; width: auto; padding: 10px; }
 
@@ -199,11 +203,19 @@ p.namePl { margin: 0; font-weight: bold; }
 .containerForSelectingRule ul li { background: #8fad47; padding: 20px; border-bottom: 1px solid grey; }
 /* CSS FOR ADMIN RULES START */
 
+/* FOOTER START */
+footer { position: fixed; background: black; padding: 10px; height: 24px; width: 100%; bottom: 0; color: white; }
+.copyrightText { float: left; width: 45%; position: relative; top: 5px; }
+.copyrightIcon { float: right; }
+.copyrightIcon ul { list-style-type: none; padding: 0; margin: 0 20px 0 0; }
+.copyrightIcon ul li { float: left; margin: 0 5px; }
+
+/* FOOTER END */
 @media screen and (max-width: 1200px) {
-  .myTeam, .teamList { width: 98%; }
+    .myTeam, .teamList { width: 98%; }
   body { overflow: hidden; }
   * { font-size: 20px !important; }
-  #mainContent { overflow: hidden; width: 90%; left: 4%; top: 50px; bottom: 0px; }
+  #mainContent { overflow: hidden; width: 90%; left: 4%; top: 50px; bottom: 50px; }
   .teamList { float: left; max-height: 50%; }
   .myTeam { max-height: 50%; margin-bottom: 1%; }
   .myTeam li, .centerTeamItems ul li { padding: 10px; }
@@ -213,5 +225,5 @@ p.namePl { margin: 0; font-weight: bold; }
   .liveData { overflow: auto; }
 }
 @media screen and (min-width: 1201px) {
-  #mainContent { bottom: 30px;}
+  #mainContent { bottom: 50px;}
 }
