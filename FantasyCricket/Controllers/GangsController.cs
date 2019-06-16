@@ -1,35 +1,40 @@
 ﻿using FantasyCricket.Models;
 using FantasyCricket.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 
 namespace FantasyCricket.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "MagickeyAuthentication")]
     public class GangsController : ControllerBase
     {
         private readonly IGangs gangs;
-        public GangsController(IGangs gangs)
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public GangsController(IGangs gangs, IHttpContextAccessor httpContextAccessor)
         {
             this.gangs = gangs;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
         public ActionResult<Gang[]> GetGangs()
 
         {
-            return gangs.GetGangs(magicKey);
+            return gangs.GetGangs(httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
         [HttpGet]
-        public void CreateGang([FromQuery(Name = "magic")] Guid magicKey)
+        public void CreateGang([FromBody] Gang gang)
 
         {
 
-            httpContextAccessor.HttpContext.User.Identity.Name
-            return gangs.GetGangs(magicKey);
+            gang.GangOwner = httpContextAccessor.HttpContext.User.Identity.Name;
+            gangs.CreateGang(gang);
         }
 
 

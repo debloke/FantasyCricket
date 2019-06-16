@@ -5,6 +5,8 @@ namespace FantasyCricket.Service
 {
     public interface IGangs
     {
-        Gang[] GetGangs(Guid magicKey);
+        Gang[] GetGangs(string username);
+
+        void CreateGang(Gang gang);
     }
 }
