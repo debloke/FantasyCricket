@@ -6,13 +6,19 @@ namespace FantasyCricket.Models
     {
 
         [SQLiteColumn("name")]
-        public int GangName { get; set; }
+        public string GangName { get; set; }
 
         [SQLiteColumn("owner")]
         public string GangOwner { get; set; }
 
-        [SQLiteColumn("seriesname")]
-        public string SeriesName { get; set; }
+        [SQLiteColumn("seriesid")]
+        public int SeriesId { get; set; }
+
+        [SQLiteColumn("gangid")]
+        public int GangId { get; set; }
+
+        [SQLiteColumn("username")]
+        public string Username { get; set; }
 
     }
 }

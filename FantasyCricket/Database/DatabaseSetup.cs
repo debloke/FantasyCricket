@@ -32,6 +32,7 @@ namespace FantasyCricket.Database
             connectionStringBuilder.DateTimeKind = DateTimeKind.Utc;
             connectionStringBuilder.JournalMode = SQLiteJournalModeEnum.Delete;
             connectionStringBuilder.FailIfMissing = false;
+            connectionStringBuilder.ForeignKeys = true;
 
             return connectionStringBuilder.ToString();
         }
@@ -116,12 +117,13 @@ namespace FantasyCricket.Database
 
             // Create Gang
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Gangs (
-                                        name      VARCHAR(255) NOT NULL PRIMARY KEY,
+                                        gangid     INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        name      VARCHAR(255) NOT NULL UNIQUE,
                                         owner      VARCHAR(255) NOT NULL,
-                                        seriesname      VARCHAR(255) NOT NULL,
+                                        seriesid      integer NOT NULL,
                                         FOREIGN KEY (owner) REFERENCES User (username) 
-                                        ON DELETE CASCADE ON UPDATE NO ACTION),
-                                        FOREIGN KEY (seriesname) REFERENCES Series (Seriesname) 
+                                        ON DELETE CASCADE ON UPDATE NO ACTION,
+                                        FOREIGN KEY (seriesid) REFERENCES Series (Seriesid) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION)";
             sqlite_cmd.ExecuteNonQuery();
 
@@ -130,11 +132,11 @@ namespace FantasyCricket.Database
             // Create GangUserMap
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS GangUserMap (
                                         username      VARCHAR(255) NOT NULL,
-                                        name      VARCHAR(255) NOT NULL,
-                                        PRIMARY KEY (username, name),
+                                        gangid      INTEGER NOT NULL,
+                                        PRIMARY KEY (username, gangid),
                                         FOREIGN KEY (username) REFERENCES User (username) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION,
-                                        FOREIGN KEY (name) REFERENCES Gangs (name) 
+                                        FOREIGN KEY (gangid) REFERENCES Gangs (gangid) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION)";
             sqlite_cmd.ExecuteNonQuery();
 

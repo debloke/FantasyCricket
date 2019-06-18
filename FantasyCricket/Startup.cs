@@ -61,6 +61,7 @@ namespace FantasyCricket
             services.AddSingleton<IPlayerInfo, PlayerInfo>();
             services.AddSingleton<ISeriesInfo, SeriesInfo>();
             services.AddSingleton<IUser, User>();
+            services.AddSingleton<IGangs, Gangs>();
             DatabaseSetup databaseSetup = new DatabaseSetup();
         }
 
