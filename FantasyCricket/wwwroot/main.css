@@ -130,6 +130,7 @@ span.captain > img { width: 20px; }
 .loginBlock > div input { border: 1px solid black; border-radius: 10px; padding: 5px 20px; background: transparent; }
 .registerLink { position: absolute; right: 20px; top: 10px; color: #000000; font-size: 18px; font-weight: bold; font-family: sans-serif; }
 #errorMessageBox { color: red; font-weight: bold; }
+.rulesLink { position: fixed; top: 10px; left: 10px; }
 /* CSS FOR LOGIN SCREEN END */
 
 /* CSS FOR REGISTER SCREEN START */
@@ -148,14 +149,13 @@ p.namePl { margin: 0; font-weight: bold; }
 .comparisionTable { position: absolute; left: 0; top: 50px; padding: 0 5%; width: 90%; bottom: 10%; overflow: hidden; }
 .comparisionItem { position: absolute; top: 65px; bottom: 0; width: 90%; overflow-y: auto; }
 .showParent { height: 40px; margin-bottom: 25px; }
-.show0, .show1, .show2 { float: left; width: 33%; background: #a56b2f; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
-.show0 { background: #ecda96; }
-.comaparisionItems { width: 50%; left: 25%; background: #70bdb2; border-radius: 10px; }
+.show0, .show1, .show2 { float: left; width: 30%; background: transparent; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset; height: 22px; border-right: 1px solid grey; line-height: 2; padding-bottom: 10px; }
+.comaparisionItems { width: 50%; left: 25%; background: #70bdb2; border-radius: 10px; background:url("/images/popupBG.jpg"); }
 #flip0 { width: 90%; line-height: 2; }
 #flip0 tbody tr:nth-child(odd) { background: #a28484; }
 .flip { width:90%; display:none; position:absolute; top:0; bottom: 0; } 
-#accountInfo { position: absolute; top: 20px; right: 20px; }
-#accountDetail { position: absolute; display: none; background: #a6d027; border-radius: 10px; border: 1px solid grey; top: 40px; right: 5px; width: auto; padding: 10px; }
+#accountInfo { position: absolute; top: 14px; right: 20px; }
+#accountDetail { position: absolute; display: none; background: #a6d027; color: #123; border-radius: 10px; border: 1px solid grey; top: 40px; right: 5px; width: auto; padding: 10px; }
 
 .centralData { position: absolute; left: 35%; top: 35%; }
 .popupRoles { width: 13px; padding: 0; margin: 0; }
@@ -229,3 +229,24 @@ footer { position: fixed; background: black; padding: 10px; height: 24px; width:
 @media screen and (min-width: 1201px) {
   #mainContent { bottom: 50px;}
 }
+
+
+
+
+/* CSS FOR THEME SWITCH START */
+.flipswitch { position: relative; width: 86px; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+.flipswitch input[type=checkbox] { display: none; }
+.flipswitch-label { display: block; overflow: hidden; cursor: pointer; border: 2px solid #999999; border-radius: 50px; }
+.flipswitch-inner { width: 200%; margin-left: -100%; -webkit-transition: margin 0.3s ease-in 0s; -moz-transition: margin 0.3s ease-in 0s;
+    -ms-transition: margin 0.3s ease-in 0s; -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s; }
+.flipswitch-inner:before, .flipswitch-inner:after { float: left; width: 50%; height: 24px; padding: 0; line-height: 24px;
+    font-size: 12px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold; -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; box-sizing: border-box; }
+.flipswitch-inner:before { content: "LIGHT"; padding-left: 12px; background-color: #EBEBEB; color: #888888; }
+.flipswitch-inner:after { content: "DARK"; padding-right: 12px; ; text-align: right;  background-color: #256799; color: #FFFFFF; }
+.flipswitch-switch { width: 31px; margin: -3.5px; background: #FFFFFF; border: 2px solid #999999; border-radius: 50px;
+    position: absolute; top: 0; bottom: 0; right: 59px; -webkit-transition: all 0.3s ease-in 0s; -moz-transition: all 0.3s ease-in 0s;
+    -ms-transition: all 0.3s ease-in 0s; -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; }
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-inner { margin-left: 0; }
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-switch { right: 0; }
+/* CSS FOR THEME SWITCH END */

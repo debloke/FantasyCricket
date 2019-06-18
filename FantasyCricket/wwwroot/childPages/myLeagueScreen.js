@@ -46,7 +46,7 @@ function displayLeagueInfo(leagueName, allData) {
             resp += "<td onclick='displayPlayersTeam(\"" + members.Username + "\")'>" + members.DisplayName + "</td>";
             resp += "<td>" + members.Total + "</td>";
             if (localStorage.loggedInUser === members.Username) {
-                resp += "<td></td></tr>";
+                resp += "<td onclick='compareWithMyScores()'>History</td></tr>";
             }
             else {
                 resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td></tr>";
@@ -78,12 +78,12 @@ function compareWithMyScores(player) {
     // Promise to fetch my points history
     listOfPromises.push(createPromise("/api/user/team/history?username=" + localStorage.loggedInUser));
     // Promise to fetch other player's points history
-    listOfPromises.push(createPromise("/api/user/team/history?username=" + player));
+    if (player) listOfPromises.push(createPromise("/api/user/team/history?username=" + player));
 
     Promise.all(listOfPromises).then(function (values) {
         let comparisionObj = {};
         comparisionObj[localStorage.loggedInUser] = values[0];
-        comparisionObj[player] = values[1];
+        if (values[1]) comparisionObj[player] = values[1];
         drawComparision(comparisionObj);
     });
 }
@@ -95,7 +95,7 @@ function drawComparision(dataToPlot) {
     tableData += "<div class='show0 showI'>Table</div>";
     tableData += "<div class='show1 showI'>Chart</div>";
     tableData += "<div class='show2 showI'>Aggregate</div></div>";
-    tableData += "<div class='comparisionItem'><table id='flip0' class='showP' width='100%'><thead><tr><th>Match</th>";
+    tableData += "<div class='comparisionItem'><table id='flip0' class='showP selected' width='100%'><thead><tr><th>Match</th>";
     ALL_MATCHES.map(function (match) {
         tempMatchData[match.unique_id] = match;
         tempMatchData[match.unique_id].game = match["team-1"] + " VS " + match["team-2"];
@@ -124,7 +124,11 @@ function drawComparision(dataToPlot) {
     tableData += "</tr></thead><tbody>";
 
     for (let key in tempData) {
-        tableData += "<tr><td>" + tempMatchData[key].game + "</td><td>" + tempData[key].myPoints + "</td><td>" + tempData[key].otherPoints + "</td></tr>";
+        tableData += "<tr>";
+        tableData += "<td>" + tempMatchData[key].game + "</td>";
+        if (!isNaN(tempData[key].myPoints)) tableData += "<td>" + tempData[key].myPoints + "</td>";
+        if (!isNaN(tempData[key].otherPoints)) tableData += "<td>" + tempData[key].otherPoints + "</td>";
+        tableData += "</tr>";
     }
     tableData += "</tbody></table>";
     tableData += "<div id='flip1' class='flip showP'></div>";
@@ -147,21 +151,21 @@ function drawComparision(dataToPlot) {
     $(".flip1").hide();
     $(".show0").bind("click", function () {
         $(".showP").hide();
-        $(".showI").css("background", "#a56b2f");
+        $(".showI").removeClass("selected");
         $("#flip0").show();
-        $(this).css("background", "#ecda96");
+        $(this).addClass("selected");
     });
     $(".show1").bind("click", function () {
         $(".showP").hide();
-        $(".showI").css("background", "#a56b2f");
+        $(".showI").removeClass("selected");
         $("#flip1").show();
-        $(this).css("background", "#ecda96");
+        $(this).addClass("selected");
     });
     $(".show2").bind("click", function () {
         $(".showP").hide();
-        $(".showI").css("background", "#a56b2f");
+        $(".showI").removeClass("selected");
         $("#flip2").show();
-        $(this).css("background", "#ecda96");
+        $(this).addClass("selected");
     });
 }
 

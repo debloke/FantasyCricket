@@ -44,7 +44,6 @@ var teamScreen = function() {
             let seriesData = values[2];
             ALL_MATCHES = values[3];
             let allMatches = [];
-            let tempData = {};
             // Hardcoding current Series as - WorldCup2019
             // This will change once we have option to select series
             let currentSeries = "WorldCup2019";
@@ -52,7 +51,7 @@ var teamScreen = function() {
             let upcomingMatchesToBeDisplayed = 3;
             // Find Series Id with selected series name
             seriesData.map(function (sD) {
-                if (tempData[sD.SeriesName] = currentSeries) seriesId = sD.SeriesId;
+                if (sD.SeriesName == currentSeries) seriesId = sD.SeriesId;
             });
             // Find all assigned match for that series
             // Remove old matches and get pick next 4 matches
