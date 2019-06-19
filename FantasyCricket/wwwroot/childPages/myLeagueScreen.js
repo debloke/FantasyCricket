@@ -5,35 +5,72 @@ var myLeagueScreen = function() {
     };
 };
 
-function populateLeagueData(id) {   
-    let response = "<div id='leagueList'><ul>";
-    // Only one entry as of now, Gangs will fit in here
-    let myLeagueData = [
-        {
-            "Name": "Overall",
-            "Members": ALL_POINTS
+function createLeagueData(id) {
+    let response = [];
+    response.push({ "Name": "Overall", "Members": ALL_POINTS });
+    let utility = new UtilityClass();
+    utility.getRequest(
+        "/api/gangs?seriesId=" + localStorage.seriesId,
+        function (data) {
+            ALL_MY_GROUPS = data;
+            let tempData = {};
+            let gangs = {};
+            ALL_POINTS.map(function (usr) {
+                tempData[usr.Username] = usr;
+            });
+            ALL_MY_GROUPS.map(function (gp) {
+                gangs[gp.GangId] = gangs[gp.GangId] || { "Name": gp.GangName, "Members": [], "GangId": gp.GangId, "GangOwner": gp.GangOwner };
+                gangs[gp.GangId].Members.push(tempData[gp.Username] || { "Username": gp.Username, "Total": 0, "DisplayName": gp.Username });
+            });
+            response = response.concat(Object.values(gangs));
+            displayData(response, id, utility);
+        },
+        function (err) {
+            alert("Unable to fetch players data for " + url);
         }
-    ];
+    );
+}
+
+function populateLeagueData(id) {
+    createLeagueData(id);
+}
+
+function displayData(myLeagueData, id, utility) {
+    let response = "<div id='leagueList'><ul>";
     myLeagueData.map(function(lData){
         if(lData.Name == "Overall") {
             response += "<li style='border-top:4px solid #5554a2'>"+ lData.Name +"</li>";
         }
         else {
-            response += "<li>"+ lData.Name +"</li>";
+            response += "<li gangId='" + lData.GangId +"'>"+ lData.Name +"</li>";
         }
     });
-    response += "</ul></div><div id='leagueInfo'></div>";
+    response += "</ul><input type='text' id='addGang'/><button id='addGangBtn'>Create</button></li>";
+    response += "</div><div id='leagueInfo'></div>";
     $(id).html(response);
-    displayLeagueInfo("Overall", myLeagueData);
+    displayLeagueInfo(myLeagueData);
     $("#leagueList li").bind("click", function() {
         $("#leagueList li").css({"border-top": "none"});
         $(this).css({"border-top": "4px solid #5554a2"});
-        displayLeagueInfo(this.textContent, myLeagueData);
+        displayLeagueInfo(myLeagueData, id, this.getAttribute("gangid"), utility);
+    });
+
+    $("#addGangBtn").bind("click", function () {
+        utility.postRequest(
+            "/api/gangs",
+            function (data) {
+                createLeagueData(id);
+            },
+            function (err) {
+                alert("Error adding gang");
+            },
+            { "GangName": $("#addGang").val(), "SeriesId": localStorage.seriesId }
+        );
     });
 }
 
-function displayLeagueInfo(leagueName, allData) {
-    let memberData = allData.filter(function(l) { return l.Name == leagueName; });
+function displayLeagueInfo(allData, id, gangid, utility) {
+    let memberData = allData.filter(function(l) { return l.GangId == gangid; });
     if(memberData && memberData.length) {
         let resp = "<table border='1'><tr><th>Rank</th><th>Member</th><th>Points</th></tr>";
         let leagueMembers = memberData[0].Members;
@@ -54,7 +91,16 @@ function displayLeagueInfo(leagueName, allData) {
             
         });
         resp += "</table>";
+        if (gangid && memberData[0].GangOwner == localStorage.loggedInUser) resp += "<button class='deleteGang'>Delete Gang</button>";
         $("#leagueInfo").html(resp);
+
+        $(".deleteGang").bind("click", function () {
+            utility.deleteRequest(
+                "/api/gangs/" + gangid,
+                function () { createLeagueData(id) },
+                function () { alert("Cannot delete gang"); }
+            );
+        });
     }
 }
 

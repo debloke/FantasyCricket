@@ -2,6 +2,7 @@
 let ALL_PLAYERS = [];
 let ALL_POINTS = [];
 let ALL_MATCHES = [];
+let ALL_MY_GROUPS = [];
 var teamScreen = function() {
     this.returnDataForDisplay = function(id) {
         let utility = new UtilityClass();
@@ -40,7 +41,6 @@ var teamScreen = function() {
                 if (val1 < val2) return -1;
             });
 
-
             let seriesData = values[2];
             ALL_MATCHES = values[3];
             let allMatches = [];
@@ -51,12 +51,12 @@ var teamScreen = function() {
             let upcomingMatchesToBeDisplayed = 3;
             // Find Series Id with selected series name
             seriesData.map(function (sD) {
-                if (sD.SeriesName == currentSeries) seriesId = sD.SeriesId;
+                if (sD.SeriesName == currentSeries) localStorage.seriesId = sD.SeriesId;
             });
             // Find all assigned match for that series
             // Remove old matches and get pick next 4 matches
             ALL_MATCHES.map(function (mD) {
-                if (seriesId == mD.SeriesId) {
+                if (localStorage.seriesId == mD.SeriesId) {
                     if ((allMatches.length < upcomingMatchesToBeDisplayed) && (new Date(mD.dateTimeGMT)) > (new Date())) {
                         allMatches.push(mD);
                     }

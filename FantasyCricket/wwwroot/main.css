@@ -138,10 +138,10 @@ button { border-radius: 10px; border: 1px solid black; padding: 5px 10px; backgr
 /* CSS FOR REGISTER SCREEN END */
 
 /* CSS FOR LEAGUE SCREEN START */
-#leagueList { position: absolute; width: 25%; overflow: auto; }
+#leagueList { position: absolute; width: 20%; overflow-y: auto; overflow-x: hidden; }
 #leagueList ul { list-style: none; padding: 0; margin: 0; }
-#leagueList ul li { color: black; padding: 10px 25px; width: 47%; float: left; margin: 0; text-decoration: none; position: relative; background: transparent; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset; }
-#leagueInfo { position: absolute; width: 70%; left: 30%; overflow: auto; text-align: center; }
+#leagueList ul li { color: black; padding: 10px 25px; width: 97%; float: left; margin: 0; text-decoration: none; position: relative; background: transparent; -moz-box-shadow: #120e09 0 -10px 40px -10px inset; -webkit-box-shadow: #120e09 0 -10px 40px -10px inset; box-shadow: #866843 0 -10px 40px -10px inset; }
+#leagueInfo { position: absolute; width: 75%; left: 25%; overflow: auto; text-align: center; }
 #leagueInfo table { width: 80%; }
 #leagueInfo table th { padding: 7px 0; background: rgba(107, 158, 160, 0.48); border-bottom: 1px solid grey; width: 20%; text-align: center; color: black; }
 #leagueInfo table td { border: none; padding: 6px 10px 3px 10px; background: rgba(171, 206, 208, 0.2); border-bottom: 1px solid grey; height: 21px; color: black; font-size: 13px; font-weight: bold; }
@@ -163,8 +163,9 @@ p.namePl { margin: 0; font-weight: bold; }
 .popupFieldCaptain { position: absolute; top: 38%; left: 57%; font-size: 10px; }
 .popupBatCaptain { position: absolute; top: 24%; left: 44%; font-size: 10px; }
 .subsPopup {  position: absolute; top: 40%; left: 27%; font-size: 10px; }
+#addGang { width: 80%; margin: 10px 0; border-radius: 10px; border: none; padding: 5px 10%; }
+.deleteGang { float: left; margin: 10px 0; }
 /* CSS FOR LEAGUE SCREEN END */
-
 /* CSS FOR PLAYER ADMIN SCREEN START */
 .playerAdminBlock { position: absolute; width: 80%; left: 10%; text-align: center; top: 50px; }
 .playerAdmin { display: inline-block; width: 96%; border: 1px solid grey; border-radius: 15px; padding: 2%; }
