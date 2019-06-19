@@ -1,5 +1,4 @@
 ﻿using FantasyCricket.Models;
-using System;
 
 namespace FantasyCricket.Service
 {
@@ -9,6 +8,9 @@ namespace FantasyCricket.Service
 
         void CreateGang(Gang gang);
 
-        void AddToGang(int gangid,string[] usernames,string owner);
+        void RemoveGang(int gangid, string owner);
+        void AddToGang(int gangid, string[] usernames, string owner);
+
+        void RemoveFromGang(int gangid, string[] usernames, string owner);
     }
 }

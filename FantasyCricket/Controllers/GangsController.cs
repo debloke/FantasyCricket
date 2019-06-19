@@ -45,5 +45,19 @@ namespace FantasyCricket.Controllers
         }
 
 
+        [HttpDelete("{gangid}")]
+        public void RemoveGang(int gangid)
+        {
+            gangs.RemoveGang(gangid, httpContextAccessor.HttpContext.User.Identity.Name);
+        }
+
+        [HttpPut("{gangid}")]
+        public void RemoveFromGang(int gangid, [FromBody] string[] usernames)
+        {
+
+            gangs.RemoveFromGang(gangid, usernames, httpContextAccessor.HttpContext.User.Identity.Name);
+        }
+
+
     }
 }

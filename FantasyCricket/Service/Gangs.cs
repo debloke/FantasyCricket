@@ -14,13 +14,17 @@ namespace FantasyCricket.Service
 
         private readonly string CREATEGANG = "INSERT INTO [Gangs] (  name, owner, seriesid) VALUES (  @name, @owner, @seriesid)";
 
+        private readonly string REMOVEGANG = "DELETE FROM [Gangs]  WHERE gangid = @gangid AND owner = @owner";
+
         private readonly string GETGANGOWNER = "SELECT owner From [Gangs] WHERE gangid = @gangid";
 
         private readonly string CREATEGANGUSERMAP = "INSERT INTO [GangUserMap] (  username, gangid) VALUES (  @username, @gangid)";
 
+        private readonly string REMOVEGANGUSERMAP = "DELETE FROM [GangUserMap]  WHERE gangid = @gangid AND username = @username";
+
         private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT INTO GangUserMap SELECT owner,gangid FROM Gangs where name = @name;";
 
-        public void AddToGang(int gangid, string[] usernames,string owner)
+        public void AddToGang(int gangid, string[] usernames, string owner)
         {
             string failedUsernames = String.Empty;
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
@@ -33,10 +37,10 @@ namespace FantasyCricket.Service
                     command.Parameters.AddWithValue("@gangid", gangid);
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
-                       bool hasRows= reader.Read();
+                        bool hasRows = reader.Read();
                         if (!hasRows)
                         {
-                            throw new GangNotFoundException($"No gang foudn with gangid : {gangid}");
+                            throw new GangNotFoundException($"No gang found with gangid : {gangid}");
                         }
                         int ownerOrdinal = reader.GetOrdinal("owner");
 
@@ -116,6 +120,69 @@ namespace FantasyCricket.Service
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         return reader.ReadAll<Gang>();
+                    }
+                }
+            }
+        }
+
+        public void RemoveFromGang(int gangid, string[] usernames, string owner)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(GETGANGOWNER, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@gangid", gangid);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        bool hasRows = reader.Read();
+                        if (!hasRows)
+                        {
+                            throw new GangNotFoundException($"No gang found with gangid : {gangid}");
+                        }
+                        int ownerOrdinal = reader.GetOrdinal("owner");
+
+                        string gangOwner = reader.GetString(ownerOrdinal);
+
+                        if (!gangOwner.Equals(owner))
+                        {
+                            throw new NotAGangOwnerException($"You are not the gang owner");
+                        }
+                    }
+                }
+
+
+
+                foreach (string username in usernames)
+                {
+                    using (SQLiteCommand command = new SQLiteCommand(REMOVEGANGUSERMAP, connection))
+                    {
+                        command.CommandType = System.Data.CommandType.Text;
+                        command.Parameters.AddWithValue("@username", username);
+                        command.Parameters.AddWithValue("@gangid", gangid);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public void RemoveGang(int gangid, string owner)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(CREATEGANG, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@gangid", gangid);
+                    command.Parameters.AddWithValue("@owner", owner);
+
+                    int deletedRows = command.ExecuteNonQuery();
+                    if (deletedRows == 0)
+                    {
+                        throw new NotAGangOwnerException($"You are not the gang owner");
                     }
                 }
             }
