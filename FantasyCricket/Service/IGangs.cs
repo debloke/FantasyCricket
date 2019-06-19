@@ -9,6 +9,6 @@ namespace FantasyCricket.Service
 
         void CreateGang(Gang gang);
 
-        void AddToGang(int gangid,string[] usernames);
+        void AddToGang(int gangid,string[] usernames,string owner);
     }
 }

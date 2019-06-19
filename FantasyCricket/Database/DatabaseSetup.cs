@@ -118,9 +118,10 @@ namespace FantasyCricket.Database
             // Create Gang
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Gangs (
                                         gangid     INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        name      VARCHAR(255) NOT NULL UNIQUE,
+                                        name      VARCHAR(255) NOT NULL,
                                         owner      VARCHAR(255) NOT NULL,
                                         seriesid      integer NOT NULL,
+                                        UNIQUE (name, owner)
                                         FOREIGN KEY (owner) REFERENCES User (username) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION,
                                         FOREIGN KEY (seriesid) REFERENCES Series (Seriesid) 

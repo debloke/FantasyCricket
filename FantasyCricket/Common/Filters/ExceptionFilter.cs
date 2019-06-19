@@ -41,6 +41,16 @@ namespace FantasyCricket.Common.Filters
                     Detail = context.Exception.ToString()
                 };
             }
+            else if (context.Exception is NotAGangOwnerException)
+            {
+                httpFault = new HttpFault
+                {
+                    HttpStatusCode = HttpStatusCode.Unauthorized,
+                    Message = context.Exception.Message,
+                    Resolution = "You can only add users to gangs you create",
+                    Detail = context.Exception.ToString()
+                };
+            }
 
             else  // Unhandled Exception Handler
             {

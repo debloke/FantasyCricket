@@ -41,7 +41,7 @@ namespace FantasyCricket.Controllers
 
         {
 
-            gangs.AddToGang(gangid, usernames);
+            gangs.AddToGang(gangid, usernames, httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
 

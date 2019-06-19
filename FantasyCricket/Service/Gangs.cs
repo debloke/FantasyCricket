@@ -1,4 +1,5 @@
-﻿using FantasyCricket.Database;
+﻿using FantasyCricket.Common.Net.Exceptions;
+using FantasyCricket.Database;
 using FantasyCricket.Models;
 using Sqlite.SqlClient;
 using System;
@@ -10,21 +11,43 @@ namespace FantasyCricket.Service
     {
 
         private readonly string SELECTGANGS = "Select gangs.seriesid, gangs.gangid, gangs.name, gangs.owner, GangUserMap.username from Gangs INNER JOIN GangUserMap on GangUserMap.gangid = Gangs.gangid where seriesid = @seriesid and GangUserMap.gangid in (select gangid from GangUserMap where username = @username)";
-        
+
         private readonly string CREATEGANG = "INSERT INTO [Gangs] (  name, owner, seriesid) VALUES (  @name, @owner, @seriesid)";
+
+        private readonly string GETGANGOWNER = "SELECT owner From [Gangs] WHERE gangid = @gangid)";
 
         private readonly string CREATEGANGUSERMAP = "INSERT INTO [GangUserMap] (  username, gangid) VALUES (  @username, @gangid)";
 
         private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT INTO GangUserMap SELECT owner,gangid FROM Gangs where name = @name;";
 
-        public void AddToGang(int gangid, string[] usernames)
+        public void AddToGang(int gangid, string[] usernames,string owner)
         {
-            string failedUsernames=String.Empty;
-            foreach (string username in usernames)
+            string failedUsernames = String.Empty;
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
-                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                connection.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand(GETGANGOWNER, connection))
                 {
-                    connection.Open();
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@gangid", gangid);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        int ownerOrdinal = reader.GetOrdinal("owner");
+
+                        string gangOwner = reader.GetString(ownerOrdinal);
+
+                        if (!gangOwner.Equals(owner))
+                        {
+                            throw new NotAGangOwnerException($"You are not the gang owner");
+                        }
+                    }
+                }
+
+
+
+                foreach (string username in usernames)
+                {
                     try
                     {
                         using (SQLiteCommand command = new SQLiteCommand(CREATEGANGUSERMAP, connection))
@@ -35,9 +58,9 @@ namespace FantasyCricket.Service
                             command.ExecuteNonQuery();
                         }
                     }
-                    catch(Exception exception)
+                    catch (Exception exception)
                     {
-                        failedUsernames += (username+",");
+                        failedUsernames += (username + ",");
                     }
                 }
             }
