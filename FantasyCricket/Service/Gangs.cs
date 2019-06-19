@@ -22,7 +22,7 @@ namespace FantasyCricket.Service
 
         private readonly string REMOVEGANGUSERMAP = "DELETE FROM [GangUserMap]  WHERE gangid = @gangid AND username = @username";
 
-        private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT INTO GangUserMap SELECT owner,gangid FROM Gangs where name = @name;";
+        private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT INTO GangUserMap SELECT owner,gangid FROM Gangs where name = @name and owner=@owner;";
 
         public void AddToGang(int gangid, string[] usernames, string owner)
         {
@@ -99,7 +99,7 @@ namespace FantasyCricket.Service
                 {
                     command.CommandType = System.Data.CommandType.Text;
                     command.Parameters.AddWithValue("@name", gang.GangName);
-
+                    command.Parameters.AddWithValue("@owner", gang.GangOwner);
                     command.ExecuteNonQuery();
                 }
 
@@ -173,7 +173,7 @@ namespace FantasyCricket.Service
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
             {
                 connection.Open();
-                using (SQLiteCommand command = new SQLiteCommand(CREATEGANG, connection))
+                using (SQLiteCommand command = new SQLiteCommand(REMOVEGANG, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
                     command.Parameters.AddWithValue("@gangid", gangid);
