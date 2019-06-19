@@ -14,7 +14,7 @@ namespace FantasyCricket.Service
 
         private readonly string CREATEGANG = "INSERT INTO [Gangs] (  name, owner, seriesid) VALUES (  @name, @owner, @seriesid)";
 
-        private readonly string GETGANGOWNER = "SELECT owner From [Gangs] WHERE gangid = @gangid)";
+        private readonly string GETGANGOWNER = "SELECT owner From [Gangs] WHERE gangid = @gangid";
 
         private readonly string CREATEGANGUSERMAP = "INSERT INTO [GangUserMap] (  username, gangid) VALUES (  @username, @gangid)";
 
