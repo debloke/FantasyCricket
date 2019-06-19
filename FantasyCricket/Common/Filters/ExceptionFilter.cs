@@ -51,7 +51,16 @@ namespace FantasyCricket.Common.Filters
                     Detail = context.Exception.ToString()
                 };
             }
-
+            else if (context.Exception is GangNotFoundException)
+            {
+                httpFault = new HttpFault
+                {
+                    HttpStatusCode = HttpStatusCode.NotFound,
+                    Message = context.Exception.Message,
+                    Resolution = "Make sure gang id is correct",
+                    Detail = context.Exception.ToString()
+                };
+            }
             else  // Unhandled Exception Handler
             {
                 httpFault = new HttpFault

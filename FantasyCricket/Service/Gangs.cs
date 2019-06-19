@@ -33,6 +33,11 @@ namespace FantasyCricket.Service
                     command.Parameters.AddWithValue("@gangid", gangid);
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
+                       bool hasRows= reader.Read();
+                        if (!hasRows)
+                        {
+                            throw new GangNotFoundException($"No gang foudn with gangid : {gangid}");
+                        }
                         int ownerOrdinal = reader.GetOrdinal("owner");
 
                         string gangOwner = reader.GetString(ownerOrdinal);
