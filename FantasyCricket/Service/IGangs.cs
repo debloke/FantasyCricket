@@ -11,6 +11,8 @@ namespace FantasyCricket.Service
         void RemoveGang(int gangid, string owner);
         void AddToGang(int gangid, string[] usernames, string owner);
 
+        void AcceptGangMembership(int gangid,string username);
+
         void RemoveFromGang(int gangid, string[] usernames, string owner);
     }
 }

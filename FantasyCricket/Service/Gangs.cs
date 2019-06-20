@@ -10,7 +10,7 @@ namespace FantasyCricket.Service
     public class Gangs : IGangs
     {
 
-        private readonly string SELECTGANGS = "Select gangs.seriesid, gangs.gangid, gangs.name, gangs.owner, GangUserMap.username from Gangs INNER JOIN GangUserMap on GangUserMap.gangid = Gangs.gangid where seriesid = @seriesid and GangUserMap.gangid in (select gangid from GangUserMap where username = @username)";
+        private readonly string SELECTGANGS = "Select gangs.seriesid, gangs.gangid, gangs.name, gangs.owner, GangUserMap.username, GangUserMap.approved from Gangs INNER JOIN GangUserMap on GangUserMap.gangid = Gangs.gangid where seriesid = @seriesid and GangUserMap.gangid in (select gangid from GangUserMap where username =  @username) and (GangUserMap.Approved=1 OR (GangUserMap.Approved = 0 and GangUserMap.username = @username) OR Gangs.owner= @username)";
 
         private readonly string CREATEGANG = "INSERT INTO [Gangs] (  name, owner, seriesid) VALUES (  @name, @owner, @seriesid)";
 
@@ -18,11 +18,29 @@ namespace FantasyCricket.Service
 
         private readonly string GETGANGOWNER = "SELECT owner From [Gangs] WHERE gangid = @gangid";
 
-        private readonly string CREATEGANGUSERMAP = "INSERT INTO [GangUserMap] (  username, gangid) VALUES (  @username, @gangid)";
+        private readonly string CREATEGANGUSERMAP = "INSERT OR REPLACE INTO [GangUserMap] (  username, gangid, approved) VALUES (  @username, @gangid, @approved)";
 
         private readonly string REMOVEGANGUSERMAP = "DELETE FROM [GangUserMap]  WHERE gangid = @gangid AND username = @username";
 
-        private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT INTO GangUserMap SELECT owner,gangid FROM Gangs where name = @name and owner=@owner;";
+        private readonly string CREATEGANGUSERMAPDEFAULT = "INSERT OR REPLACE INTO [GangUserMap] (username, gangid) VALUES (  @owner, @gangid)";
+
+        private readonly string GETGANGID = "SELECT gangid FROM Gangs where name = @name and owner=@owner";
+
+        public void AcceptGangMembership(int gangid, string username)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+            {
+                connection.Open();
+                using (SQLiteCommand command = new SQLiteCommand(CREATEGANGUSERMAP, connection))
+                {
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@gangid", gangid);
+                    command.Parameters.AddWithValue("@approved", Status.Approved);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
         public void AddToGang(int gangid, string[] usernames, string owner)
         {
@@ -64,6 +82,7 @@ namespace FantasyCricket.Service
                             command.CommandType = System.Data.CommandType.Text;
                             command.Parameters.AddWithValue("@username", username);
                             command.Parameters.AddWithValue("@gangid", gangid);
+                            command.Parameters.AddWithValue("@approved", Status.Pending);
                             command.ExecuteNonQuery();
                         }
                     }
@@ -95,13 +114,30 @@ namespace FantasyCricket.Service
                     command.ExecuteNonQuery();
                 }
 
-                using (SQLiteCommand command = new SQLiteCommand(CREATEGANGUSERMAPDEFAULT, connection))
+
+                using (SQLiteCommand command = new SQLiteCommand(GETGANGID, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
                     command.Parameters.AddWithValue("@name", gang.GangName);
                     command.Parameters.AddWithValue("@owner", gang.GangOwner);
-                    command.ExecuteNonQuery();
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        bool hasRows = reader.Read();
+
+                        int gangIdOrdinal = reader.GetOrdinal("gangid");
+
+                        int gangId = reader.GetInt32(gangIdOrdinal);
+                        using (SQLiteCommand createUserMapcommand = new SQLiteCommand(CREATEGANGUSERMAPDEFAULT, connection))
+                        {
+                            createUserMapcommand.CommandType = System.Data.CommandType.Text;
+                            createUserMapcommand.Parameters.AddWithValue("@owner", gang.GangOwner);
+                            createUserMapcommand.Parameters.AddWithValue("@gangid", gangId);
+                            createUserMapcommand.ExecuteNonQuery();
+                        }
+                    }
                 }
+
+
 
             }
         }

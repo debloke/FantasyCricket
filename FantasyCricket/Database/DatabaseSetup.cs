@@ -134,6 +134,7 @@ namespace FantasyCricket.Database
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS GangUserMap (
                                         username      VARCHAR(255) NOT NULL,
                                         gangid      INTEGER NOT NULL,
+                                        approved INTEGER NOT NULL DEFAULT 1,
                                         PRIMARY KEY (username, gangid),
                                         FOREIGN KEY (username) REFERENCES User (username) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION,

@@ -2,6 +2,11 @@
 
 namespace FantasyCricket.Models
 {
+    public enum Status
+    {
+        Approved=1,
+        Pending=0
+    }
     public class Gang
     {
 
@@ -19,6 +24,9 @@ namespace FantasyCricket.Models
 
         [SQLiteColumn("username")]
         public string Username { get; set; }
+
+        [SQLiteColumn("approved")]
+        public Status Approved { get; set; }
 
     }
 }

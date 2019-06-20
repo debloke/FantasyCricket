@@ -44,6 +44,14 @@ namespace FantasyCricket.Controllers
             gangs.AddToGang(gangid, usernames, httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
+        [HttpPut("{gangid}")]
+        public void AcceptGangMembership(int gangid)
+
+        {
+
+            gangs.AcceptGangMembership(gangid, httpContextAccessor.HttpContext.User.Identity.Name);
+        }
+
 
         [HttpDelete("{gangid}")]
         public void RemoveGang(int gangid)
@@ -51,7 +59,7 @@ namespace FantasyCricket.Controllers
             gangs.RemoveGang(gangid, httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
-        [HttpPut("{gangid}")]
+        [HttpDelete("{gangid}/removeuser")]
         public void RemoveFromGang(int gangid, [FromBody] string[] usernames)
         {
 
