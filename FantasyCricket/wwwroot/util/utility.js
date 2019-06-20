@@ -1,7 +1,6 @@
 let UtilityClass = function () {
     let that = this;
     that.baseURL = "";
-    /* that.baseURL = "https://cricketfantasy.azurewebsites.net/"; */
 
     /**************************************************
      * @function     getRequest
@@ -69,11 +68,17 @@ let UtilityClass = function () {
      * @param        {String} url - URL for HTTP request
      * @param        {Callback} successCB - Callback for success
      * @param        {Callback} errorCB - Callback for error
+     * @param        {Object} data - Data to delete - Optional
      * @return       N/A
      **************************************************/
-    that.deleteRequest = function(url, successCB, errorCB) {
+    that.deleteRequest = function (url, successCB, errorCB, data) {
+        let obj = { url: (that.baseURL + url), type: "DELETE" };
+        if (data) {
+            obj.data = JSON.stringify(data);
+            obj.contentType = "application/json";
+        }
         makeHTTPCall(
-            addGUIDForRequest({url: (that.baseURL + url), type: "DELETE"}), 
+            addGUIDForRequest(obj), 
             successCB,
             errorCB);
     };

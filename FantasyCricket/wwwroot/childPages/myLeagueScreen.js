@@ -21,6 +21,7 @@ function createLeagueData(id) {
             ALL_MY_GROUPS.map(function (gp) {
                 gangs[gp.GangId] = gangs[gp.GangId] || { "Name": gp.GangName, "Members": [], "GangId": gp.GangId, "GangOwner": gp.GangOwner };
                 gangs[gp.GangId].Members.push(tempData[gp.Username] || { "Username": gp.Username, "Total": 0, "DisplayName": gp.Username });
+                if(localStorage.loggedInUser === gp.Username)  gangs[gp.GangId].Approved = gp.Approved;
             });
             response = response.concat(Object.values(gangs));
             displayData(response, id, utility);
@@ -72,35 +73,91 @@ function displayData(myLeagueData, id, utility) {
 function displayLeagueInfo(allData, id, gangid, utility) {
     let memberData = allData.filter(function(l) { return l.GangId == gangid; });
     if(memberData && memberData.length) {
-        let resp = "<table border='1'><tr><th>Rank</th><th>Member</th><th>Points</th></tr>";
-        let leagueMembers = memberData[0].Members;
-        leagueMembers = leagueMembers.sort(function(a,b) {
-            return b.Total - a.Total;
-        });
-        let rank = 1;
-        leagueMembers.map(function (members) {
-            resp += "<tr><td>" + (rank++) + "</td>";
-            resp += "<td onclick='displayPlayersTeam(\"" + members.Username + "\")'>" + members.DisplayName + "</td>";
-            resp += "<td>" + members.Total + "</td>";
-            if (localStorage.loggedInUser === members.Username) {
-                resp += "<td onclick='compareWithMyScores()'>History</td></tr>";
+        if(memberData[0].Approved != 0) {
+            let resp = "<table border='1'><tr><th>Rank</th><th>Member</th><th>Points</th></tr>";
+            let leagueMembers = memberData[0].Members;
+            leagueMembers = leagueMembers.sort(function(a,b) {
+                return b.Total - a.Total;
+            });
+            let rank = 1;
+            let presentMembers = [];
+            leagueMembers.map(function (members) {
+                resp += "<tr><td>" + (rank++) + "</td>";
+                resp += "<td onclick='displayPlayersTeam(\"" + members.Username + "\")'>" + members.DisplayName + "</td>";
+                resp += "<td>" + members.Total + "</td>";
+                if (localStorage.loggedInUser === members.Username) {
+                    resp += "<td onclick='compareWithMyScores()'>History</td><td></td></tr>";
+                }
+                else if(memberData[0].GangOwner && (localStorage.loggedInUser === memberData[0].GangOwner)) {
+                    resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td><td class='removeMemberFromGang' data='"+ members.Username +"'>Remove</td></tr>";
+                }
+                else {
+                    resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td><td></td></tr>";
+                }
+                presentMembers.push(members.Username);     
+            });
+            resp += "</table>";
+            if (gangid && memberData[0].GangOwner == localStorage.loggedInUser) {
+                resp += "<button class='deleteGang'>Delete Gang</button>";
+                resp += "<div style='margin-top: 10px'><span>Add User: </span><input type='text' class='searchUser'/></div>";
+                resp += "<table id='userList'><table>";
             }
-            else {
-                resp += "<td onclick='compareWithMyScores(\"" + members.Username + "\")'>Compare</td></tr>";
-            }
-            
-        });
-        resp += "</table>";
-        if (gangid && memberData[0].GangOwner == localStorage.loggedInUser) resp += "<button class='deleteGang'>Delete Gang</button>";
-        $("#leagueInfo").html(resp);
 
-        $(".deleteGang").bind("click", function () {
-            utility.deleteRequest(
-                "/api/gangs/" + gangid,
-                function () { createLeagueData(id) },
-                function () { alert("Cannot delete gang"); }
-            );
-        });
+            $("#leagueInfo").html(resp);
+
+            $(".deleteGang").bind("click", function () {
+                utility.deleteRequest(
+                    "/api/gangs/" + gangid,
+                    function () { createLeagueData(id) },
+                    function () { alert("Cannot delete gang"); }
+                );
+            });
+
+            $(".removeMemberFromGang").bind("click", function() {
+                let user = this.getAttribute("data");
+                utility.deleteRequest(
+                    "/api/gangs/" + gangid + "/removeuser",
+                    function () { createLeagueData(id) },
+                    function () { alert("Cannot delete user"); },
+                    [user]
+                );
+            });
+
+            $(".searchUser").bind("keyup", function () {
+                let resp = "";
+                let absentMembers = ALL_POINTS.filter(function(m) {
+                    return (presentMembers.indexOf(m.Username) === -1) &&
+                        ((m.Username.toLowerCase().indexOf($(".searchUser").val().toLowerCase()) > -1) ||
+                         (m.DisplayName.toLowerCase().indexOf($(".searchUser").val().toLowerCase()) > -1));
+                });
+                absentMembers.map(function(am) {
+                    resp += "<tr><td>"+am.Username+"<td><td>"+am.DisplayName+"<td><td data='"+ am.Username +"' class='addMemberToGrp'>+</td></tr>"
+                });
+                $("#userList").html(resp);
+
+                $(".addMemberToGrp").unbind("click");
+                $(".addMemberToGrp").bind("click", function() {
+                    utility.postRequest(
+                        "/api/gangs/" + gangid,
+                        function() { createLeagueData(id); },
+                        function() { alert("Error adding member"); },
+                        [this.getAttribute("data")]
+                    );
+                });
+            });
+        }
+        else {
+            let resp = "<button class='approveJoiningGang'>Join Gang</button>"
+            $("#leagueInfo").html(resp);
+            $(".approveJoiningGang").unbind("click");
+            $(".approveJoiningGang").bind("click", function() {
+                utility.putRequest(
+                    "/api/gangs/" + gangid,
+                    function () { createLeagueData(id) },
+                    function () { alert("Cannot approve joining group"); }
+                );
+            });
+        }
     }
 }
 
