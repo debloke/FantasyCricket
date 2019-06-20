@@ -89,7 +89,7 @@ namespace FantasyCricket.Database
                                      [lastlogin]     DATETIME  ,
                                      [magickey]     GUID,
                                      [displayname]     VARCHAR(255) NOT NULL )";
-            sqlite_cmd.ExecuteNonQuery();      
+            sqlite_cmd.ExecuteNonQuery();
 
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS UserTeam (
                                         username      VARCHAR(255) NOT NULL,
@@ -141,6 +141,12 @@ namespace FantasyCricket.Database
                                         FOREIGN KEY (gangid) REFERENCES Gangs (gangid) 
                                         ON DELETE CASCADE ON UPDATE NO ACTION)";
             sqlite_cmd.ExecuteNonQuery();
+
+
+            sqlite_cmd.CommandText = @"ALTER TABLE GangUserMap ADD COLUMN approved INTEGER NOT NULL DEFAULT 1";
+            sqlite_cmd.ExecuteNonQuery();
+
+
 
             // Create GangUserMap
             sqlite_cmd.CommandText = @"CREATE TABLE IF NOT EXISTS MatchPointsHistory (
