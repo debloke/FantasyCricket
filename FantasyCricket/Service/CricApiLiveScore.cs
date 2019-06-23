@@ -50,7 +50,11 @@ namespace FantasyCricket.Service
         public CricApiLiveScore(IHubContext<LiveScoreHub> hubContext)
         {
             this.hubContext = hubContext;
+#if (!DEBUG)
+
+
             LoadCricApiLiveScoreTimer();
+#endif
         }
 
         private Points[] GetScore(Match match)

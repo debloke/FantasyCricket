@@ -199,35 +199,42 @@ namespace FantasyCricket.Service
 
         private void UserMaintenanceTimerEvent(object state)
         {
-            lock (login)
+            try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
+                lock (login)
                 {
-                    connection.Open();
-                    using (SQLiteCommand command = new SQLiteCommand(SELECTALLUSER, connection))
+                    using (SQLiteConnection connection = new SQLiteConnection(DatabaseSetup.GetConnectString()))
                     {
-                        command.CommandType = System.Data.CommandType.Text;
-                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        connection.Open();
+                        using (SQLiteCommand command = new SQLiteCommand(SELECTALLUSER, connection))
                         {
-                            MagicKey[] keys = reader.ReadAll<MagicKey>();
-                            foreach (MagicKey key in keys)
+                            command.CommandType = System.Data.CommandType.Text;
+                            using (SQLiteDataReader reader = command.ExecuteReader())
                             {
-                                if (key.LastLogin != null && (DateTime.UtcNow - key.LastLogin).TotalHours >= 1)
+                                MagicKey[] keys = reader.ReadAll<MagicKey>();
+                                foreach (MagicKey key in keys)
                                 {
-                                    using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                                    if (key.LastLogin != null && (DateTime.UtcNow - key.LastLogin).TotalHours >= 1)
                                     {
-                                        command1.CommandType = System.Data.CommandType.Text;
+                                        using (SQLiteCommand command1 = new SQLiteCommand(UPDATEUSERGUID, connection))
+                                        {
+                                            command1.CommandType = System.Data.CommandType.Text;
 
-                                        command1.Parameters.AddWithValue("@username", key.UserName);
-                                        command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid().ToString());
-                                        command1.ExecuteNonQuery();
+                                            command1.Parameters.AddWithValue("@username", key.UserName);
+                                            command1.Parameters.AddWithValue("@newmagickey", Guid.NewGuid().ToString());
+                                            command1.ExecuteNonQuery();
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                //TODO Add logging
             }
         }
 
